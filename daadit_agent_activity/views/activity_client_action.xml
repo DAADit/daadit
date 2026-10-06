@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_daadit_agent_activity" model="ir.actions.client">
+        <field name="name">Agent-activiteit</field>
+        <field name="tag">daadit_agent_activity</field>
+        <field name="target">current</field>
+    </record>
+
+    <!-- Direct achter "Agents" (seq 46 = Schedules), dus sequence 45. -->
+    <menuitem id="menu_daadit_agent_activity"
+              name="Activiteit"
+              parent="ai_app.ai_menu_root"
+              action="action_daadit_agent_activity"
+              sequence="45"/>
+
+</odoo>

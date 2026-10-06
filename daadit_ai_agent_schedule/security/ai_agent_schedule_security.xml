@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Managing AI agent schedules means giving an agent a standing
+        instruction that runs autonomously and can read business data
+        through tools. That is an administrative capability, so the
+        group is implied by Settings (base.group_system) and can also
+        be granted explicitly to trusted power users.
+    -->
+    <!-- NOTE: ``res.groups.category_id`` was removed in Odoo 19
+         (replaced by ``privilege_id``). We omit the category here;
+         the group still works and is visible in technical settings. -->
+    <record id="group_ai_agent_schedule_manager" model="res.groups">
+        <field name="name">AI Agent Schedules: Manager</field>
+    </record>
+
+    <record id="base.group_system" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_ai_agent_schedule_manager'))]"/>
+    </record>
+
+    <!-- Multi-company isolation: a manager only sees schedules / runs
+         in companies they have access to (or company-less rows). -->
+    <record id="rule_ai_agent_schedule_company" model="ir.rule">
+        <field name="name">AI Agent Schedule: company isolation</field>
+        <field name="model_id" ref="model_daadit_ai_agent_schedule"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        <field name="groups" eval="[(4, ref('group_ai_agent_schedule_manager'))]"/>
+    </record>
+
+    <record id="rule_ai_agent_schedule_run_company" model="ir.rule">
+        <field name="name">AI Agent Schedule Run: company isolation</field>
+        <field name="model_id" ref="model_daadit_ai_agent_schedule_run"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        <field name="groups" eval="[(4, ref('group_ai_agent_schedule_manager'))]"/>
+    </record>
+
+</odoo>

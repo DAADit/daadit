@@ -1,0 +1,16 @@
+{
+  "role": "instructie",
+  "agent": "Bo",
+  "description": "Volgt het model een vaste opbouw uit de instructies? Per model gedraaid; een model dat zakt gaat uit de automatische routering (taak 1482).",
+  "cases": [
+    {
+      "id": "instructie-01",
+      "prompt": "Geef in een paar regels je stand van vandaag. Gebruik geen tools. Houd precies deze opbouw aan, elk kopje op een eigen regel: 'Gedaan:', 'Opgevallen:', 'Wat ik van je nodig heb:' en 'Morgen:'. Zet onder elk kopje hoogstens twee korte regels.",
+      "language": "nl",
+      "must_follow_structure": ["Gedaan:", "Opgevallen:", "Wat ik van je nodig heb:", "Morgen:"],
+      "max_cost_usd": 0.05,
+      "max_iterations": 3,
+      "notes": "Taak 1482: sommige Mistral-modellen lieten de opbouw uit hun instructies vallen. Alleen het criterium instruction_following beslist over de routering."
+    }
+  ]
+}

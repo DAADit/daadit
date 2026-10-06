@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_users_form_simple_modif_inherit_daadit_voice" model="ir.ui.view">
+        <field name="name">res.users.form.simple.modif.inherit.daadit.voice</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='other_preferences']" position="inside">
+                <field name="daadit_voice_ptt_hotkey"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

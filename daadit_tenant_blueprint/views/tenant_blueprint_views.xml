@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_daadit_tenant_blueprint_form" model="ir.ui.view">
+        <field name="name">daadit.tenant.blueprint.form</field>
+        <field name="model">daadit.tenant.blueprint</field>
+        <field name="arch" type="xml">
+            <form string="Vestigingsblueprint">
+                <div class="alert alert-info" role="alert">
+                    De blueprint bevat de configuratie, niet de sleutels.
+                    API-keys, tokens en wachtwoorden horen bij de omgeving
+                    en gaan bewust niet mee.
+                </div>
+                <group>
+                    <field name="summary" nolabel="1" readonly="1"
+                           invisible="not summary"/>
+                </group>
+                <group>
+                    <field name="payload" nolabel="1" widget="ace"
+                           options="{'mode': 'json'}"/>
+                </group>
+                <footer>
+                    <button name="action_export" type="object" string="Exporteren"
+                            class="btn-primary"/>
+                    <button name="action_export_package" type="object"
+                            string="Bewaren als pakket" class="btn-secondary"
+                            icon="fa-archive"/>
+                    <button name="action_dry_run" type="object"
+                            string="Proef toepassen" class="btn-secondary"/>
+                    <button name="action_apply" type="object" string="Toepassen"
+                            class="btn-secondary"
+                            confirm="Deze blueprint wordt op DEZE database toegepast. Doorgaan?"/>
+                    <button string="Sluiten" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_daadit_tenant_blueprint" model="ir.actions.act_window">
+        <field name="name">Vestigingsblueprint</field>
+        <field name="res_model">daadit.tenant.blueprint</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_daadit_tenant_blueprint"
+              name="Vestigingsblueprint"
+              parent="base.menu_administration"
+              action="action_daadit_tenant_blueprint"
+              sequence="90"
+              groups="base.group_system"/>
+</odoo>

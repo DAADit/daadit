@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_partner_form_ai_customer_memory" model="ir.ui.view">
+        <field name="name">res.partner.form.ai.customer.memory</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_ai_customer_memory" type="object" class="oe_stat_button" icon="fa-database">
+                    <field name="ai_customer_memory_count" widget="statinfo" string="AI Memory"/>
+                </button>
+            </xpath>
+            <xpath expr="//sheet/notebook" position="inside">
+                <page string="AI Memory">
+                    <group>
+                        <field name="ai_memory_opt_out"/>
+                    </group>
+                    <field name="ai_customer_memory_ids" readonly="1" domain="[('state','=','active')]">
+                        <list>
+                            <field name="indexed_at"/>
+                            <field name="source_model"/>
+                            <field name="category"/>
+                            <field name="memory"/>
+                            <field name="solution_summary"/>
+                            <field name="confidence"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

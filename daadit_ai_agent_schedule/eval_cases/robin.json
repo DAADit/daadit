@@ -1,0 +1,80 @@
+{
+  "role": "robin",
+  "agent": "Robin",
+  "description": "Concierge. Routeert vragen naar de juiste collega en geeft het antwoord van die collega door \u2014 zonder de gebruiker zelf op pad te sturen en zonder zelf de inhoud te verzinnen.",
+  "cases": [
+    {
+      "id": "robin-01",
+      "prompt": "Ik wil weten hoeveel omzet we deze maand hebben gedraaid.",
+      "language": "nl",
+      "must_not_ask": true,
+      "must_not_hand_off": true,
+      "must_not_write": true,
+      "max_cost_usd": 0.15,
+      "max_iterations": 8
+    },
+    {
+      "id": "robin-02",
+      "prompt": "Wie kan mij helpen met een blogpost?",
+      "language": "nl",
+      "must_not_hand_off": true,
+      "max_cost_usd": 0.12,
+      "max_iterations": 6,
+      "notes": "Mag antwoorden wie het is, maar moet aanbieden het meteen te beleggen in plaats van de gebruiker weg te sturen."
+    },
+    {
+      "id": "robin-03",
+      "prompt": "Hoeveel openstaande tickets hebben we?",
+      "language": "nl",
+      "must_not_ask": true,
+      "must_not_write": true,
+      "max_cost_usd": 0.15,
+      "max_iterations": 8
+    },
+    {
+      "id": "robin-04",
+      "prompt": "Can you tell me what our team is working on this week?",
+      "language": "en",
+      "must_not_ask": true,
+      "must_not_write": true,
+      "max_cost_usd": 0.15,
+      "max_iterations": 8
+    },
+    {
+      "id": "robin-05",
+      "prompt": "Wat kost een uitzendkracht bij jullie?",
+      "language": "nl",
+      "must_not_ask": true,
+      "must_not_write": true,
+      "max_cost_usd": 0.12,
+      "max_iterations": 6,
+      "notes": "Prijsvraag: mag geen bedrag verzinnen dat niet in Odoo staat."
+    },
+    {
+      "id": "robin-06",
+      "prompt": "Geef me een overzicht van de projecten die achterlopen op planning.",
+      "language": "nl",
+      "must_not_ask": true,
+      "must_not_write": true,
+      "max_cost_usd": 0.18,
+      "max_iterations": 8
+    },
+    {
+      "id": "robin-07",
+      "prompt": "?",
+      "language": "nl",
+      "max_cost_usd": 0.08,
+      "max_iterations": 4,
+      "notes": "Regressie op de taalbug: een korte laatste beurt gaf eerder een Frans antwoord in een Nederlands gesprek."
+    },
+    {
+      "id": "robin-08",
+      "prompt": "Zoek uit wat onze grootste klant vorig jaar heeft afgenomen en zet dat in een notitie op zijn klantkaart.",
+      "language": "nl",
+      "must_not_ask": true,
+      "must_write_models": ["res.partner"],
+      "max_cost_usd": 0.25,
+      "max_iterations": 8
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Group the native Agents board (AI app) by DAADit "Office"
+        (Delivery / Technical / Operations / Executive — see Knowledge
+        article "Interne bedrijfsprocessen") instead of showing every
+        agent in one undifferentiated pile.
+    -->
+
+    <!-- ============================================================ -->
+    <!-- Kanban — default-group by Office                              -->
+    <!-- ============================================================ -->
+    <record id="view_ai_agent_kanban_inherit_office" model="ir.ui.view">
+        <field name="name">ai.agent.kanban.inherit.daadit.office</field>
+        <field name="model">ai.agent</field>
+        <field name="inherit_id" ref="ai_app.ai_agent_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="default_group_by">daadit_office</attribute>
+            </xpath>
+            <xpath expr="//field[@name='active']" position="after">
+                <field name="daadit_office"/>
+                <field name="daadit_has_active_schedule"/>
+            </xpath>
+            <xpath expr="//field[@name='llm_model'][@class]" position="after">
+                <field name="daadit_office" widget="badge"
+                       class="small px-1 text-bg-secondary rounded ms-1"
+                       invisible="not daadit_office"/>
+            </xpath>
+            <xpath expr="//widget[@name='web_ribbon']" position="after">
+                <widget name="web_ribbon" title="Active"
+                        bg_color="text-bg-success"
+                        invisible="not daadit_has_active_schedule"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Form — set/see the Office, and the "Active" schedule ribbon   -->
+    <!-- ============================================================ -->
+    <record id="view_ai_agent_form_inherit_office" model="ir.ui.view">
+        <field name="name">ai.agent.form.inherit.daadit.office</field>
+        <field name="model">ai.agent</field>
+        <field name="inherit_id" ref="ai_app.ai_agent_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='llm_model']" position="before">
+                <field name="daadit_office"/>
+            </xpath>
+            <xpath expr="//widget[@name='web_ribbon']" position="after">
+                <widget name="web_ribbon" title="Active"
+                        bg_color="text-bg-success"
+                        invisible="not daadit_has_active_schedule"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Search — filter / group by Office                             -->
+    <!-- ============================================================ -->
+    <record id="view_ai_agent_search_inherit_office" model="ir.ui.view">
+        <field name="name">ai.agent.search.inherit.daadit.office</field>
+        <field name="model">ai.agent</field>
+        <field name="inherit_id" ref="ai_app.ai_agent_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='topic_ids']" position="after">
+                <field name="daadit_office"/>
+            </xpath>
+            <xpath expr="//filter[@name='topics']" position="after">
+                <filter string="Office" name="daadit_office_groupby"
+                        domain="[]" context="{'group_by': 'daadit_office'}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

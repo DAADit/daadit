@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ai_agent_repair_scope_list" model="ir.ui.view">
+        <field name="name">daadit.ai.agent.repair.scope.list</field>
+        <field name="model">daadit.ai.agent.repair.scope</field>
+        <field name="arch" type="xml">
+            <list editable="bottom"
+                  decoration-muted="not effective">
+                <field name="agent_id"/>
+                <field name="target_agent_id"/>
+                <field name="article_ref"/>
+                <field name="approved_by_id"/>
+                <field name="approved_on" readonly="1" optional="show"/>
+                <field name="note" optional="show"/>
+                <field name="effective" readonly="1"/>
+                <field name="active" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ai_agent_repair_scope_form" model="ir.ui.view">
+        <field name="name">daadit.ai.agent.repair.scope.form</field>
+        <field name="model">daadit.ai.agent.repair.scope</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        Deze regel staat een agent toe de prompt of
+                        planning van één collega aan te passen. Zonder
+                        een gebruiker bij <b>Aangezet door</b> telt de
+                        regel niet mee.
+                    </div>
+                    <group>
+                        <group>
+                            <field name="agent_id"/>
+                            <field name="target_agent_id"/>
+                            <field name="article_ref"/>
+                        </group>
+                        <group>
+                            <field name="approved_by_id"/>
+                            <field name="approved_on" readonly="1"/>
+                            <field name="effective" readonly="1"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="note"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ai_agent_repair_scope_search" model="ir.ui.view">
+        <field name="name">daadit.ai.agent.repair.scope.search</field>
+        <field name="model">daadit.ai.agent.repair.scope</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="agent_id"/>
+                <field name="target_agent_id"/>
+                <filter name="filter_effective" string="Werkt"
+                        domain="[('effective', '=', True)]"/>
+                <filter name="filter_not_approved"
+                        string="Nog niet aangezet door een mens"
+                        domain="[('approved_by_id', '=', False)]"/>
+                <separator/>
+                <filter name="group_by_agent" string="Reparerende agent"
+                        context="{'group_by': 'agent_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ai_agent_repair_scope" model="ir.actions.act_window">
+        <field name="name">Reparatiebereik</field>
+        <field name="res_model">daadit.ai.agent.repair.scope</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id"
+                ref="view_ai_agent_repair_scope_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Nog geen reparatiebereik ingesteld
+            </p>
+            <p>
+                Zolang hier niets staat, blijft de huidige stand gelden.
+                Een regel maakt expliciet welke collega een agent
+                autonoom mag repareren; verruimen doe je per agent, met
+                een naam erbij.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_ai_agent_repair_scope"
+              name="Reparatiebereik"
+              parent="ai_app.ai_menu_root"
+              action="action_ai_agent_repair_scope"
+              sequence="49"/>
+
+</odoo>

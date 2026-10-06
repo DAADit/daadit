@@ -1,0 +1,48 @@
+// Dark mode. Odoo 19 laadt dit bestand alleen in het bundle
+// web.assets_web_dark, ná agent_activity.scss, dus het hoeft alleen de
+// custom properties uit het kopblok te herzetten — geen enkele regel
+// hieronder wordt herhaald.
+//
+// Waarom expliciete waarden en geen omklappende variabelen: Odoo zendt
+// de Bootstrap-kleuren niet uit als CSS custom properties, en de
+// SCSS-variabelen zijn in beide bundles gelijk. Odoo's eigen componenten
+// (bijv. emoji_picker.dark.scss) zetten daarom ook per component vaste
+// waarden. Zonder dit bestand bleven alle kaarten wit op een donkere
+// pagina — precies de klacht.
+//
+// Contrast op --daa-surface (#26272d), berekend:
+//   --daa-text   #dfe0e4  ≈ 11,4:1
+//   --daa-muted  #a2a6ae  ≈  6,2:1   (norm 4,5:1)
+//   --daa-accent #7ea6ff  ≈  6,7:1
+// Het oorspronkelijke #2a5bd7 haalt op deze achtergrond maar 2,4:1 en
+// is daarom vervangen door een lichtere blauwtint.
+
+.o_daadit_activity {
+    --daa-accent: #7ea6ff;
+    --daa-accent-bg: rgba(126, 166, 255, 0.14);
+    --daa-accent-border: rgba(126, 166, 255, 0.38);
+
+    // Gelijk aan wat Odoo zelf op .o_web_client zet in dark mode.
+    --daa-page-bg: #1b1d26;
+
+    --daa-surface: #26272d;
+    --daa-surface-2: #1e1f24;
+    --daa-border: #3a3c44;
+    --daa-border-soft: rgba(255, 255, 255, 0.08);
+    --daa-text: #dfe0e4;
+    --daa-muted: #a2a6ae;
+    --daa-strong: #f2f3f5;
+    --daa-shadow: rgba(0, 0, 0, 0.45);
+
+    --daa-success: #5dd39e;
+    --daa-success-bg: rgba(93, 211, 158, 0.16);
+    --daa-danger: #f08a84;
+    --daa-danger-bg: rgba(240, 138, 132, 0.16);
+    --daa-warning: #e3b341;
+
+    // Avatars zonder afbeelding vallen weg tegen een donkere kaart; de
+    // placeholder moet lichter zijn dan de kaart, niet donkerder.
+    .daa-agent-avatar {
+        background: rgba(255, 255, 255, 0.08);
+    }
+}

@@ -1,0 +1,35 @@
+// TikTok brand colour variables
+$tiktok-black: #010101;
+$tiktok-red:   #EE1D52;
+$tiktok-teal:  #69C9D0;
+
+// ── Stream post stats bar ────────────────────────────────────────────────────
+.o_social_stream_post_tiktok_stats {
+    border-top: 1px solid var(--o-input-border-color, #dee2e6);
+    padding-top: 6px;
+    margin-top: 4px;
+    font-size: 0.85rem;
+
+    .o_social_tiktok_likes {
+        .fa-heart {
+            color: $tiktok-red;
+        }
+        &.o_social_tiktok_user_likes {
+            font-weight: 700;
+        }
+    }
+}
+
+// ── Post-composer preview card ───────────────────────────────────────────────
+.o_social_tiktok_preview {
+    background-color: #f8f9fa;
+
+    .o_social_preview_icon_wrapper {
+        background-color: $tiktok-black;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}

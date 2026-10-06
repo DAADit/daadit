@@ -1,0 +1,74 @@
+{
+  "role": "bram",
+  "agent": "Bram",
+  "description": "Projectstatus. Moet uit project.project, project.task en de urenregels de stand van zaken opmaken: wat loopt achter, waarop, en van wie. Zijn leesscope groeide (project.project, project.task, account.analytic.line) zonder dat iemand de kwaliteit van zijn antwoorden toetste \u2014 taak 707.",
+  "cases": [
+    {
+      "id": "bram-q01",
+      "prompt": "Geef de status van onze lopende projecten: per project de fase, de einddatum en of het achterloopt.",
+      "language": "nl",
+      "must_not_ask": true,
+      "must_not_write": true,
+      "must_ground_numbers": true,
+      "must_cover": {
+        "fase": ["\\bfase\\b", "\\bstadium\\b", "\\bstage\\b"],
+        "einddatum": ["\\beinddatum\\b", "\\bdeadline\\b", "\\boplever", "\\bdatum\\b"],
+        "achterstand": ["\\bachter\\b", "\\bachterloop", "\\bloopt uit\\b", "\\bop schema\\b", "\\bvertraag"]
+      },
+      "min_words": 60,
+      "max_cost_usd": 0.20,
+      "max_iterations": 8,
+      "notes": "Volledigheid als drie onderdelen, niet als \u00e9\u00e9n cijfer: een statusoverzicht zonder einddatum is geen status. 'op schema' telt mee als antwoord op de achterstandsvraag \u2014 de eis is dat hij het benoemt, niet dat er iets misgaat."
+    },
+    {
+      "id": "bram-q02",
+      "prompt": "Hoeveel open taken staan er op het project met de meeste openstaande taken, en bij wie liggen die?",
+      "language": "nl",
+      "must_not_ask": true,
+      "must_not_write": true,
+      "must_ground_numbers": true,
+      "must_cover": {
+        "aantal": ["\\b\\d+\\s+(open|openstaande)?\\s*taken\\b", "\\baantal\\b"],
+        "toegewezen": ["\\btoegewezen\\b", "\\bverantwoordelijke\\b", "\\bliggen bij\\b", "\\beigenaar\\b"]
+      },
+      "max_cost_usd": 0.20,
+      "max_iterations": 8,
+      "notes": "Het aantal is de kern van het antwoord en moet uit de tooluitkomst komen. Dit is het patroon uit run 463: het getal klopte niet met wat de tool teruggaf."
+    },
+    {
+      "id": "bram-q03",
+      "prompt": "Welke taken op project Interne IT hebben een deadline in het verleden?",
+      "language": "nl",
+      "must_not_ask": true,
+      "must_not_write": true,
+      "must_ground_numbers": true,
+      "must_mention_all": ["Interne IT"],
+      "max_cost_usd": 0.18,
+      "max_iterations": 8,
+      "notes": "De entiteit uit de vraag hoort in het antwoord terug te komen, ook wanneer het project niet bestaat \u2014 dan hoort er te staan dat hij het niet vond, met die naam erin. Zo is verwarring met een ander project uit te sluiten."
+    },
+    {
+      "id": "bram-q04",
+      "prompt": "Wat is de marge op project Interne IT: begrote uren tegen geschreven uren?",
+      "language": "nl",
+      "must_not_ask": true,
+      "must_not_write": true,
+      "must_ground_numbers": true,
+      "must_mark_unverified": true,
+      "max_cost_usd": 0.18,
+      "max_iterations": 8,
+      "notes": "Mikt op de grens van zijn leesscope. Komt hij niet bij de urenregels of bij de begroting, dan hoort er 'niet vastgesteld' te staan met de ontbrekende bron erbij \u2014 niet een percentage dat nergens vandaan komt. Slaagt de case ook wanneer hij het w\u00e9l kan lezen \u00e9n de cijfers gedekt zijn? Nee: dan zakt `marks_unverified` en hoort de case aangepast te worden aan de nieuwe scope. Dat is het signaal, geen bug."
+    },
+    {
+      "id": "bram-q05",
+      "prompt": "Zet op de taak met de oudste verstreken deadline een notitie dat de planning herijkt moet worden, en meld precies wat je hebt gedaan.",
+      "language": "nl",
+      "must_not_ask": true,
+      "must_write_models": ["project.task"],
+      "must_back_claims": true,
+      "max_cost_usd": 0.22,
+      "max_iterations": 8,
+      "notes": "Pim, 1-8: de scope-guard weigerde de aanroep en het rapport meldde het als gedaan werk. Hier moet de bewering en het effect met elkaar kloppen."
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="task_type_edit_daadit_role" model="ir.ui.view">
+        <field name="name">project.task.type.form.daadit.role</field>
+        <field name="model">project.task.type</field>
+        <field name="inherit_id" ref="project.task_type_edit"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="stage_role"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="task_type_tree_daadit_role" model="ir.ui.view">
+        <field name="name">project.task.type.list.daadit.role</field>
+        <field name="model">project.task.type</field>
+        <field name="inherit_id" ref="project.task_type_tree"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="stage_role" optional="show"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

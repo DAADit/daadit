@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        The polished board (static/src/js/agent_dashboard_action.js).
+        Lives inside the native "Dashboards" app (spreadsheet_dashboard),
+        as a sibling of that app's own "Dashboards" and "Configuration"
+        entries — not a spreadsheet.dashboard record, since that format
+        can't render arbitrary HTML/CSS. A plain ir.ui.menu pointing at
+        our client action renders fine alongside it.
+    -->
+    <record id="action_daadit_agent_dashboard_board" model="ir.actions.client">
+        <field name="name">Agent Dashboard</field>
+        <field name="tag">daadit_agent_dashboard</field>
+        <field name="target">current</field>
+    </record>
+
+    <menuitem id="menu_daadit_agent_dashboard_board"
+              name="Agent Dashboard"
+              parent="spreadsheet_dashboard.spreadsheet_dashboard_menu_root"
+              action="action_daadit_agent_dashboard_board"
+              sequence="5"/>
+
+</odoo>

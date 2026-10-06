@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Fallback seed: keeps the agent model dropdown usable before the
+         first successful sync with the Loes API. The daily cron (and
+         the manual "Refresh models" button) overwrite/extend these rows
+         with the live model list. noupdate="1" so admin edits and synced
+         rows survive module upgrades.
+
+         Model ids per loes.ai/#api (2026-07-29): the HostYourAI router
+         namespaces Loes under ``hyai/``. ``hyai/loes-large`` is the
+         default (World variant on Qwen3.5-27B); the ``-eu-eurollm``
+         variant is the fully-EU alternative. -->
+    <data noupdate="1">
+        <record id="model_loes_large" model="daadit.ai.loes.model">
+            <field name="technical_name">hyai/loes-large</field>
+            <field name="label">Loes Large (World, Qwen3.5-27B)</field>
+            <field name="sequence">1</field>
+        </record>
+        <record id="model_loes_large_eu" model="daadit.ai.loes.model">
+            <field name="technical_name">hyai/loes-large-eu-eurollm-22b-2512</field>
+            <field name="label">Loes Large EU (EuroLLM 22B)</field>
+            <field name="sequence">2</field>
+        </record>
+    </data>
+</odoo>

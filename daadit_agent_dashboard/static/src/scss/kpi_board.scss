@@ -1,0 +1,100 @@
+// DAADit Agent Dashboard — KPI board styling.
+// Scoped under .o_daadit_kpi_board so it never leaks into other kanbans.
+
+.o_daadit_kpi_board {
+    $good: #15803d;
+    $warn: #a96a0b;
+    $crit: #bc3a2e;
+    $accent: #3b4e8c;
+    $line: #e4e7ee;
+    $muted: #5b6472;
+
+    .o_daadit_kpi {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 14px 16px;
+        border: 1px solid $line;
+        border-left: 3px solid $accent;
+        border-radius: 8px;
+        background: #fff;
+        min-height: 96px;
+
+        &.o_kpi_good { border-left-color: $good; }
+        &.o_kpi_warn { border-left-color: $warn; }
+        &.o_kpi_crit { border-left-color: $crit; }
+        &.o_kpi_na   { border-left-color: $line; }
+    }
+
+    .o_kpi_head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 8px;
+    }
+
+    .o_kpi_name {
+        font-size: 12px;
+        font-weight: 600;
+        color: $muted;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        line-height: 1.35;
+    }
+
+    .o_kpi_badge {
+        flex: none;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 20px;
+        font-variant-numeric: tabular-nums;
+        color: #fff;
+        background: $accent;
+
+        &.o_kpi_badge_good { background: $good; }
+        &.o_kpi_badge_warn { background: $warn; }
+        &.o_kpi_badge_crit { background: $crit; }
+        &.o_kpi_badge_na   { background: #9aa2b1; }
+    }
+
+    .o_kpi_values {
+        display: flex;
+        align-items: baseline;
+        gap: 6px;
+        font-variant-numeric: tabular-nums;
+
+        .o_kpi_real {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            color: #161a22;
+        }
+        .o_kpi_target {
+            font-size: 13px;
+            color: $muted;
+        }
+    }
+
+    .o_kpi_track {
+        height: 6px;
+        background: #eceef3;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    .o_kpi_fill {
+        height: 100%;
+        border-radius: 4px;
+        background: $accent;
+        transition: width 0.3s ease;
+    }
+    .o_kpi_good .o_kpi_fill { background: $good; }
+    .o_kpi_warn .o_kpi_fill { background: $warn; }
+    .o_kpi_crit .o_kpi_fill { background: $crit; }
+
+    .o_kpi_signal {
+        font-size: 12px;
+        color: $muted;
+        line-height: 1.4;
+    }
+}

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="social_stream_post_view_kanban" model="ir.ui.view">
+        <field name="name">social.stream.post.view.kanban.inherit.tiktok</field>
+        <field name="model">social.stream.post</field>
+        <field name="inherit_id" ref="social.social_stream_post_view_kanban"/>
+        <field name="arch" type="xml">
+            <!-- Load TikTok-specific fields so they are available in the kanban record -->
+            <xpath expr="//field[@name='stream_post_image_urls']" position="after">
+                <field name="tiktok_video_id" invisible="1"/>
+                <field name="tiktok_likes_count" invisible="1"/>
+                <field name="tiktok_comments_count" invisible="1"/>
+                <field name="tiktok_shares_count" invisible="1"/>
+                <field name="tiktok_views_count" invisible="1"/>
+            </xpath>
+
+            <!-- Inject TikTok stats bar below the post message (only for TikTok posts) -->
+            <xpath expr="//div[hasclass('o_social_stream_post_message')]" position="inside">
+                <div class="o_social_stream_post_tiktok_stats px-2 d-flex justify-content-between align-items-center"
+                     t-if="record.media_type.raw_value === 'tiktok'">
+
+                    <div class="o_social_tiktok_likes o_social_subtle_btn d-flex align-items-center ps-2 pe-2">
+                        <i class="fa fa-heart me-1" title="Likes" style="color:#fe2c55;"/>
+                        <field name="tiktok_likes_count" class="fw-bold"/>
+                    </div>
+
+                    <div class="o_social_tiktok_comments o_social_subtle_btn d-flex align-items-center px-2">
+                        <i class="fa fa-comment me-1" title="Comments"/>
+                        <field name="tiktok_comments_count" class="fw-bold"/>
+                    </div>
+
+                    <div class="flex-grow-1 d-flex text-muted justify-content-end align-items-center">
+                        <i class="fa fa-share-alt me-1" title="Shares"/>
+                        <field name="tiktok_shares_count" class="me-2"/>
+                        <i class="fa fa-eye me-1" title="Views"/>
+                        <field name="tiktok_views_count"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</data>
+</odoo>

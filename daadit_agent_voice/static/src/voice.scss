@@ -1,0 +1,49 @@
+// Microphone button while it is actually listening: a calm pulse, so
+// you can tell at a glance that the agent is waiting for you to speak.
+.o-daadit-voice-active {
+    .o-daadit-voice-listening,
+    &.fa-microphone {
+        animation: o-daadit-voice-pulse 1.2s ease-in-out infinite;
+    }
+}
+
+@keyframes o-daadit-voice-pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.35;
+    }
+}
+
+// Respect the OS "reduce motion" setting — a blinking icon is exactly
+// the kind of thing that setting exists for.
+@media (prefers-reduced-motion: reduce) {
+    .o-daadit-voice-active {
+        .o-daadit-voice-listening,
+        &.fa-microphone {
+            animation: none;
+            opacity: 0.6;
+        }
+    }
+}
+
+.o-daadit-voice-picker {
+    max-width: 34rem;
+}
+
+// Denkstappen-lijst in de compose-strook. Groeit mee met de beurt maar
+// blijft begrensd, zodat een lange run de composer niet wegduwt.
+.o-daadit-AgentSteps {
+    max-height: 6.5rem;
+    overflow-y: auto;
+    line-height: 1.35;
+    pointer-events: auto;
+
+    .o-daadit-AgentSteps-bullet {
+        width: 0.9rem;
+        text-align: center;
+        flex-shrink: 0;
+    }
+}

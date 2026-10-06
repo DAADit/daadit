@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ai_agent_view_form_voice" model="ir.ui.view">
+        <field name="name">ai.agent.form.daadit.voice</field>
+        <field name="model">ai.agent</field>
+        <field name="inherit_id" ref="ai_app.ai_agent_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Anchored on the sheet rather than a named element: the
+                 stock form is reorganised regularly, and a missing
+                 anchor would break the whole agent screen. -->
+            <xpath expr="//sheet" position="inside">
+                <group string="Praten met deze agent" name="daadit_voice">
+                    <field name="daadit_voice_enabled"/>
+                    <field name="daadit_voice_provider"
+                           invisible="not daadit_voice_enabled"/>
+                    <field name="daadit_voice_lang"
+                           invisible="not daadit_voice_enabled"/>
+                    <field name="daadit_voice_handsfree"
+                           invisible="not daadit_voice_enabled"/>
+
+                    <!-- ElevenLabs: natural but metered. -->
+                    <field name="daadit_elevenlabs_voice_id"
+                           widget="daadit_elevenlabs_picker"
+                           invisible="not daadit_voice_enabled or daadit_voice_provider != 'elevenlabs'"/>
+                    <field name="daadit_elevenlabs_stability"
+                           invisible="not daadit_voice_enabled or daadit_voice_provider != 'elevenlabs'"/>
+                    <field name="daadit_elevenlabs_similarity"
+                           invisible="not daadit_voice_enabled or daadit_voice_provider != 'elevenlabs'"/>
+
+                    <!-- Browser voice: free, quality depends on the machine. -->
+                    <field name="daadit_voice_gender"
+                           invisible="not daadit_voice_enabled or daadit_voice_provider != 'browser'"/>
+                    <field name="daadit_voice_name"
+                           widget="daadit_voice_picker"
+                           invisible="not daadit_voice_enabled or daadit_voice_provider != 'browser'"/>
+                    <field name="daadit_voice_rate"
+                           invisible="not daadit_voice_enabled or daadit_voice_provider != 'browser'"/>
+                    <field name="daadit_voice_pitch"
+                           invisible="not daadit_voice_enabled or daadit_voice_provider != 'browser'"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

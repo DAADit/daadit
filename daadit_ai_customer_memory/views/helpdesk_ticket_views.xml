@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_helpdesk_ticket_form_ai_customer_memory" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.form.ai.customer.memory</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_ai_customer_memory" type="object" class="oe_stat_button" icon="fa-database">
+                    <field name="ai_customer_memory_count" widget="statinfo" string="AI Memory"/>
+                </button>
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button name="action_index_ai_customer_memory" type="object" string="Index AI Memory" class="btn-secondary" invisible="ai_memory_opt_out"/>
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <field name="ai_memory_opt_out" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

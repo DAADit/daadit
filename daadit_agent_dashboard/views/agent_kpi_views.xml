@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Kanban — the dashboard board (default), grouped by agent      -->
+    <!-- ============================================================ -->
+    <record id="view_daadit_agent_kpi_kanban" model="ir.ui.view">
+        <field name="name">daadit.agent.kpi.kanban</field>
+        <field name="model">daadit.agent.kpi</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="agent_key"
+                    group_create="false" group_delete="false"
+                    group_edit="false" records_draggable="false"
+                    class="o_daadit_kpi_board">
+                <field name="name"/>
+                <field name="agent_key"/>
+                <field name="status"/>
+                <field name="informational"/>
+                <field name="realised_display"/>
+                <field name="target_display"/>
+                <field name="progress_label"/>
+                <field name="bar_width"/>
+                <field name="signal"/>
+                <templates>
+                    <t t-name="card"
+                       t-attf-class="o_daadit_kpi o_kpi_#{record.status.raw_value}">
+                        <div class="o_kpi_head">
+                            <span class="o_kpi_name">
+                                <field name="name"/>
+                            </span>
+                            <span t-if="!record.informational.raw_value"
+                                  t-attf-class="o_kpi_badge o_kpi_badge_#{record.status.raw_value}">
+                                <field name="progress_label"/>
+                            </span>
+                        </div>
+                        <div class="o_kpi_values">
+                            <span class="o_kpi_real">
+                                <field name="realised_display"/>
+                            </span>
+                            <span t-if="record.target_display.value"
+                                  class="o_kpi_target">
+                                / <field name="target_display"/>
+                            </span>
+                        </div>
+                        <div t-if="!record.informational.raw_value"
+                             class="o_kpi_track">
+                            <div class="o_kpi_fill"
+                                 t-att-style="'width: ' + record.bar_width.raw_value + '%;'"/>
+                        </div>
+                        <div t-if="record.signal.value" class="o_kpi_signal">
+                            <field name="signal"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- List — flat table of every KPI                                -->
+    <!-- ============================================================ -->
+    <record id="view_daadit_agent_kpi_list" model="ir.ui.view">
+        <field name="name">daadit.agent.kpi.list</field>
+        <field name="model">daadit.agent.kpi</field>
+        <field name="arch" type="xml">
+            <list decoration-success="status == 'good'"
+                  decoration-warning="status == 'warn'"
+                  decoration-danger="status == 'crit'"
+                  create="false">
+                <field name="agent_key"/>
+                <field name="name"/>
+                <field name="realised_display" string="Realisatie"/>
+                <field name="target_display" string="Doel"/>
+                <field name="progress_label" string="%"/>
+                <field name="status" widget="badge"
+                       decoration-success="status == 'good'"
+                       decoration-warning="status == 'warn'"
+                       decoration-danger="status == 'crit'"/>
+                <field name="signal" optional="show"/>
+                <field name="pace_aware" optional="hide"/>
+                <field name="higher_is_better" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Form — edit a target                                          -->
+    <!-- ============================================================ -->
+    <record id="view_daadit_agent_kpi_form" model="ir.ui.view">
+        <field name="name">daadit.agent.kpi.form</field>
+        <field name="model">daadit.agent.kpi</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Gearchiveerd"
+                            bg_color="text-bg-danger" invisible="active"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="bijv. Omzet dit jaar"/></h1>
+                    </div>
+                    <group>
+                        <group string="Definitie">
+                            <field name="agent_key"/>
+                            <field name="metric_key"/>
+                            <field name="target"/>
+                            <field name="unit"/>
+                            <field name="sequence"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group string="Beoordeling">
+                            <field name="higher_is_better"/>
+                            <field name="pace_aware"/>
+                            <field name="informational"/>
+                        </group>
+                    </group>
+                    <group string="Live realisatie">
+                        <group>
+                            <field name="realised_display" string="Realisatie"/>
+                            <field name="target_display" string="Doel"/>
+                            <field name="progress_label" string="Voortgang"/>
+                        </group>
+                        <group>
+                            <field name="status"/>
+                            <field name="pace" widget="percentage"/>
+                        </group>
+                    </group>
+                    <separator string="Signaal"/>
+                    <field name="signal"
+                           placeholder="Korte sturing die op de kaart verschijnt."/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Search                                                        -->
+    <!-- ============================================================ -->
+    <record id="view_daadit_agent_kpi_search" model="ir.ui.view">
+        <field name="name">daadit.agent.kpi.search</field>
+        <field name="model">daadit.agent.kpi</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="agent_key"/>
+                <filter name="f_behind" string="Achter"
+                        domain="[('status', '=', 'crit')]"/>
+                <filter name="f_attention" string="Aandacht"
+                        domain="[('status', '=', 'warn')]"/>
+                <separator/>
+                <filter name="g_agent" string="Agent"
+                        context="{'group_by': 'agent_key'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Action + menu                                                 -->
+    <!-- ============================================================ -->
+    <record id="action_daadit_agent_kpi" model="ir.actions.act_window">
+        <field name="name">Doelen beheren</field>
+        <field name="res_model">daadit.agent.kpi</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="view_daadit_agent_kpi_search"/>
+        <field name="context">{'search_default_g_agent': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Nog geen KPI's
+            </p>
+            <p>
+                Elke KPI koppelt een doel aan een live meting per agent.
+                Doelen zijn bewerkbaar — het team beheert zijn eigen targets.
+            </p>
+        </field>
+    </record>
+
+    <!--
+        Secondary entry: the classic kanban/list/form for editing
+        targets, reachable from the "Doelen beheren" button on the
+        polished board (agent_dashboard_client_action.xml) or directly
+        via this menu — both live under the Dashboards app now.
+    -->
+    <menuitem id="menu_daadit_agent_kpi"
+              name="Doelen beheren"
+              parent="spreadsheet_dashboard.spreadsheet_dashboard_menu_root"
+              action="action_daadit_agent_kpi"
+              sequence="6"/>
+
+</odoo>

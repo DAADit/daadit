@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="edit_project_daadit_framework" model="ir.ui.view">
+        <field name="name">project.project.form.daadit.framework</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='settings']" position="after">
+                <page name="daadit_framework" string="DAADit Framework">
+                    <group>
+                        <group string="Intake / requirements">
+                            <field name="daadit_intake_method"/>
+                            <field name="daadit_intake_target_stage_id"/>
+                        </group>
+                        <group string="AI">
+                            <field name="daadit_ai_provider"/>
+                            <field name="daadit_ai_model_id"/>
+                            <field name="daadit_run_tests"/>
+                            <field name="daadit_require_review"/>
+                        </group>
+                    </group>
+                    <group string="Development / bouwen">
+                        <group>
+                            <field name="daadit_repo_owner"/>
+                            <field name="daadit_repo_name"/>
+                            <field name="daadit_base_branch" placeholder="main (erft indien leeg)"/>
+                            <field name="daadit_branch_prefix" placeholder="feature/ (erft indien leeg)"/>
+                            <field name="daadit_target_env"/>
+                            <field name="daadit_auto_build"/>
+                            <field name="daadit_auto_test"/>
+                            <field name="daadit_auto_docs"/>
+                            <field name="daadit_max_iterations"/>
+                        </group>
+                        <group>
+                            <field name="daadit_commit_author_name"/>
+                            <field name="daadit_commit_author_email"/>
+                            <field name="daadit_path_whitelist"/>
+                        </group>
+                    </group>
+                    <group string="Commit-conventie">
+                        <field name="daadit_commit_convention" nolabel="1"
+                               placeholder="Bijv. Conventional Commits; korte imperatieve titel; verwijs naar de taak-id..."/>
+                    </group>
+                    <p class="text-muted">
+                        Lege velden erven van de klant. Vul de klant in onder
+                        Contacten &gt; tab "DAADit Build" voor gedeelde standaarden.
+                    </p>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

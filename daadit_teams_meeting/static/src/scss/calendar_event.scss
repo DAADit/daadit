@@ -1,0 +1,28 @@
+/*
+ * Belt-and-braces hide of the stock videocall widget whenever the
+ * Videolink field is a Microsoft Teams URL. This is a CSS-level safety net
+ * on top of the view-level invisible expression on
+ * <div name="videocall_location_div">, so even if the client-side
+ * evaluation of `is_teams_videocall` doesn't fire (cached view definitions,
+ * stale arch, etc.) the long teams.microsoft.com URL never reaches the user.
+ *
+ * Modern :has() selector — supported in Chrome 105+, Safari 15.4+, Edge 105+,
+ * Firefox 121+. Anything Odoo 19 runs on supports it.
+ */
+
+.o_form_view {
+    // Hide the stock label + wrapper div when the field value is a Teams URL.
+    // We can't read the field value from CSS directly, but the field renders
+    // an <input>, <a> or <span> with the URL as either value=, href= or
+    // text content. We catch the input/anchor variants here.
+    div[name="videocall_location_div"]:has(input[value*="teams.microsoft.com"]),
+    div[name="videocall_location_div"]:has(a[href*="teams.microsoft.com"]),
+    label[for="videocall_location"]:has(
+        + div[name="videocall_location_div"] input[value*="teams.microsoft.com"]
+    ),
+    label[for="videocall_location"]:has(
+        + div[name="videocall_location_div"] a[href*="teams.microsoft.com"]
+    ) {
+        display: none !important;
+    }
+}

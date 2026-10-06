@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_daadit_ai_index_run_list" model="ir.ui.view">
+        <field name="name">daadit.ai.index.run.list</field>
+        <field name="model">daadit.ai.index.run</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="state == 'error'" create="false" edit="false">
+                <field name="date"/>
+                <field name="state"/>
+                <field name="embedding_ok"/>
+                <field name="embedded_count"/>
+                <field name="sources_ok"/>
+                <field name="indexed_count"/>
+                <field name="processing_count"/>
+                <field name="failed_count"/>
+                <field name="alerted"/>
+                <field name="error" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_daadit_ai_index_run" model="ir.actions.act_window">
+        <field name="name">Indexering kennisbronnen</field>
+        <field name="res_model">daadit.ai.index.run</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <menuitem id="menu_daadit_ai_index_run"
+              name="Indexering kennisbronnen"
+              parent="ai_app.ai_menu_root"
+              action="action_daadit_ai_index_run"
+              sequence="50"/>
+</odoo>

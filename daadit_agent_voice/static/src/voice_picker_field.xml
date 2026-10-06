@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="daadit_agent_voice.VoicePickerField">
+        <div class="d-flex align-items-center gap-2 o-daadit-voice-picker">
+            <select class="form-select form-select-sm"
+                    t-att-disabled="props.readonly ? 'disabled' : undefined"
+                    t-on-change="onChange">
+                <option value="">Automatisch (op taal en stemtype)</option>
+                <t t-foreach="relevantVoices" t-as="voice" t-key="voice.name">
+                    <option t-att-value="voice.name"
+                            t-att-selected="voice.name === value ? 'selected' : undefined"
+                            t-esc="labelFor(voice)"/>
+                </t>
+            </select>
+            <button type="button"
+                    class="btn btn-sm btn-outline-primary text-nowrap"
+                    t-on-click="onTest">
+                <i class="fa fa-volume-up me-1"/>Beluister
+            </button>
+        </div>
+        <small t-if="state.loading" class="text-muted">Stemmen laden…</small>
+        <small t-elif="!relevantVoices.length" class="text-muted">
+            Deze browser heeft geen stemmen geïnstalleerd voor de gekozen taal.
+        </small>
+    </t>
+
+</templates>

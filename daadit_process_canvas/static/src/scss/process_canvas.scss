@@ -1,0 +1,323 @@
+// Procescanvas -- alles onder .o_daadit_canvas, zodat de rest van de portal
+// hier niets van merkt.
+//
+// Bewust geen min()/max() met gemengde eenheden: daar loopt de SCSS-compiler
+// van Odoo op stuk.
+
+.o_daadit_canvas {
+    --dc-ground: #f4f6fa;
+    --dc-grid: #dde3ec;
+    --dc-surface: #ffffff;
+    --dc-surface-2: #f9fbfd;
+    --dc-line: #d3dbe6;
+    --dc-line-strong: #b9c5d6;
+    --dc-ink: #0b1f33;
+    --dc-ink-2: #42566e;
+    --dc-muted: #7286a0;
+    --dc-accent: #1f6feb;
+    --dc-accent-soft: #e6efff;
+    --dc-accent-ink: #0b47a8;
+    --dc-ok: #0f9b76;
+    --dc-ok-soft: #e2f6f0;
+    --dc-warn: #b8790a;
+    --dc-warn-soft: #fdf3dd;
+    --dc-dev: #c0392b;
+    --dc-dev-soft: #fdecea;
+    --dc-shadow: 0 1px 2px rgba(11, 31, 51, .06), 0 8px 24px -12px rgba(11, 31, 51, .28);
+    --dc-shadow-lift: 0 2px 4px rgba(11, 31, 51, .08), 0 18px 40px -16px rgba(11, 31, 51, .42);
+    --dc-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+    position: relative;
+    height: 78vh;
+    min-height: 520px;
+    max-height: 900px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--dc-line);
+    border-radius: 14px;
+    overflow: hidden;
+    background: var(--dc-surface);
+    color: var(--dc-ink);
+
+    @media (prefers-color-scheme: dark) {
+        --dc-ground: #0a1626;
+        --dc-grid: #152740;
+        --dc-surface: #0f2036;
+        --dc-surface-2: #132840;
+        --dc-line: #22364f;
+        --dc-line-strong: #31485f;
+        --dc-ink: #eaf1f9;
+        --dc-ink-2: #b3c4d8;
+        --dc-muted: #8fa3bd;
+        --dc-accent: #4d90ff;
+        --dc-accent-soft: #132f57;
+        --dc-accent-ink: #a8c9ff;
+        --dc-ok: #2dd4a7;
+        --dc-ok-soft: #0d3b33;
+        --dc-warn: #f0b429;
+        --dc-warn-soft: #3d2f0c;
+        --dc-dev: #ff7a6b;
+        --dc-dev-soft: #40201c;
+        --dc-shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 10px 30px -14px rgba(0, 0, 0, .8);
+        --dc-shadow-lift: 0 2px 6px rgba(0, 0, 0, .5), 0 22px 50px -18px rgba(0, 0, 0, .9);
+    }
+
+    * { box-sizing: border-box; }
+
+    // -------------------------------------------------------------- kop
+    .dc-top {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 11px 16px;
+        border-bottom: 1px solid var(--dc-line);
+        background: var(--dc-surface);
+        flex: none;
+    }
+    .dc-crumbs { display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0; }
+    .dc-crumb {
+        border: 0; background: none; padding: 5px 9px; border-radius: 7px;
+        font-size: 13.5px; color: var(--dc-muted); white-space: nowrap; cursor: pointer;
+    }
+    .dc-crumb:hover { background: var(--dc-surface-2); color: var(--dc-ink); }
+    .dc-crumb[aria-current] { color: var(--dc-ink); font-weight: 600; cursor: default; }
+    .dc-sep { color: var(--dc-line-strong); }
+
+    .dc-legend { display: flex; gap: 13px; flex: none; }
+    .dc-lg { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--dc-muted); }
+    .dc-lg i { width: 9px; height: 9px; border-radius: 50%; display: block; background: var(--dc-line-strong); }
+    .dc-lg.is-ok i { background: var(--dc-ok); }
+    .dc-lg.is-warn i { background: var(--dc-warn); }
+    .dc-lg.is-dev i { background: var(--dc-dev); }
+
+    // ------------------------------------------------------------ canvas
+    .dc-stage {
+        position: relative; flex: 1; overflow: hidden; cursor: grab;
+        background-color: var(--dc-ground);
+        background-image: radial-gradient(circle at 1px 1px, var(--dc-grid) 1px, transparent 0);
+        background-size: 26px 26px;
+    }
+    .dc-stage.is-panning { cursor: grabbing; }
+    .dc-world { position: absolute; top: 0; left: 0; transform-origin: 0 0; }
+    .dc-wires { position: absolute; top: 0; left: 0; overflow: visible; pointer-events: none; }
+
+    .dc-wire { fill: none; stroke: var(--dc-line-strong); stroke-width: 1.75; }
+    .dc-wire.is-hot { stroke: var(--dc-accent); stroke-width: 2.5; }
+    .dc-wire.is-ghost { stroke-dasharray: 4 5; }
+    .dc-flow {
+        fill: none; stroke: var(--dc-accent); stroke-width: 2.5; stroke-linecap: round;
+        stroke-dasharray: 5 13; opacity: 0;
+    }
+    .dc-flow.is-hot { opacity: .95; animation: dc-dash 1.1s linear infinite; }
+    .dc-cap { fill: var(--dc-line-strong); }
+    .dc-cap.is-hot { fill: var(--dc-accent); }
+
+    .dc-tag {
+        position: absolute; transform: translate(-50%, -50%); font-family: var(--dc-mono);
+        font-size: 10.5px; padding: 3px 8px; border-radius: 20px; white-space: nowrap;
+        background: var(--dc-surface); border: 1px solid var(--dc-line);
+        color: var(--dc-ink-2); pointer-events: none; box-shadow: var(--dc-shadow);
+    }
+    .dc-tag.is-hot { border-color: var(--dc-accent); color: var(--dc-accent-ink); background: var(--dc-accent-soft); }
+
+    // ------------------------------------------------------------ knopen
+    .dc-node {
+        position: absolute; background: var(--dc-surface); border: 1px solid var(--dc-line);
+        border-radius: 14px; box-shadow: var(--dc-shadow); cursor: grab;
+        transition: box-shadow .2s, border-color .2s;
+    }
+    .dc-node:hover { box-shadow: var(--dc-shadow-lift); border-color: var(--dc-line-strong); }
+    .dc-node.is-sel { border-color: var(--dc-accent); box-shadow: var(--dc-shadow-lift), 0 0 0 3px var(--dc-accent-soft); }
+    .dc-node.is-dragging { cursor: grabbing; }
+
+    .dc-app { width: 186px; padding: 15px 15px 12px; }
+    .dc-app img { width: 46px; height: 46px; border-radius: 11px; display: block; }
+    .dc-app h3 { margin: 11px 0 2px; font-size: 14.5px; }
+    .dc-app .dc-tech { font-family: var(--dc-mono); font-size: 10px; color: var(--dc-muted); }
+    .dc-app .dc-bar { display: flex; gap: 3px; margin-top: 11px; }
+    .dc-app .dc-bar b { height: 4px; border-radius: 2px; flex: 1; background: var(--dc-line); }
+    .dc-app .dc-bar b.is-ok { background: var(--dc-ok); }
+    .dc-app .dc-bar b.is-warn { background: var(--dc-warn); }
+    .dc-app .dc-bar b.is-dev { background: var(--dc-dev); }
+    .dc-app .dc-foot {
+        display: flex; justify-content: space-between; align-items: center;
+        margin-top: 9px; font-size: 11.5px; color: var(--dc-muted);
+    }
+    .dc-app .dc-dive { opacity: 0; color: var(--dc-accent); font-weight: 600; transition: opacity .2s; }
+    .dc-node:hover .dc-dive { opacity: 1; }
+
+    // Niveau 1: het proces, met de Odoo-applicaties die het draagt zichtbaar
+    // in de kaart zelf. Dat is de vertaling waar het de klant om gaat, dus die
+    // hoort niet achter een klik te zitten.
+    .dc-proc { width: 264px; padding: 15px 16px 12px; }
+    .dc-proc h3 { margin: 0 0 11px; font-size: 15px; letter-spacing: -.01em; }
+    .dc-apps { display: flex; flex-wrap: wrap; gap: 6px; }
+    .dc-chip {
+        display: inline-flex; align-items: center; gap: 6px;
+        background: var(--dc-surface-2); border: 1px solid var(--dc-line);
+        border-radius: 8px; padding: 4px 8px 4px 5px;
+    }
+    .dc-chip img { width: 20px; height: 20px; border-radius: 5px; display: block; }
+    .dc-chip b { font-size: 11.5px; font-weight: 600; color: var(--dc-ink-2); }
+    .dc-chip.is-empty { border-style: dashed; }
+    .dc-chip.is-empty b { color: var(--dc-muted); font-weight: 400; font-style: italic; }
+    .dc-proc .dc-bar { display: flex; gap: 3px; margin-top: 12px; }
+    .dc-proc .dc-bar b { height: 4px; border-radius: 2px; flex: 1; background: var(--dc-line); }
+    .dc-proc .dc-bar b.is-ok { background: var(--dc-ok); }
+    .dc-proc .dc-bar b.is-warn { background: var(--dc-warn); }
+    .dc-proc .dc-bar b.is-dev { background: var(--dc-dev); }
+    .dc-proc .dc-foot {
+        display: flex; justify-content: space-between; align-items: center;
+        margin-top: 9px; font-size: 11.5px; color: var(--dc-muted);
+    }
+    .dc-proc .dc-dive { opacity: 0; color: var(--dc-accent); font-weight: 600; transition: opacity .2s; }
+    .dc-node:hover .dc-dive { opacity: 1; }
+
+    .dc-step { width: 238px; padding: 13px 14px 12px 17px; }
+    .dc-step::before {
+        content: ""; position: absolute; left: 0; top: 11px; bottom: 11px; width: 3px;
+        border-radius: 0 3px 3px 0; background: var(--dc-line-strong);
+    }
+    .dc-step.is-ok::before { background: var(--dc-ok); }
+    .dc-step.is-warn::before { background: var(--dc-warn); }
+    .dc-step.is-dev::before { background: var(--dc-dev); }
+    .dc-step .dc-hd { display: flex; align-items: flex-start; gap: 9px; }
+    .dc-step .dc-seq {
+        font-family: var(--dc-mono); font-size: 10px; color: var(--dc-muted);
+        border: 1px solid var(--dc-line); border-radius: 5px; padding: 2px 5px;
+        flex: none; margin-top: 1px;
+    }
+    .dc-step h4 { margin: 0; font-size: 13.5px; line-height: 1.35; }
+    .dc-step .dc-role { margin-top: 7px; font-size: 11.5px; color: var(--dc-muted); }
+    .dc-step .dc-role b { color: var(--dc-ink-2); }
+    .dc-step .dc-new {
+        display: inline-block; margin-left: 6px; font-size: 9.5px; font-family: var(--dc-mono);
+        letter-spacing: .08em; text-transform: uppercase; color: var(--dc-accent-ink);
+        background: var(--dc-accent-soft); border-radius: 4px; padding: 1px 5px;
+    }
+    .dc-io {
+        display: flex; gap: 8px; margin-top: 11px; padding-top: 10px;
+        border-top: 1px solid var(--dc-line);
+    }
+    .dc-io > div { flex: 1; min-width: 0; }
+    .dc-io span {
+        display: block; font-family: var(--dc-mono); font-size: 9px; letter-spacing: .12em;
+        text-transform: uppercase; color: var(--dc-muted); margin-bottom: 3px;
+    }
+    .dc-io p {
+        margin: 0; font-size: 11.5px; color: var(--dc-ink-2);
+        overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .dc-port {
+        position: absolute; width: 11px; height: 11px; border-radius: 50%;
+        background: var(--dc-surface); border: 2px solid var(--dc-line-strong);
+        top: 50%; margin-top: -5.5px;
+    }
+    .dc-port.is-in { left: -6px; }
+    .dc-port.is-out { right: -6px; }
+    .dc-node:hover .dc-port { border-color: var(--dc-accent); }
+
+    .dc-ghost {
+        position: absolute; display: flex; align-items: center; gap: 8px;
+        background: var(--dc-surface-2); border: 1px dashed var(--dc-line-strong);
+        border-radius: 11px; padding: 8px 12px;
+    }
+    .dc-ghost img { width: 22px; height: 22px; border-radius: 6px; }
+    .dc-ghost b { font-size: 12px; }
+    .dc-ghost span { display: block; font-family: var(--dc-mono); font-size: 9.5px; color: var(--dc-muted); }
+
+    // --------------------------------------------------------- inspector
+    .dc-insp {
+        position: absolute; top: 0; right: 0; bottom: 0; width: 326px;
+        background: var(--dc-surface); border-left: 1px solid var(--dc-line);
+        display: flex; flex-direction: column; z-index: 5;
+        transform: translateX(100%); transition: transform .28s cubic-bezier(.22, 1, .36, 1);
+    }
+    .dc-insp.is-open { transform: none; }
+    .dc-insp header {
+        padding: 15px 17px 12px; border-bottom: 1px solid var(--dc-line);
+        display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;
+    }
+    .dc-insp header h2 { margin: 0; font-size: 16px; }
+    .dc-insp header p {
+        margin: 4px 0 0; font-family: var(--dc-mono); font-size: 10.5px;
+        letter-spacing: .05em; text-transform: uppercase; color: var(--dc-muted);
+    }
+    .dc-x { border: 0; background: none; color: var(--dc-muted); font-size: 20px; line-height: 1; cursor: pointer; }
+    .dc-body { padding: 16px 17px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 14px; }
+
+    .dc-fld > span {
+        display: block; font-family: var(--dc-mono); font-size: 9.5px; letter-spacing: .13em;
+        text-transform: uppercase; color: var(--dc-muted); margin-bottom: 5px;
+    }
+    .dc-fld input, .dc-fld textarea {
+        width: 100%; background: var(--dc-surface-2); color: var(--dc-ink);
+        border: 1px solid var(--dc-line); border-radius: 9px; padding: 9px 11px;
+        font-size: 13px; resize: vertical;
+    }
+    .dc-fld input:focus, .dc-fld textarea:focus {
+        border-color: var(--dc-accent); outline: none;
+        box-shadow: 0 0 0 3px var(--dc-accent-soft);
+    }
+    .dc-fld p.dc-ro { margin: 0; font-size: 13px; color: var(--dc-ink-2); }
+
+    .dc-mark { display: flex; flex-direction: column; gap: 7px; }
+    .dc-mark button {
+        display: flex; align-items: center; gap: 10px; text-align: left; cursor: pointer;
+        background: var(--dc-surface-2); border: 1px solid var(--dc-line);
+        border-radius: 10px; padding: 10px 12px; font-size: 13px; color: var(--dc-ink);
+    }
+    .dc-mark button i { width: 9px; height: 9px; border-radius: 50%; background: var(--dc-line-strong); flex: none; }
+    .dc-mark button small { display: block; color: var(--dc-muted); font-size: 11px; margin-top: 2px; }
+    .dc-mark button.is-on.dc-v-akkoord { background: var(--dc-ok-soft); border-color: var(--dc-ok); }
+    .dc-mark button.is-on.dc-v-akkoord i { background: var(--dc-ok); }
+    .dc-mark button.is-on.dc-v-aandacht { background: var(--dc-warn-soft); border-color: var(--dc-warn); }
+    .dc-mark button.is-on.dc-v-aandacht i { background: var(--dc-warn); }
+    .dc-mark button.is-on.dc-v-afkeur { background: var(--dc-dev-soft); border-color: var(--dc-dev); }
+    .dc-mark button.is-on.dc-v-afkeur i { background: var(--dc-dev); }
+
+    // ---------------------------------------------------------- bediening
+    .dc-tools { position: absolute; left: 16px; bottom: 16px; display: flex; gap: 9px; z-index: 4; }
+    .dc-pill {
+        display: flex; background: var(--dc-surface); border: 1px solid var(--dc-line);
+        border-radius: 11px; box-shadow: var(--dc-shadow); overflow: hidden;
+    }
+    .dc-pill button {
+        border: 0; background: none; padding: 8px 12px; font-size: 14px;
+        color: var(--dc-ink-2); cursor: pointer;
+    }
+    .dc-pill button:hover { background: var(--dc-surface-2); }
+    .dc-pill button + button { border-left: 1px solid var(--dc-line); }
+    .dc-zoom {
+        font-family: var(--dc-mono); font-size: 11px; color: var(--dc-muted);
+        padding: 8px 11px; border-left: 1px solid var(--dc-line);
+        min-width: 52px; text-align: center; font-variant-numeric: tabular-nums;
+    }
+    .dc-add {
+        display: flex; align-items: center; gap: 7px; background: var(--dc-accent);
+        color: #fff; border: 0; border-radius: 11px; padding: 9px 15px;
+        font-size: 13px; font-weight: 600; cursor: pointer; box-shadow: var(--dc-shadow);
+    }
+    .dc-add[hidden] { display: none; }
+
+    .dc-msg {
+        position: absolute; right: 16px; bottom: 16px; font-size: 11.5px;
+        color: var(--dc-muted); background: var(--dc-surface);
+        border: 1px solid var(--dc-line); border-radius: 9px; padding: 7px 12px;
+        box-shadow: var(--dc-shadow); z-index: 4; max-width: 320px;
+    }
+    .dc-msg.is-error { color: var(--dc-dev); border-color: var(--dc-dev); }
+
+    :focus-visible { outline: 2px solid var(--dc-accent); outline-offset: 2px; }
+
+    @media (max-width: 720px) {
+        .dc-insp { width: 100%; }
+        .dc-legend { display: none; }
+    }
+}
+
+@keyframes dc-dash { to { stroke-dashoffset: -18; } }
+
+@media (prefers-reduced-motion: reduce) {
+    .o_daadit_canvas * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}

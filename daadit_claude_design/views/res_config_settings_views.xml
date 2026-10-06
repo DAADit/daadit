@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Put Claude Design under Settings → AI (same place as Mistral/Loes),
+        not as a separate top-level settings app that is easy to miss.
+    -->
+    <record id="res_config_settings_view_form_claude_design" model="ir.ui.view">
+        <field name="name">res.config.settings.form.daadit.claude.design</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="ai_app.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='ai_app']" position="inside">
+                <block title="Claude Design (huisstijl)"
+                       name="daadit_claude_design_block"
+                       groups="base.group_system">
+                    <setting string="Live design system"
+                             help="Marketingagents halen bij elke contentrun
+                                   het actuele design system op uit Claude Design.">
+                        <div class="content-group">
+                            <div class="mt16">
+                                <label for="daadit_claude_design_project_url"
+                                       string="Project-URL"/>
+                                <field name="daadit_claude_design_project_url"
+                                       placeholder="https://claude.ai/design/p/..."
+                                       nolabel="1"
+                                       class="w-100"/>
+                            </div>
+                            <div class="mt16">
+                                <label for="daadit_claude_design_access_token"
+                                       string="Access token"/>
+                                <field name="daadit_claude_design_access_token"
+                                       password="True"
+                                       nolabel="1"
+                                       class="w-100"/>
+                            </div>
+                            <div class="mt16">
+                                <label for="daadit_claude_design_refresh_token"
+                                       string="Refresh token"/>
+                                <field name="daadit_claude_design_refresh_token"
+                                       password="True"
+                                       nolabel="1"
+                                       class="w-100"/>
+                            </div>
+                            <div class="mt16">
+                                <label for="daadit_claude_design_expires_at"
+                                       string="Verloopt (unix, optioneel)"/>
+                                <field name="daadit_claude_design_expires_at"
+                                       nolabel="1"
+                                       class="w-100"/>
+                            </div>
+                            <div class="text-muted mt8">
+                                Tokens komen niet uit de Anthropic API-keys-pagina.
+                                Maak ze via Claude Code <code>/design-login</code>
+                                of <code>npx -y github:erdnj/claude-design-mcp login</code>.
+                            </div>
+                        </div>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

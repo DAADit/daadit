@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="ir_actions_server_werkafspraak_vastleggen" model="ir.actions.server">
+            <field name="name">AI: Werkafspraak Vastleggen</field>
+            <field name="use_in_ai" eval="True"/>
+            <field name="model_id" ref="ai.model_ai_agent"/>
+            <field name="state">code</field>
+            <field name="code">ai['result'] = record._ai_tool_werkafspraak_vastleggen(afspraak=afspraak)</field>
+            <field name="ai_tool_description">Leg een blijvende werkwens van dit bedrijf vast, bijvoorbeeld "pas na 3 werkdagen over een onbetaalde factuur melden". Alleen voor wat iemand je vraagt voortaan anders, wel of niet meer te doen; niet voor een vraag voor één keer. De afspraak geldt alleen voor dit bedrijf, staat los van je standaardopdracht en geeft je geen extra rechten.</field>
+            <field name="ai_tool_schema">{"type": "object", "properties": {"afspraak": {"type": "string", "description": "De afspraak in één korte zin, in gewone taal (maximaal 500 tekens)."}}, "required": ["afspraak"]}</field>
+        </record>
+
+        <record id="ir_actions_server_werkafspraak_intrekken" model="ir.actions.server">
+            <field name="name">AI: Werkafspraak Intrekken</field>
+            <field name="use_in_ai" eval="True"/>
+            <field name="model_id" ref="ai.model_ai_agent"/>
+            <field name="state">code</field>
+            <field name="code">ai['result'] = record._ai_tool_werkafspraak_intrekken(nummer=nummer)</field>
+            <field name="ai_tool_description">Zet een werkafspraak van dit bedrijf uit, als iemand vraagt het weer gewoon te doen of als een nieuwe afspraak een oude vervangt. Gebruik het nummer uit je werkafspraken (bijvoorbeeld #12).</field>
+            <field name="ai_tool_schema">{"type": "object", "properties": {"nummer": {"type": "string", "description": "Het nummer van de afspraak, bijvoorbeeld '#12'."}}, "required": ["nummer"]}</field>
+        </record>
+
+        <record id="ai_topic_werkafspraken" model="ai.topic">
+            <field name="name">Werkafspraken</field>
+            <field name="tool_ids" eval="[(6, 0, [
+                ref('ir_actions_server_werkafspraak_vastleggen'),
+                ref('ir_actions_server_werkafspraak_intrekken'),
+            ])]"/>
+        </record>
+
+    </data>
+
+    <function model="ai.agent" name="_daadit_attach_werkafspraak_topic"/>
+</odoo>

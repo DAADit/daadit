@@ -1,0 +1,271 @@
+// DAADit Agent Dashboard — OWL board (Dashboards app).
+// Scoped under .o_daadit_board so it never leaks into other screens.
+// Color tokens intentionally mirror kpi_board.scss (kept local since
+// Odoo's asset bundler doesn't share block-scoped $variables across
+// files) so the "Doelen beheren" kanban and this board feel like one
+// system.
+
+.o_daadit_board {
+    $good: #15803d;
+    $warn: #a96a0b;
+    $crit: #bc3a2e;
+    $accent: #3b4e8c;
+    $line: #e4e7ee;
+    $muted: #5b6472;
+    $ink: #161a22;
+
+    padding: 20px 28px 40px;
+    max-width: 1180px;
+    margin: 0 auto;
+    font-variant-numeric: tabular-nums;
+
+    .o_daadit_board_head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+        border-bottom: 2px solid $ink;
+        padding-bottom: 16px;
+        margin-bottom: 22px;
+    }
+    .o_daadit_brand {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+
+        h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+    }
+    .o_daadit_mark {
+        font-family: ui-monospace, "SF Mono", monospace;
+        font-weight: 700;
+        font-size: 12px;
+        letter-spacing: 0.04em;
+        color: #fff;
+        background: $accent;
+        padding: 3px 7px;
+        border-radius: 5px;
+    }
+    .o_daadit_head_actions {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+    .o_daadit_stamp {
+        font-size: 12px;
+        color: $muted;
+    }
+    .o_daadit_edit_btn {
+        font-size: 13px;
+        white-space: nowrap;
+    }
+
+    .o_daadit_loading,
+    .o_daadit_error {
+        padding: 40px 0;
+        text-align: center;
+        color: $muted;
+    }
+    .o_daadit_error {
+        color: $crit;
+    }
+
+    .o_daadit_panels {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+    }
+    .o_daadit_panel {
+        border: 1px solid $line;
+        border-radius: 12px;
+        padding: 18px 20px 16px;
+        background: #fff;
+        box-shadow: 0 1px 2px rgba(20, 24, 34, 0.04);
+    }
+    .o_daadit_eyebrow {
+        margin-bottom: 12px;
+    }
+    .o_daadit_tag {
+        font-family: ui-monospace, "SF Mono", monospace;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        color: $accent;
+        background: #eaedf6;
+        padding: 3px 9px;
+        border-radius: 5px;
+        text-transform: uppercase;
+    }
+
+    .o_daadit_kpi_grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 12px;
+    }
+    .o_tile {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        padding: 12px 14px;
+        border: 1px solid $line;
+        border-left: 3px solid $accent;
+        border-radius: 8px;
+        background: #fcfcfd;
+
+        &.o_tile_good { border-left-color: $good; }
+        &.o_tile_warn { border-left-color: $warn; }
+        &.o_tile_crit { border-left-color: $crit; }
+        &.o_tile_na   { border-left-color: $line; }
+    }
+    .o_tile_head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    .o_tile_name {
+        font-size: 11px;
+        font-weight: 650;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: $muted;
+        line-height: 1.35;
+    }
+    .o_tile_badge {
+        flex: none;
+        font-size: 10.5px;
+        font-weight: 700;
+        padding: 2px 7px;
+        border-radius: 20px;
+        color: #fff;
+        background: $accent;
+
+        &.o_badge_good { background: $good; }
+        &.o_badge_warn { background: $warn; }
+        &.o_badge_crit { background: $crit; }
+        &.o_badge_na   { background: #9aa2b1; }
+    }
+    .o_tile_values {
+        display: flex;
+        align-items: baseline;
+        gap: 6px;
+    }
+    .o_tile_real {
+        font-size: 21px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+        color: $ink;
+    }
+    .o_tile_target {
+        font-size: 12px;
+        color: $muted;
+    }
+    .o_tile_track {
+        height: 6px;
+        background: #eceef3;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    .o_tile_fill {
+        height: 100%;
+        border-radius: 4px;
+        background: $accent;
+    }
+    .o_tile_good .o_tile_fill { background: $good; }
+    .o_tile_warn .o_tile_fill { background: $warn; }
+    .o_tile_crit .o_tile_fill { background: $crit; }
+    .o_tile_signal {
+        font-size: 11.5px;
+        color: $muted;
+        line-height: 1.4;
+    }
+
+    // Mini bar charts (sales / marketing trend).
+    .o_daadit_chart {
+        margin-top: 16px;
+        padding-top: 14px;
+        border-top: 1px solid $line;
+    }
+    .o_chart_cap {
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: $muted;
+        font-weight: 650;
+        margin-bottom: 10px;
+    }
+    .o_chart_bars {
+        display: flex;
+        align-items: flex-end;
+        gap: 10px;
+        height: 110px;
+        border-bottom: 1px solid $line;
+    }
+    .o_chart_col {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        align-items: center;
+        height: 100%;
+        gap: 5px;
+        max-width: 56px;
+    }
+    .o_chart_val {
+        font-size: 10.5px;
+        color: $muted;
+        font-weight: 650;
+    }
+    .o_chart_bar {
+        width: 60%;
+        background: $accent;
+        border-radius: 3px 3px 0 0;
+        min-height: 2px;
+    }
+    .o_chart_month {
+        font-size: 10.5px;
+        color: #9aa2b1;
+        text-transform: uppercase;
+        margin-top: 4px;
+    }
+
+    // Helpdesk workload distribution.
+    .o_daadit_dist {
+        margin-top: 16px;
+        padding-top: 14px;
+        border-top: 1px solid $line;
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+    }
+    .o_dist_row {
+        display: grid;
+        grid-template-columns: 90px 1fr 32px;
+        align-items: center;
+        gap: 10px;
+        font-size: 13px;
+    }
+    .o_dist_who {
+        color: $muted;
+    }
+    .o_dist_track {
+        height: 8px;
+        background: #eceef3;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    .o_dist_fill {
+        height: 100%;
+        background: $accent;
+        border-radius: 4px;
+    }
+    .o_dist_n {
+        text-align: right;
+        font-weight: 650;
+    }
+}

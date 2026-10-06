@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="param_claude_design_project_url" model="ir.config_parameter">
+        <field name="key">daadit_claude_design.project_url</field>
+        <field name="value">https://claude.ai/design/p/be67f866-bfed-4399-aff2-04f86cf9d736</field>
+    </record>
+    <record id="param_claude_design_client_id" model="ir.config_parameter">
+        <field name="key">daadit_claude_design.client_id</field>
+        <field name="value">59637612-477b-4836-a601-b0589eda7704</field>
+    </record>
+</odoo>

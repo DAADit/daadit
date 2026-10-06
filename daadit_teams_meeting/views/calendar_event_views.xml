@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_calendar_event_form_teams" model="ir.ui.view">
+        <field name="name">calendar.event.form.inherit.daadit.teams</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_form"/>
+        <!-- Priority higher than other calendar.event.form inherits so we
+             win the final say on the videolink area. -->
+        <field name="priority">30</field>
+        <field name="arch" type="xml">
+            <!-- Replace the stock label + wrapper div outright so the browser
+                 can't render the old DOM under any cache scenario. We re-emit
+                 a copy of the stock structure that's only rendered for
+                 non-Teams videolinks, plus a clean Teams rendering. -->
+
+            <xpath expr="//label[@for='videocall_location']" position="replace">
+                <!-- Stock label for non-Teams videolinks -->
+                <label for="videocall_location" class="opacity-100"
+                       invisible="(res_model == 'hr.leave') or is_teams_videocall"/>
+                <!-- Pretty label for Teams videolinks -->
+                <label for="ms_teams_pretty_link" string="Videolink" class="opacity-100"
+                       invisible="not is_teams_videocall"/>
+            </xpath>
+
+            <xpath expr="//div[@name='videocall_location_div']" position="replace">
+                <!-- Stock videolink widget — only for non-Teams videocalls -->
+                <div name="videocall_location_div"
+                     invisible="(res_model == 'hr.leave') or is_teams_videocall">
+                    <div class="d-flex">
+                        <field name="videocall_location"
+                               string="Video Link"
+                               widget="CopyClipboardChar"
+                               force_save="1"
+                               class="mb-0"
+                               readonly="videocall_source == 'discuss' or not user_can_edit"/>
+                        <div class="d-flex flex-nowrap">
+                            <button name="clear_videocall_location" type="object"
+                                    class="btn btn-link btn-lg ms-1 px-1 py-0"
+                                    invisible="not videocall_location or not user_can_edit"
+                                    context="{'recurrence_update': recurrence_update}">
+                                <span title="Clear meeting" class="fa fa-times"/>
+                            </button>
+                            <button name="action_join_video_call"
+                                    class="btn btn-link btn-lg px-1 py-0"
+                                    help="Join Video Call" type="object"
+                                    invisible="not videocall_location or not user_can_edit">
+                                <span title="Join video call" class="fa fa-sign-in"/>
+                            </button>
+                            <button name="set_discuss_videocall_location" type="object"
+                                    class="btn btn-link btn-sm px-0 text-nowrap"
+                                    invisible="videocall_location or not user_can_edit"
+                                    context="{'recurrence_update': recurrence_update}">
+                                <span class="fa fa-plus"/><span> Odoo meeting</span>
+                            </button>
+                            <button name="action_set_teams_videocall_location" type="object"
+                                    string="+ Teams vergadering"
+                                    class="btn btn-link btn-sm px-0 text-nowrap"
+                                    invisible="videocall_location or not user_can_edit"/>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Teams videolink rendering — only when this is a Teams videocall.
+                     Plain server-action button that opens the join URL; this
+                     deliberately does NOT use widget="url" because the text=
+                     / options.text override on that widget proved unreliable
+                     in practice (kept rendering the raw URL). -->
+                <div name="ms_teams_videolink_div"
+                     class="d-flex align-items-center gap-2"
+                     invisible="not is_teams_videocall">
+                    <button name="action_open_teams_meeting"
+                            type="object"
+                            class="btn btn-link p-0"
+                            icon="fa-external-link"
+                            string="Open Microsoft Teams-vergadering"/>
+                    <button name="action_remove_teams_meeting"
+                            type="object"
+                            class="btn btn-link btn-sm text-danger px-1"
+                            confirm="Weet je zeker dat je de Teams-vergadering wilt verwijderen?"
+                            help="Verwijder Teams-vergadering">
+                        <span title="Verwijder Teams-vergadering" class="fa fa-times"/>
+                    </button>
+                </div>
+                <!-- Hidden tracker so the field is loaded with the record but
+                     no widget is rendered for it. -->
+                <field name="ms_teams_pretty_link" invisible="1"/>
+
+                <!-- Tracking fields kept invisible -->
+                <field name="use_teams_meeting" invisible="1"/>
+                <field name="ms_teams_meeting_id" invisible="1"/>
+                <field name="ms_teams_join_url" invisible="1"/>
+                <field name="is_teams_videocall" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

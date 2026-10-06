@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+    <record id="ai_customer_memory_settings_singleton" model="daadit.ai.customer.memory.settings">
+        <field name="name">AI Customer Memory Settings</field>
+        <field name="enabled">True</field>
+        <field name="anonymize">True</field>
+        <field name="send_personal_data">False</field>
+        <field name="max_memories_per_source">3</field>
+        <field name="max_backfill_batch">25</field>
+    </record>
+</odoo>

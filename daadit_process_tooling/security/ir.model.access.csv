@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_daadit_process_user,daadit.process user,model_daadit_process,base.group_user,1,1,1,1
+access_daadit_process_phase_user,daadit.process.phase user,model_daadit_process_phase,base.group_user,1,1,1,1
+access_daadit_process_step_user,daadit.process.step user,model_daadit_process_step,base.group_user,1,1,1,1

@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_daadit_ai_health_form" model="ir.ui.view">
+        <field name="name">daadit.ai.health.form</field>
+        <field name="model">daadit.ai.health</field>
+        <field name="arch" type="xml">
+            <form string="Gezondheid van het agentteam" create="false"
+                  edit="false">
+                <sheet>
+                    <div class="alert alert-success" role="alert"
+                         invisible="status != 'ok'">
+                        <b>In orde.</b>
+                        <field name="status_reason" nolabel="1"
+                               readonly="1"/>
+                    </div>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="status != 'warn'">
+                        <b>Let op.</b>
+                        <field name="status_reason" nolabel="1"
+                               readonly="1"/>
+                    </div>
+                    <div class="alert alert-danger" role="alert"
+                         invisible="status != 'alarm'">
+                        <b>Actie nodig.</b>
+                        <field name="status_reason" nolabel="1"
+                               readonly="1"/>
+                    </div>
+                    <field name="status" invisible="1"/>
+                    <group>
+                        <group string="Bundel deze maand">
+                            <field name="plan_name"/>
+                            <field name="units_used"/>
+                            <field name="units_included"/>
+                            <field name="units_ratio"
+                                   widget="percentage"
+                                   options="{'digits': [1, 0]}"/>
+                            <field name="overage_eur"
+                                   invisible="overage_eur == 0"/>
+                        </group>
+                        <group string="Kosten (intern)">
+                            <field name="spend_today_eur"/>
+                            <field name="spend_month_eur"/>
+                        </group>
+                        <group string="Werk">
+                            <field name="runs_24h"/>
+                            <field name="runs_failed_24h"/>
+                            <field name="failed_actions_24h"/>
+                            <field name="last_run_date"/>
+                        </group>
+                        <group string="Betrouwbaarheid">
+                            <field name="attention_24h"/>
+                            <field name="claims_24h"/>
+                            <field name="schedules_active"/>
+                            <field name="schedules_tripped"/>
+                            <field name="schedules_off"/>
+                            <field name="schedules_overdue"/>
+                        </group>
+                        <group string="Promptregistry">
+                            <field name="registry_entries"/>
+                            <field name="prompt_drift"/>
+                            <field name="schedules_covered"/>
+                            <field name="schedules_uncovered"/>
+                            <field name="registry_inactive"
+                                   invisible="registry_inactive == 0"/>
+                            <field name="registry_orphans"
+                                   invisible="registry_orphans == 0"/>
+                            <field name="registry_broken"
+                                   invisible="registry_broken == 0"/>
+                            <field name="prompt_drift_detail"
+                                   invisible="prompt_drift == 0"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="action_view_attention" type="object"
+                                string="Runs met aandacht"
+                                class="btn-primary" icon="fa-flag"/>
+                        <button name="action_view_tripped" type="object"
+                                string="Uitgezet na fouten"
+                                class="btn-secondary" icon="fa-ban"
+                                invisible="schedules_tripped == 0"/>
+                        <button name="action_view_prompt_drift"
+                                type="object"
+                                string="Planningen met drift"
+                                class="btn-secondary" icon="fa-code-fork"
+                                invisible="prompt_drift == 0"/>
+                        <button name="action_view_uncovered"
+                                type="object"
+                                string="Planningen zonder artikel"
+                                class="btn-secondary" icon="fa-unlink"
+                                invisible="schedules_uncovered == 0"/>
+                        <button name="action_coverage_report"
+                                type="object"
+                                string="Dekkingsrapport (dry-run)"
+                                class="btn-secondary" icon="fa-file-text-o"/>
+                        <button name="action_view_overdue" type="object"
+                                string="Planningen die achterlopen"
+                                class="btn-secondary" icon="fa-clock-o"/>
+                        <button name="action_view_recent_runs" type="object"
+                                string="Runs van 24 uur"
+                                class="btn-secondary" icon="fa-history"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_daadit_ai_coverage_report" model="ir.ui.view">
+        <field name="name">daadit.ai.health.coverage.report</field>
+        <field name="model">daadit.ai.health</field>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <form string="Dekking van de promptregistry" create="false"
+                  edit="false">
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        <b>Dry-run.</b> Dit is een voorstel: er is niets
+                        aangemaakt en niets gewijzigd. Leg een ontbrekend
+                        artikel één keer vast in de registry-map en zet de
+                        koppeling in de systeemparameter — de bestaande
+                        sync doet de rest.
+                    </div>
+                    <field name="coverage_report" nolabel="1" readonly="1"
+                           widget="text"/>
+                </sheet>
+                <footer>
+                    <button string="Sluiten" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_daadit_ai_health" model="ir.actions.server">
+        <field name="name">Gezondheid van het agentteam</field>
+        <field name="model_id" ref="model_daadit_ai_health"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_open()</field>
+    </record>
+
+    <menuitem id="menu_daadit_ai_health"
+              name="Gezondheid"
+              parent="ai_app.ai_menu_root"
+              action="action_daadit_ai_health"
+              sequence="45"/>
+</odoo>

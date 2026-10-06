@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="daadit_agent_mention_view_list" model="ir.ui.view">
+        <field name="name">daadit.agent.mention.list</field>
+        <field name="model">daadit.agent.mention</field>
+        <field name="arch" type="xml">
+            <list string="Vermeldingen">
+                <field name="create_date" string="Wanneer"/>
+                <field name="agent_id"/>
+                <field name="res_model"/>
+                <field name="res_id"/>
+                <field name="state"/>
+                <field name="attempts"/>
+                <field name="error"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="daadit_agent_mention_action" model="ir.actions.act_window">
+        <field name="name">Vermeldingen van agents</field>
+        <field name="res_model">daadit.agent.mention</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>

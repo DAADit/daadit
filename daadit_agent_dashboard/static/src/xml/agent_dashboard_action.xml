@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="daadit_agent_dashboard.Board">
+        <div class="o_daadit_board">
+            <div class="o_daadit_board_head">
+                <div class="o_daadit_brand">
+                    <span class="o_daadit_mark">DAADit</span>
+                    <h1>Agent Dashboard</h1>
+                </div>
+                <div class="o_daadit_head_actions">
+                    <span t-if="state.year" class="o_daadit_stamp">
+                        Boekjaar <t t-esc="state.year"/> · <t t-esc="state.pacePct"/>% verstreken
+                    </span>
+                    <button class="btn btn-secondary o_daadit_edit_btn" t-on-click="openTargets">
+                        Doelen beheren
+                    </button>
+                </div>
+            </div>
+
+            <div t-if="state.loading" class="o_daadit_loading">Bezig met laden…</div>
+            <div t-elif="state.error" class="o_daadit_error">
+                Kon de dashboardgegevens niet laden. Probeer het later opnieuw of neem contact op met de beheerder.
+            </div>
+            <div t-else="" class="o_daadit_panels">
+                <t t-foreach="state.groups" t-as="group" t-key="group.key">
+                    <section class="o_daadit_panel">
+                        <div class="o_daadit_eyebrow">
+                            <span class="o_daadit_tag">
+                                <t t-esc="group.icon"/> <t t-esc="group.label"/>
+                            </span>
+                        </div>
+
+                        <div class="o_daadit_kpi_grid">
+                            <t t-foreach="group.kpis" t-as="kpi" t-key="kpi.id">
+                                <div t-attf-class="o_tile o_tile_{{kpi.status}}">
+                                    <div class="o_tile_head">
+                                        <span class="o_tile_name"><t t-esc="kpi.name"/></span>
+                                        <span t-if="!kpi.informational"
+                                              t-attf-class="o_tile_badge o_badge_{{kpi.status}}">
+                                            <t t-esc="kpi.progress_label"/>
+                                        </span>
+                                    </div>
+                                    <div class="o_tile_values">
+                                        <span class="o_tile_real"><t t-esc="kpi.realised_display"/></span>
+                                        <span t-if="kpi.target_display" class="o_tile_target">
+                                            / <t t-esc="kpi.target_display"/>
+                                        </span>
+                                    </div>
+                                    <div t-if="!kpi.informational" class="o_tile_track">
+                                        <div class="o_tile_fill" t-attf-style="width: {{kpi.bar_width}}%;"/>
+                                    </div>
+                                    <div t-if="kpi.signal" class="o_tile_signal"><t t-esc="kpi.signal"/></div>
+                                </div>
+                            </t>
+                        </div>
+
+                        <div t-if="group.key === 'sales' and state.salesMonthly.length" class="o_daadit_chart">
+                            <div class="o_chart_cap">Bevestigde omzet per maand</div>
+                            <div class="o_chart_bars">
+                                <t t-foreach="state.salesMonthly" t-as="m" t-key="m.month">
+                                    <div class="o_chart_col">
+                                        <span class="o_chart_val">€<t t-esc="m.value"/></span>
+                                        <div class="o_chart_bar"
+                                             t-attf-style="height: {{barHeight(m.value, state.salesMonthly)}}%;"/>
+                                        <span class="o_chart_month"><t t-esc="m.month"/></span>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+
+                        <div t-if="group.key === 'marketing' and state.leadsMonthly.length" class="o_daadit_chart">
+                            <div class="o_chart_cap">Nieuwe leads per maand</div>
+                            <div class="o_chart_bars">
+                                <t t-foreach="state.leadsMonthly" t-as="m" t-key="m.month">
+                                    <div class="o_chart_col">
+                                        <span class="o_chart_val"><t t-esc="m.value"/></span>
+                                        <div class="o_chart_bar"
+                                             t-attf-style="height: {{barHeight(m.value, state.leadsMonthly)}}%;"/>
+                                        <span class="o_chart_month"><t t-esc="m.month"/></span>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+
+                        <div t-if="group.key === 'helpdesk' and state.helpdeskWorkload.length" class="o_daadit_dist">
+                            <div class="o_chart_cap">Werkverdeling open tickets</div>
+                            <t t-foreach="state.helpdeskWorkload" t-as="row" t-key="row.label">
+                                <div class="o_dist_row">
+                                    <span class="o_dist_who"><t t-esc="row.label"/></span>
+                                    <div class="o_dist_track">
+                                        <div class="o_dist_fill"
+                                             t-attf-style="width: {{barHeight(row.value, state.helpdeskWorkload)}}%;"/>
+                                    </div>
+                                    <span class="o_dist_n"><t t-esc="row.value"/></span>
+                                </div>
+                            </t>
+                        </div>
+                    </section>
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

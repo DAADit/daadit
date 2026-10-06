@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_daadit_agent_automation_event_list" model="ir.ui.view">
+        <field name="name">daadit.agent.automation.event.list</field>
+        <field name="model">daadit.agent.automation.event</field>
+        <field name="arch" type="xml">
+            <list create="0" decoration-muted="state == 'skipped'"
+                  decoration-danger="state == 'failed'">
+                <field name="create_date"/>
+                <field name="agent_id"/>
+                <field name="action_id"/>
+                <field name="res_model_name"/>
+                <field name="res_name"/>
+                <field name="state"/>
+                <field name="run_id"/>
+                <field name="error"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_daadit_agent_automation_event_form" model="ir.ui.view">
+        <field name="name">daadit.agent.automation.event.form</field>
+        <field name="model">daadit.agent.automation.event</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0">
+                <header>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="agent_id"/>
+                            <field name="action_id"/>
+                            <field name="schedule_id"/>
+                            <field name="res_model_name"/>
+                            <field name="res_name"/>
+                            <field name="res_model"/>
+                            <field name="res_id"/>
+                        </group>
+                        <group>
+                            <field name="run_id"/>
+                            <field name="message_id"/>
+                            <field name="activity_id"/>
+                            <field name="attempts"/>
+                            <field name="error"/>
+                        </group>
+                    </group>
+                    <field name="prompt"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_daadit_agent_automation_event" model="ir.actions.act_window">
+        <field name="name">Recordgebeurtenissen</field>
+        <field name="res_model">daadit.agent.automation.event</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_daadit_agent_automation_event"
+              name="Recordgebeurtenissen"
+              parent="ai_app.ai_menu_root"
+              action="action_daadit_agent_automation_event"
+              groups="base.group_system"
+              sequence="48"/>
+</odoo>

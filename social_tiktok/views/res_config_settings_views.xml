@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.social.tiktok</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="social.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//block[hasclass('o_social_developer_settings')]" position="inside">
+                <setting string="TikTok Developer Account">
+                    <div class="content-group">
+                        <p class="text-muted">
+                            Register your app at
+                            <a href="https://developers.tiktok.com/" target="_blank">developers.tiktok.com</a>
+                            and enter the credentials below.
+                        </p>
+                        <div class="mt16">
+                            <label for="tiktok_client_key" string="Client Key" class="col-3 col-lg-3 o_form_label"/>
+                            <field name="tiktok_client_key" class="oe_inline"/>
+                        </div>
+                        <div class="mt16">
+                            <label for="tiktok_client_secret" string="Client Secret" class="col-3 col-lg-3 o_form_label"/>
+                            <field name="tiktok_client_secret" password="True" class="oe_inline"/>
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

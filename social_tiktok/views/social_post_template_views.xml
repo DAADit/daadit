@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <record id="social_post_template_view_form" model="ir.ui.view">
+        <field name="name">social.post.template.view.form.inherit.tiktok</field>
+        <field name="model">social.post.template</field>
+        <field name="priority">5</field>
+        <field name="inherit_id" ref="social.social_post_template_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook[@name='media_customization']" position="inside">
+                <page string="TikTok" name="tiktok_content"
+                      invisible="not has_tiktok_account">
+                    <group>
+                        <group>
+                            <field name="tiktok_title"
+                                   string="Caption / Title"
+                                   help="Displayed as the video description on TikTok (max 150 characters)."/>
+                            <field name="tiktok_video_ids"
+                                   widget="many2many_binary"
+                                   string="Video File"
+                                   help="Upload the video file you want to post on TikTok."/>
+                            <field name="tiktok_privacy_level" string="Privacy"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//field[@name='account_ids']" position="after">
+                <field name="has_tiktok_account" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</data>
+</odoo>

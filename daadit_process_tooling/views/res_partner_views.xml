@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_process_tooling" model="ir.ui.view">
+        <field name="name">res.partner.form.process.tooling</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet/notebook" position="inside">
+                <page string="Processtooling" name="process_tooling"
+                      invisible="company_type != 'company'">
+                    <group>
+                        <field name="process_tooling_active" widget="boolean_toggle"/>
+                    </group>
+                    <field name="process_ids" context="{'default_is_template': False}">
+                        <list>
+                            <field name="sequence" widget="handle"/>
+                            <field name="name"/>
+                            <field name="version"/>
+                            <field name="portal_visible" widget="boolean_toggle"/>
+                            <field name="uploaded_on"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </list>
+                    </field>
+                    <div class="text-muted">
+                        Open een proces om de HTML-tool te uploaden en de configuratie
+                        in te stellen. Nog geen proces ingericht? Maak er een aan en kies
+                        een <strong>template</strong> als startpunt. De processen
+                        verschijnen voor de portalgebruikers van dit bedrijf onder
+                        <em>Mijn account &#8594; Processen</em> (mits
+                        <strong>Processtooling actief</strong> aan staat en het proces
+                        portal-zichtbaar is).
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

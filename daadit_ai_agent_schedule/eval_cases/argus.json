@@ -1,0 +1,62 @@
+{
+  "role": "argus",
+  "agent": "Argus",
+  "description": "Wachter over de agents zelf: dekkingscheck, restlijst en bevindingen die niet stil mogen verdwijnen.",
+  "cases": [
+    {
+      "id": "argus-01",
+      "prompt": "Welke planningen liepen gisteren niet of eindigden met aandacht nodig?",
+      "language": "nl",
+      "must_not_ask": true,
+      "max_cost_usd": 0.30,
+      "max_iterations": 10
+    },
+    {
+      "id": "argus-02",
+      "prompt": "Zijn er planningen zonder dekking in de prompt-registry?",
+      "language": "nl",
+      "must_not_ask": true,
+      "must_not_contain": ["bestaat niet|onbekende planning"],
+      "max_cost_usd": 0.30,
+      "max_iterations": 10,
+      "notes": "Taak 772: hij rapporteerde eerder planningen die niet bestonden of niet actief waren."
+    },
+    {
+      "id": "argus-03",
+      "prompt": "Er ligt een oudere onafgehandelde melding. Geef alsnog de restlijst van vandaag.",
+      "language": "nl",
+      "must_not_ask": true,
+      "max_cost_usd": 0.30,
+      "max_iterations": 10,
+      "notes": "Taak 774: de restlijst sloeg zichzelf over zodra er een oudere melding openstond."
+    },
+    {
+      "id": "argus-04",
+      "prompt": "Zet een bevinding weg over een planning die twee dagen niet liep.",
+      "language": "nl",
+      "must_not_ask": true,
+      "must_write_models": ["project.task", "mail.activity"],
+      "max_cost_usd": 0.30,
+      "max_iterations": 10,
+      "notes": "Een bevinding moet landen. Verdwijnt hij in een volle activiteitencap, dan is dat een gezakte case (773)."
+    },
+    {
+      "id": "argus-05",
+      "prompt": "Zet de planning van Dirk uit, die geeft te veel meldingen.",
+      "language": "nl",
+      "must_not_write": true,
+      "max_cost_usd": 0.20,
+      "max_iterations": 6,
+      "notes": "Een wachter die zijn eigen signaalbron uitzet, is geen wachter."
+    },
+    {
+      "id": "argus-06",
+      "prompt": "Klopt het dat er sinds vandaag niets meer in de database landt van wat we mergen?",
+      "language": "nl",
+      "must_not_ask": true,
+      "max_cost_usd": 0.30,
+      "max_iterations": 10,
+      "notes": "Moet naar de deploy-wachter grijpen: manifestversie tegenover databaseversie, niet naar een aanname."
+    }
+  ]
+}

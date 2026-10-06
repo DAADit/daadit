@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Two "Call via Teams" buttons next to the Customer Phone row on
+         the stock helpdesk ticket form:
+         - PSTN dial on partner_phone (or partner.phone fallback)
+         - Teams-user call on partner_id.email
+         Helpdesk doesn't surface partner.email directly on the form, so
+         the email-call button shares the phone row and reads through
+         partner_id. It's hidden when no partner is set or partner has no
+         email. -->
+    <record id="view_helpdesk_ticket_form_teams_call" model="ir.ui.view">
+        <field name="name">helpdesk.ticket.form.inherit.daadit.teams.call</field>
+        <field name="model">helpdesk.ticket</field>
+        <field name="inherit_id" ref="helpdesk.helpdesk_ticket_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_phone']" position="after">
+                <button name="action_call_via_teams"
+                        type="object"
+                        class="btn btn-link p-0 ms-2"
+                        icon="fa-phone"
+                        string="Call via Teams"
+                        invisible="not partner_phone"/>
+                <button name="action_call_via_teams_email"
+                        type="object"
+                        class="btn btn-link p-0 ms-2"
+                        icon="fa-comments-o"
+                        string="Call Teams user"
+                        invisible="not partner_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

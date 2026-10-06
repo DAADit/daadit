@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="daadit_agent_activity.Board">
+    <div class="o_daadit_activity o_action h-100 overflow-auto">
+
+        <t t-if="state.loading">
+            <div class="daa-empty">Activiteit laden…</div>
+        </t>
+        <t t-elif="state.error">
+            <div class="daa-empty text-danger">
+                Het activiteitenoverzicht kon niet laden. Probeer het opnieuw
+                of controleer de logs.
+            </div>
+        </t>
+        <t t-else="">
+
+            <!-- ===================== Kop + filters ===================== -->
+            <div class="daa-header">
+                <div class="daa-title">
+                    <h1>Agent-activiteit</h1>
+                    <span class="daa-live" t-att-class="state.live ? 'is-live' : ''">
+                        <span class="daa-live-dot"/>
+                        <t t-esc="state.live ? 'Live' : 'Offline'"/>
+                    </span>
+                </div>
+                <div class="daa-filters">
+                    <select class="form-select form-select-sm" t-on-change="onDeptChange">
+                        <option value="all">Alle afdelingen</option>
+                        <t t-foreach="state.data.depts" t-as="d" t-key="d.id">
+                            <option t-att-value="'' + d.id"
+                                    t-att-selected="state.dept === '' + d.id ? 'selected' : undefined"
+                                    t-esc="d.name"/>
+                        </t>
+                    </select>
+                    <select class="form-select form-select-sm"
+                            t-on-change="(ev) => { state.agent = ev.target.value; }">
+                        <option value="all">Alle agents</option>
+                        <t t-foreach="agentChoices" t-as="a" t-key="a.id">
+                            <option t-att-value="'' + a.id"
+                                    t-att-selected="state.agent === '' + a.id ? 'selected' : undefined"
+                                    t-esc="a.name"/>
+                        </t>
+                    </select>
+                    <select class="form-select form-select-sm"
+                            t-on-change="(ev) => { state.status = ev.target.value; }">
+                        <option value="all">Alle statussen</option>
+                        <option value="done">Klaar</option>
+                        <option value="error">Fout</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- ===================== Stat-chips ===================== -->
+            <div class="daa-stats">
+                <div class="daa-chip">
+                    <span class="daa-chip-value" t-esc="state.data.stats.runs_today"/>
+                    <span class="daa-chip-label">runs vandaag</span>
+                </div>
+                <div class="daa-chip" t-att-class="state.data.stats.error_today ? 'is-error' : ''">
+                    <span class="daa-chip-value" t-esc="state.data.stats.error_today"/>
+                    <span class="daa-chip-label">fouten</span>
+                </div>
+                <div class="daa-chip">
+                    <span class="daa-chip-value" t-esc="state.data.stats.chat_calls_today"/>
+                    <span class="daa-chip-label">chat-calls</span>
+                </div>
+                <div class="daa-chip" t-att-class="state.data.stats.mentions_pending ? 'is-warn' : ''">
+                    <span class="daa-chip-value" t-esc="state.data.stats.mentions_pending"/>
+                    <span class="daa-chip-label">@-wachtrij</span>
+                </div>
+                <div class="daa-chip">
+                    <span class="daa-chip-value" t-esc="fmtTokens(state.data.stats.tokens_today)"/>
+                    <span class="daa-chip-label">tokens</span>
+                </div>
+                <div class="daa-chip">
+                    <span class="daa-chip-value" t-att-title="'Omgerekend uit USD tegen koers ' + state.data.stats.fx_rate">€<t t-esc="state.data.stats.cost_today"/></span>
+                    <span class="daa-chip-label">kosten vandaag</span>
+                </div>
+            </div>
+
+            <!-- ===================== Nu bezig ===================== -->
+            <t t-if="running.length">
+                <h2 class="daa-section">Nu bezig</h2>
+                <div class="daa-running">
+                    <t t-foreach="running" t-as="r" t-key="r.run_id">
+                        <div class="daa-running-card" t-on-click="() => this.openRun(r.run_id)">
+                            <span class="daa-pulse"/>
+                            <div>
+                                <div class="daa-running-agent" t-esc="r.agent"/>
+                                <div class="daa-running-name" t-esc="r.schedule"/>
+                            </div>
+                            <span class="daa-running-elapsed" t-esc="fmtElapsed(r.elapsed_s)"/>
+                        </div>
+                    </t>
+                </div>
+            </t>
+
+            <div class="daa-columns">
+                <!-- ================= Agent-overzicht ================= -->
+                <div class="daa-col-main">
+                    <h2 class="daa-section">Agents</h2>
+                    <div class="daa-agent-grid">
+                        <t t-foreach="agents" t-as="a" t-key="a.id">
+                            <div class="daa-agent-card"
+                                 t-att-class="a.running ? 'is-running' : ''"
+                                 t-on-click="() => this.openAgent(a.id)">
+                                <div class="daa-agent-top">
+                                    <img class="daa-agent-avatar"
+                                         t-att-src="'/web/image/ai.agent/' + a.id + '/image_128'"
+                                         t-att-alt="a.name" loading="lazy"/>
+                                    <div>
+                                        <div class="daa-agent-name" t-esc="a.name"/>
+                                        <div class="daa-agent-dept" t-esc="a.dept"/>
+                                    </div>
+                                    <span class="daa-state" t-att-class="'is-' + (a.last_state || 'idle')"
+                                          t-esc="stateLabel(a.last_state)"/>
+                                </div>
+                                <div class="daa-agent-metrics">
+                                    <span><b t-esc="a.runs_today"/> runs</span>
+                                    <span><b t-esc="a.chat_calls_today"/> chats</span>
+                                    <span t-if="a.mentions_pending" class="text-warning">
+                                        <b t-esc="a.mentions_pending"/> @-open
+                                    </span>
+                                    <span t-if="a.errors_today" class="text-danger">
+                                        <b t-esc="a.errors_today"/> fout
+                                    </span>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+
+                    <!-- ================= Vandaag gedaan ================= -->
+                    <h2 class="daa-section">Vandaag gedaan</h2>
+                    <t t-if="!today.length">
+                        <div class="daa-empty">Nog geen afgeronde runs vandaag.</div>
+                    </t>
+                    <table t-else="" class="daa-table">
+                        <thead>
+                            <tr>
+                                <th>Tijd</th>
+                                <th>Agent</th>
+                                <th>Run</th>
+                                <th>Status</th>
+                                <th class="text-end">Duur</th>
+                                <th class="text-end">Tools</th>
+                                <th class="text-end">Tokens</th>
+                                <th class="text-end">Kosten</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="today" t-as="r" t-key="r.run_id">
+                                <tr t-on-click="() => this.openRun(r.run_id)">
+                                    <td t-esc="fmtTime(r.started)"/>
+                                    <td t-esc="r.agent"/>
+                                    <td>
+                                        <span t-esc="r.schedule"/>
+                                        <div t-if="r.state === 'error' and r.error_short"
+                                             class="daa-error-short" t-esc="r.error_short"/>
+                                    </td>
+                                    <td>
+                                        <span class="daa-state" t-att-class="'is-' + r.state"
+                                              t-esc="stateLabel(r.state)"/>
+                                    </td>
+                                    <td class="text-end"><t t-esc="r.duration"/>s</td>
+                                    <td class="text-end" t-esc="r.actions"/>
+                                    <td class="text-end" t-esc="fmtTokens(r.tokens)"/>
+                                    <td class="text-end">€<t t-esc="r.cost"/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+
+                    <!-- ================= Gepland ================= -->
+                    <h2 class="daa-section">Gepland (komende 7 dagen)</h2>
+                    <t t-if="!upcoming.length">
+                        <div class="daa-empty">Geen geplande runs binnen 7 dagen.</div>
+                    </t>
+                    <table t-else="" class="daa-table">
+                        <thead>
+                            <tr>
+                                <th>Eerstvolgende run</th>
+                                <th>Agent</th>
+                                <th>Schedule</th>
+                                <th>Interval</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="upcoming" t-as="s" t-key="s.schedule_id">
+                                <tr t-on-click="() => this.openSchedule(s.schedule_id)">
+                                    <td>
+                                        <span t-esc="fmtDay(s.nextcall)"/>
+                                        <span t-if="s.overdue" class="daa-overdue">achterstallig</span>
+                                    </td>
+                                    <td t-esc="s.agent"/>
+                                    <td t-esc="s.name"/>
+                                    <td t-esc="s.interval"/>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- ================= Live feed ================= -->
+                <div class="daa-col-feed">
+                    <h2 class="daa-section">Live feed</h2>
+                    <div class="daa-feed">
+                        <t t-if="!feed.length">
+                            <div class="daa-empty">Nog geen activiteit.</div>
+                        </t>
+                        <t t-foreach="feed" t-as="e" t-key="e_index">
+                            <div class="daa-feed-item"
+                                 t-on-click="() => e.run_id ? this.openRun(e.run_id) : null">
+                                <span class="daa-feed-dot" t-att-class="'is-' + e.level"/>
+                                <div>
+                                    <span class="daa-feed-agent" t-esc="e.agent"/>
+                                    <span class="daa-feed-text" t-esc="e.text"/>
+                                    <div class="daa-feed-ts" t-esc="fmtDay(e.ts)"/>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </div>
+</t>
+
+</templates>

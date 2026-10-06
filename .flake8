@@ -1,0 +1,16 @@
+[flake8]
+max-line-length = 100
+
+# De oas-checks-workflow draait flake8 op álle regels van een gewijzigd
+# bestand. Zonder deze twee uitzonderingen faalt elke wijziging aan een
+# module op bestaande, bewuste Odoo-conventies in ongewijzigde regels:
+#
+# * `__init__.py` bestaat in Odoo juist uit "ongebruikte" imports — dat
+#   is hoe modellen, controllers en tests geladen worden (F401). Sommige
+#   modules zetten eerst een logger op en importeren daarna bewust
+#   (E402), of armen na de imports een observer — dat is hier opzet.
+# * `__manifest__.py` bevat lange beschrijvings- en helpteksten die
+#   afbreken de leesbaarheid van het manifest schaadt (E501).
+per-file-ignores =
+    */__init__.py: F401, E402
+    */__manifest__.py: E501

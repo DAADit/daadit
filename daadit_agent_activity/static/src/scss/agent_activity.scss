@@ -1,0 +1,410 @@
+// Kleuren staan als component-scoped custom properties bovenaan, zodat
+// agent_activity.dark.scss alleen dit blok hoeft te herzetten.
+//
+// Bewust geen Bootstrap-variabelen: Odoo 19 zendt die niet uit als CSS
+// custom properties (geverifieerd op het gecompileerde bundle), dus ze
+// zouden altijd op hun lichte fallback blijven staan en de kaarten wit
+// laten in dark mode. Odoo's eigen componenten lossen dit op met
+// expliciete waarden per thema; dat patroon volgen we hier.
+//
+// De grijstinten zijn ook opgehoogd: de labels stonden op #8a929a,
+// ongeveer 2,8:1 op wit, ruim onder de leesbaarheidsnorm van 4,5:1.
+
+.o_daadit_activity {
+    --daa-accent: #2a5bd7;
+    --daa-accent-bg: #eef4ff;
+    --daa-accent-border: #b6ccfa;
+
+    --daa-surface: #fff;
+    --daa-surface-2: #f4f6f8;
+    --daa-border: #e2e5e9;
+    --daa-border-soft: rgba(20, 30, 60, 0.08);
+    --daa-text: #212529;
+    --daa-muted: #5c636a;
+    --daa-strong: #212529;
+    --daa-shadow: rgba(20, 30, 60, 0.08);
+
+    // Paginaachtergrond. Odoo zet die op .o_web_client (#F9FAFB licht,
+    // #1B1D26 donker) en biedt er GEEN css-variabele voor aan:
+    // --o-webclient-background-color bestaat niet in het gecompileerde
+    // bundle, dus de oude var(--o-webclient-background-color, #f8f9fa)
+    // viel in beide thema's terug op lichtgrijs. Vandaar exact dezelfde
+    // waarden als Odoo zelf gebruikt, per thema gezet.
+    --daa-page-bg: #f9fafb;
+
+    --daa-success: #146c43;
+    --daa-success-bg: rgba(25, 135, 84, 0.12);
+    --daa-danger: #b02a37;
+    --daa-danger-bg: rgba(220, 53, 69, 0.12);
+    --daa-warning: #8a6100;
+
+    padding: 16px 24px 40px;
+    background: var(--daa-page-bg);
+    color: var(--daa-text);
+
+    // ---------------- kop ----------------
+    .daa-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+
+        h1 {
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0;
+            color: var(--daa-strong);
+        }
+    }
+    .daa-title {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .daa-live {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: var(--daa-muted);
+
+        .daa-live-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--daa-muted);
+        }
+        &.is-live {
+            color: var(--daa-success);
+            .daa-live-dot {
+                background: var(--daa-success);
+                animation: daa-pulse 1.6s ease-in-out infinite;
+            }
+        }
+    }
+    .daa-filters {
+        display: flex;
+        gap: 8px;
+
+        select {
+            min-width: 150px;
+        }
+    }
+
+    // ---------------- stat-chips ----------------
+    .daa-stats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin: 16px 0;
+    }
+    .daa-chip {
+        background: var(--daa-surface);
+        border: 1px solid var(--daa-border);
+        border-radius: 10px;
+        padding: 8px 16px;
+        display: flex;
+        flex-direction: column;
+        min-width: 96px;
+
+        .daa-chip-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--daa-strong);
+        }
+        .daa-chip-label {
+            // was 11px/#6c757d — te klein en te licht voor een label dat
+            // de waarde erboven moet duiden.
+            font-size: 12px;
+            color: var(--daa-muted);
+        }
+        &.is-error .daa-chip-value {
+            color: var(--daa-danger);
+        }
+        &.is-warn .daa-chip-value {
+            color: var(--daa-warning);
+        }
+    }
+
+    // ---------------- secties ----------------
+    .daa-section {
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--daa-muted);
+        margin: 20px 0 10px;
+    }
+    .daa-empty {
+        color: var(--daa-muted);
+        font-size: 13px;
+        padding: 12px 0;
+    }
+
+    // ---------------- nu bezig ----------------
+    .daa-running {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .daa-running-card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--daa-accent-bg);
+        border: 1px solid var(--daa-accent-border);
+        border-radius: 10px;
+        padding: 10px 16px;
+        cursor: pointer;
+
+        .daa-running-agent {
+            font-weight: 700;
+            color: var(--daa-strong);
+        }
+        .daa-running-name {
+            font-size: 12px;
+            color: var(--daa-muted);
+        }
+        .daa-running-elapsed {
+            font-variant-numeric: tabular-nums;
+            font-size: 12px;
+            color: var(--daa-accent);
+            font-weight: 600;
+        }
+    }
+    .daa-pulse {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--daa-accent);
+        animation: daa-pulse 1.2s ease-in-out infinite;
+        flex-shrink: 0;
+    }
+
+    // ---------------- kolommen ----------------
+    .daa-columns {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 320px;
+        gap: 24px;
+        align-items: start;
+
+        @media (max-width: 992px) {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+
+    // ---------------- agent-grid ----------------
+    .daa-agent-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 10px;
+    }
+    .daa-agent-card {
+        background: var(--daa-surface);
+        border: 1px solid var(--daa-border);
+        border-radius: 10px;
+        padding: 10px 12px;
+        cursor: pointer;
+        transition: box-shadow 0.15s ease;
+
+        &:hover {
+            box-shadow: 0 2px 8px var(--daa-shadow);
+        }
+        &.is-running {
+            border-color: var(--daa-accent-border);
+            box-shadow: 0 0 0 2px color-mix(in srgb, var(--daa-accent) 18%, transparent);
+        }
+    }
+    .daa-agent-top {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        > div {
+            min-width: 0;
+            flex: 1;
+        }
+    }
+    .daa-agent-avatar {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+        background: var(--daa-surface-2);
+    }
+    .daa-agent-name {
+        font-weight: 700;
+        font-size: 13px;
+        color: var(--daa-strong);
+    }
+    .daa-agent-dept {
+        // was 11px/#8a929a — ca. 2,8:1 op wit, ruim onder de norm.
+        font-size: 12px;
+        color: var(--daa-muted);
+    }
+    .daa-agent-metrics {
+        display: flex;
+        gap: 10px;
+        margin-top: 8px;
+        font-size: 12px;
+        color: var(--daa-muted);
+
+        b {
+            color: var(--daa-strong);
+        }
+    }
+
+    // ---------------- statuslabels ----------------
+    .daa-state {
+        font-size: 11px;
+        font-weight: 600;
+        border-radius: 6px;
+        padding: 2px 8px;
+        flex-shrink: 0;
+
+        &.is-done {
+            background: var(--daa-success-bg);
+            color: var(--daa-success);
+        }
+        &.is-error {
+            background: var(--daa-danger-bg);
+            color: var(--daa-danger);
+        }
+        &.is-running {
+            background: color-mix(in srgb, var(--daa-accent) 12%, transparent);
+            color: var(--daa-accent);
+            animation: daa-pulse 1.6s ease-in-out infinite;
+        }
+        &.is-idle {
+            background: var(--daa-surface-2);
+            color: var(--daa-muted);
+        }
+    }
+
+    // ---------------- tabellen ----------------
+    .daa-table {
+        width: 100%;
+        background: var(--daa-surface);
+        border: 1px solid var(--daa-border);
+        border-radius: 10px;
+        border-collapse: separate;
+        border-spacing: 0;
+        overflow: hidden;
+        font-size: 13px;
+        color: var(--daa-text);
+
+        th {
+            text-align: left;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--daa-muted);
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--daa-border);
+            background: var(--daa-surface-2);
+
+            &.text-end {
+                text-align: right;
+            }
+        }
+        td {
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--daa-border-soft);
+        }
+        tbody tr {
+            cursor: pointer;
+
+            &:hover {
+                background: var(--daa-surface-2);
+            }
+            &:last-child td {
+                border-bottom: 0;
+            }
+        }
+    }
+    .daa-error-short {
+        font-size: 12px;
+        color: var(--daa-danger);
+        margin-top: 2px;
+    }
+    .daa-overdue {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--daa-warning);
+        margin-left: 8px;
+        text-transform: uppercase;
+    }
+
+    // ---------------- feed ----------------
+    .daa-col-feed {
+        position: sticky;
+        top: 0;
+    }
+    .daa-feed {
+        background: var(--daa-surface);
+        border: 1px solid var(--daa-border);
+        border-radius: 10px;
+        padding: 8px 12px;
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+    .daa-feed-item {
+        display: flex;
+        gap: 10px;
+        padding: 8px 0;
+        border-bottom: 1px solid var(--daa-border-soft);
+        cursor: pointer;
+
+        &:last-child {
+            border-bottom: 0;
+        }
+    }
+    .daa-feed-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-top: 5px;
+        flex-shrink: 0;
+
+        &.is-success {
+            background: var(--daa-success);
+        }
+        &.is-error {
+            background: var(--daa-danger);
+        }
+        &.is-info {
+            background: var(--daa-accent);
+        }
+        &.is-warning {
+            background: var(--daa-warning);
+        }
+    }
+    .daa-feed-agent {
+        font-weight: 700;
+        font-size: 12px;
+        margin-right: 4px;
+        color: var(--daa-strong);
+    }
+    .daa-feed-text {
+        font-size: 12px;
+        color: var(--daa-text);
+    }
+    .daa-feed-ts {
+        // was 11px/#8a929a; tijdstempels zijn de kleinste tekst op het
+        // scherm en waren in de praktijk nauwelijks te lezen.
+        font-size: 12px;
+        color: var(--daa-muted);
+    }
+}
+
+@keyframes daa-pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.35;
+    }
+}

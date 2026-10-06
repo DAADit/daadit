@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Card on the portal "My Account" home. -->
+    <template id="portal_my_home_process_tooling"
+              name="Portal My Home: Processtooling"
+              inherit_id="portal.portal_my_home"
+              priority="30">
+        <xpath expr="//div[@id='portal_common_category']" position="inside">
+            <t t-if="has_process_tooling">
+                <t t-call="portal.portal_docs_entry">
+                    <t t-set="icon" t-value="'/portal/static/src/img/portal-addresses.svg'"/>
+                    <t t-set="title">Processen</t>
+                    <t t-set="text">Bekijk en valideer de procesmodellen van je organisatie</t>
+                    <t t-set="url" t-value="'/my/processen'"/>
+                    <t t-set="config_card" t-value="True"/>
+                </t>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- Reusable validation-state badge. -->
+    <template id="process_state_badge">
+        <t t-set="labels" t-value="{'open':'Open','akkoord':'Akkoord','aandacht':'Aandachtspunt','afkeur':'Afkeur'}"/>
+        <t t-set="clsmap" t-value="{'open':'secondary','akkoord':'success','aandacht':'warning','afkeur':'danger'}"/>
+        <span t-attf-class="badge text-bg-#{clsmap.get(state,'secondary')}"><t t-out="labels.get(state,'Open')"/></span>
+    </template>
+
+    <!-- /my/processen : overview of the customer's visible processes. -->
+    <template id="portal_my_processes" name="Mijn processen">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="False"/>
+            <div class="o_portal_process_tooling">
+                <div class="row mt-2 mb-3">
+                    <div class="col-12">
+                        <h3 class="mb-0">Processen</h3>
+                        <p class="text-muted mb-0">
+                            Navigeer en valideer de procesmodellen van je organisatie.
+                        </p>
+                    </div>
+                </div>
+                <t t-if="processes">
+                    <div class="row g-3">
+                        <t t-foreach="processes" t-as="proc">
+                            <div class="col-12 col-md-6 col-lg-4">
+                                <a t-attf-href="/my/processen/#{proc.id}"
+                                   class="card h-100 text-decoration-none">
+                                    <div class="card-body">
+                                        <h5 class="card-title mb-1">
+                                            <i class="fa fa-sitemap me-2 text-primary" role="img" aria-label="Proces"/>
+                                            <t t-out="proc.name"/>
+                                        </h5>
+                                        <t t-if="proc.step_count">
+                                            <div class="progress mt-2 mb-1" style="height:6px;">
+                                                <div class="progress-bar bg-success" t-attf-style="width:#{proc.progress}%;"/>
+                                            </div>
+                                            <small class="text-muted"><t t-out="proc.validated_count"/> / <t t-out="proc.step_count"/> gevalideerd</small>
+                                        </t>
+                                        <small t-elif="proc.version" class="text-muted">Versie <t t-out="proc.version"/></small>
+                                    </div>
+                                </a>
+                            </div>
+                        </t>
+                    </div>
+                </t>
+                <t t-else="">
+                    <div class="alert alert-info" role="alert">
+                        Er is nog geen proces beschikbaar voor jouw organisatie.
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <!-- /my/processen/<id> : one process, rendered natively. -->
+    <template id="portal_my_process" name="Mijn proces">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="False"/>
+            <div class="o_portal_process_tooling">
+                <div class="row mt-2 mb-2">
+                    <div class="col-12 d-flex align-items-center justify-content-between flex-wrap gap-2">
+                        <div>
+                            <h3 class="mb-0"><t t-out="process.name"/></h3>
+                            <small t-if="preview" class="text-warning">Interne preview</small>
+                        </div>
+                        <a href="/my/processen" class="btn btn-sm btn-secondary">
+                            <i class="fa fa-arrow-left me-1"/>Alle processen
+                        </a>
+                    </div>
+                </div>
+
+                <t t-if="process.phase_ids">
+                    <!-- progress -->
+                    <div class="mb-4">
+                        <div class="progress" style="height:8px;">
+                            <div class="progress-bar bg-success" t-attf-style="width:#{process.progress}%;"/>
+                        </div>
+                        <small class="text-muted"><t t-out="process.validated_count"/> / <t t-out="process.step_count"/> stappen akkoord</small>
+                    </div>
+
+                    <t t-foreach="process.phase_ids" t-as="phase">
+                        <h5 class="mt-4 mb-2 text-uppercase" style="letter-spacing:.5px;font-size:13px;color:#6c757d;">
+                            <t t-out="phase.name"/>
+                        </h5>
+                        <t t-foreach="phase.step_ids" t-as="step">
+                            <div class="card mb-3" t-attf-id="step-#{step.id}">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start gap-2">
+                                        <h5 class="card-title mb-1"><t t-out="step.name"/></h5>
+                                        <t t-call="daadit_process_tooling.process_state_badge">
+                                            <t t-set="state" t-value="step.validation_state"/>
+                                        </t>
+                                    </div>
+                                    <div class="row g-2 my-2">
+                                        <div t-if="step.role" class="col-6 col-md-3"><small class="text-muted d-block text-uppercase">Rol</small><t t-out="step.role"/></div>
+                                        <div t-if="step.system" class="col-6 col-md-3"><small class="text-muted d-block text-uppercase">Systeem</small><t t-out="step.system"/></div>
+                                        <div t-if="step.input" class="col-6 col-md-3"><small class="text-muted d-block text-uppercase">Input</small><t t-out="step.input"/></div>
+                                        <div t-if="step.output" class="col-6 col-md-3"><small class="text-muted d-block text-uppercase">Output</small><t t-out="step.output"/></div>
+                                    </div>
+                                    <div t-if="step.description" class="mb-2"><t t-out="step.description"/></div>
+
+                                    <t t-if="not preview and process.allow_validation">
+                                        <form method="post" t-attf-action="/my/processen/#{process.id}/step/#{step.id}/validate" class="mt-2">
+                                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                            <textarea name="note" rows="1" class="form-control form-control-sm mb-2" placeholder="Opmerking (optioneel)" t-out="step.validation_note or ''"/>
+                                            <div class="d-flex gap-2 flex-wrap">
+                                                <button type="submit" name="state" value="akkoord" t-attf-class="btn btn-sm #{'btn-success' if step.validation_state == 'akkoord' else 'btn-outline-success'}">✓ Akkoord</button>
+                                                <button type="submit" name="state" value="aandacht" t-attf-class="btn btn-sm #{'btn-warning' if step.validation_state == 'aandacht' else 'btn-outline-warning'}">! Aandachtspunt</button>
+                                                <button type="submit" name="state" value="afkeur" t-attf-class="btn btn-sm #{'btn-danger' if step.validation_state == 'afkeur' else 'btn-outline-danger'}">✕ Afkeur</button>
+                                                <button type="submit" name="state" value="open" class="btn btn-sm btn-outline-secondary ms-auto">Reset</button>
+                                            </div>
+                                        </form>
+                                    </t>
+                                    <t t-elif="step.validation_note">
+                                        <div class="text-muted small"><em>Opmerking:</em> <t t-out="step.validation_note"/></div>
+                                    </t>
+                                </div>
+                            </div>
+                        </t>
+                    </t>
+                </t>
+
+                <!-- Fallback: external HTML tool -->
+                <t t-elif="process.tool_html">
+                    <div style="height: 80vh; border: 1px solid #dee2e6; border-radius: .375rem; overflow: hidden;">
+                        <iframe t-attf-src="/my/processen/#{process.id}/tool"
+                                style="width:100%; height:100%; border:0;"
+                                sandbox="allow-scripts allow-same-origin allow-popups allow-downloads allow-forms allow-modals"
+                                title="Processtool"/>
+                    </div>
+                </t>
+
+                <t t-else="">
+                    <div class="alert alert-info" role="alert">
+                        Dit proces heeft nog geen inhoud. Voeg fasen en stappen toe in Odoo,
+                        of upload een externe HTML-tool.
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+</odoo>

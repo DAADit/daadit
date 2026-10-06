@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_daadit_ai_permission_review_line_list" model="ir.ui.view">
+        <field name="name">daadit.ai.permission.review.line.list</field>
+        <field name="model">daadit.ai.permission.review.line</field>
+        <field name="arch" type="xml">
+            <list string="Agents" create="false" delete="false"
+                  editable="bottom"
+                  decoration-warning="claims_unverified_count > 0"
+                  decoration-info="config_changed">
+                <field name="agent_name" readonly="1"/>
+                <field name="rights_level" readonly="1"/>
+                <field name="role" readonly="1" optional="hide"/>
+                <field name="config_changed" readonly="1"/>
+                <field name="run_count" readonly="1"/>
+                <field name="effective_write_count" readonly="1"/>
+                <field name="refused_write_count" readonly="1"/>
+                <field name="claims_unverified_count" readonly="1"/>
+                <field name="needs_attention_count" readonly="1"/>
+                <field name="outcome"/>
+                <field name="reviewer_note" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_daadit_ai_permission_review_line_form" model="ir.ui.view">
+        <field name="name">daadit.ai.permission.review.line.form</field>
+        <field name="model">daadit.ai.permission.review.line</field>
+        <field name="arch" type="xml">
+            <form string="Agent in de rechtenreview" create="false">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="agent_name" readonly="1"/></h1>
+                        <h3><field name="rights_level" readonly="1"/></h3>
+                    </div>
+                    <div class="alert alert-info" role="alert"
+                         invisible="not config_changed">
+                        <b>Configuratie gewijzigd sinds de vorige review.</b>
+                        <field name="config_change_detail" nolabel="1"
+                               readonly="1"/>
+                    </div>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="claims_unverified_count == 0">
+                        <b>Deze agent meldde werk dat niet in de runlog
+                        staat.</b> Beoordeel niet alleen of hij dit mág,
+                        maar ook of zijn rapportage klopt.
+                    </div>
+                    <group>
+                        <group string="Mag hij dit?">
+                            <field name="role" readonly="1"/>
+                            <field name="write_tools" readonly="1"/>
+                            <field name="outbound_tools" readonly="1"/>
+                            <field name="destructive_tools" readonly="1"/>
+                            <field name="hard_blocked" readonly="1"/>
+                        </group>
+                        <group string="Leesscope">
+                            <field name="scope_unknown" readonly="1"
+                                   invisible="not scope_unknown"/>
+                            <field name="scope_unrestricted" readonly="1"/>
+                            <field name="scope_models" readonly="1"/>
+                            <field name="blocked_models" readonly="1"/>
+                            <field name="pii_blocklist" readonly="1"/>
+                        </group>
+                        <group string="Klopt wat hij meldt?">
+                            <field name="run_count" readonly="1"/>
+                            <field name="effective_write_count" readonly="1"/>
+                            <field name="refused_write_count" readonly="1"/>
+                            <field name="claims_unverified_count"
+                                   readonly="1"/>
+                            <field name="needs_attention_count" readonly="1"/>
+                        </group>
+                        <group string="Uitkomst van de review">
+                            <field name="outcome"/>
+                            <field name="reviewer_note"/>
+                        </group>
+                    </group>
+                    <field name="config_changed" invisible="1"/>
+                    <footer>
+                        <button name="action_open_agent" type="object"
+                                string="Open de agent"
+                                class="btn-secondary" icon="fa-user"/>
+                        <button name="action_view_runs" type="object"
+                                string="Runs in deze periode"
+                                class="btn-secondary" icon="fa-history"/>
+                    </footer>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_daadit_ai_permission_review_form" model="ir.ui.view">
+        <field name="name">daadit.ai.permission.review.form</field>
+        <field name="model">daadit.ai.permission.review</field>
+        <field name="arch" type="xml">
+            <form string="Rechtenreview" create="false">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="period_start"/>
+                            <field name="period_end"/>
+                            <field name="trigger"/>
+                        </group>
+                        <group>
+                            <field name="responsible_user_id"/>
+                            <field name="baseline_snapshot_name"/>
+                            <field name="baseline_snapshot_date"/>
+                        </group>
+                    </group>
+                    <group string="Samenvatting">
+                        <field name="summary" nolabel="1" readonly="1"/>
+                    </group>
+                    <notebook>
+                        <page string="Agents" name="lines">
+                            <field name="line_ids" nolabel="1"
+                                   context="{'list_view_ref': 'daadit_ai_agent_schedule.view_daadit_ai_permission_review_line_list'}"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_daadit_ai_permission_review_list" model="ir.ui.view">
+        <field name="name">daadit.ai.permission.review.list</field>
+        <field name="model">daadit.ai.permission.review</field>
+        <field name="arch" type="xml">
+            <list string="Rechtenreviews" create="false"
+                  decoration-warning="open_count > 0">
+                <field name="name"/>
+                <field name="period_start"/>
+                <field name="period_end"/>
+                <field name="agent_count"/>
+                <field name="changed_count"/>
+                <field name="unreliable_count"/>
+                <field name="open_count"/>
+                <field name="responsible_user_id"/>
+                <field name="trigger"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_daadit_ai_permission_review" model="ir.actions.act_window">
+        <field name="name">Rechtenreviews</field>
+        <field name="res_model">daadit.ai.permission.review</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Nog geen rechtenreview samengesteld.
+            </p>
+            <p>
+                De kwartaalcadans stelt er zelf een samen en zet hem als
+                To-Do bij de verantwoordelijke. Met "Nieuwe review nu"
+                doe je dat handmatig.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_daadit_ai_permission_review_build" model="ir.actions.server">
+        <field name="name">Nieuwe rechtenreview nu</field>
+        <field name="model_id" ref="model_daadit_ai_permission_review"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_build_now()</field>
+    </record>
+
+    <menuitem id="menu_daadit_ai_permission_review_root"
+              name="Rechtenreview"
+              parent="ai_app.ai_menu_root"
+              sequence="46"/>
+
+    <menuitem id="menu_daadit_ai_permission_review"
+              name="Rechtenreviews"
+              parent="menu_daadit_ai_permission_review_root"
+              action="action_daadit_ai_permission_review"
+              sequence="10"/>
+
+    <menuitem id="menu_daadit_ai_permission_review_build"
+              name="Nieuwe rechtenreview nu"
+              parent="menu_daadit_ai_permission_review_root"
+              action="action_daadit_ai_permission_review_build"
+              sequence="20"/>
+
+</odoo>

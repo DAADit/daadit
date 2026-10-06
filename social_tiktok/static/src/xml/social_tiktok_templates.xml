@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!--
+        TikTok frontend template extensions.
+
+        Comments are not manageable through TikTok's standard API, so we do not
+        extend StreamPostComments here.  The JS click handler in
+        stream_post_kanban_record.js opens the video on TikTok.com instead.
+    -->
+</templates>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Startwaarden voor de gebruiksmeter. Alles staat als
+        systeemparameter zodat de prijzen zonder release te wijzigen
+        zijn: een staffel aanpassen is een commerciële beslissing, geen
+        deploy.
+
+        noupdate="1": een module-upgrade mag nooit de prijsafspraak van
+        een draaiende klant terugzetten naar de fabrieksinstelling.
+    -->
+    <data noupdate="1">
+
+        <!-- Kostprijs van één werk-eenheid. Gemeten over 210 echte
+             calls: gemiddeld $0,021 per beurt, dus ~€0,02. Dit is de
+             noemer van de meter; hij hoort mee te bewegen met de
+             werkelijke modelkosten, niet met de verkoopprijs. -->
+        <record id="param_plan_unit_cost_eur" model="ir.config_parameter">
+            <field name="key">daadit_ai_agent_schedule.plan_unit_cost_eur</field>
+            <field name="value">0.02</field>
+        </record>
+
+        <!-- Startpakket. Een kleine vestiging die een paar vragen per
+             dag stelt hoort niet hetzelfde te betalen als een die de
+             hele dag laat doorwerken; dat was precies de reden om van
+             een prijs per agent af te stappen. -->
+        <record id="param_plan_name" model="ir.config_parameter">
+            <field name="key">daadit_ai_agent_schedule.plan_name</field>
+            <field name="value">Starter</field>
+        </record>
+        <record id="param_plan_units_included" model="ir.config_parameter">
+            <field name="key">daadit_ai_agent_schedule.plan_units_included</field>
+            <field name="value">500</field>
+        </record>
+
+        <!-- Prijs per eenheid boven de bundel. Ruim boven de kostprijs:
+             de bundel is de korting, verbruik daarbuiten is los werk. -->
+        <record id="param_plan_overage_price_eur" model="ir.config_parameter">
+            <field name="key">daadit_ai_agent_schedule.plan_overage_price_eur</field>
+            <field name="value">0.15</field>
+        </record>
+
+        <!-- Tot hoever we boven de bundel door laten lopen voordat de
+             kraan dichtgaat. Op het dubbele van de bundel is er iets
+             structureel mis (een agent in een lus, een verkeerd
+             ingestelde planning) en is doorgaan geen dienstverlening
+             meer maar schade. -->
+        <record id="param_plan_hard_stop_ratio" model="ir.config_parameter">
+            <field name="key">daadit_ai_agent_schedule.plan_hard_stop_ratio</field>
+            <field name="value">2.0</field>
+        </record>
+
+        <!-- Vanaf welk deel van de bundel de klant het hoort. Op 60%
+             is er nog tijd om te kiezen: gedrag aanpassen of een
+             pakket omhoog. Een melding op 95% is geen keuze meer. -->
+        <record id="param_fair_use_warn_ratio" model="ir.config_parameter">
+            <field name="key">daadit_ai_agent_schedule.fair_use_warn_ratio</field>
+            <field name="value">0.6</field>
+        </record>
+
+        <!-- Vangnet per collega, náást de bundel van de vestiging. Eén
+             doorgeslagen agent mag de bundel van alle andere niet
+             opeten. 0 zetten schakelt de standaard uit. -->
+        <record id="param_default_agent_daily_cap_eur" model="ir.config_parameter">
+            <field name="key">daadit_ai_agent_schedule.default_agent_daily_cap_eur</field>
+            <field name="value">8.0</field>
+        </record>
+        <record id="param_default_agent_monthly_cap_eur" model="ir.config_parameter">
+            <field name="key">daadit_ai_agent_schedule.default_agent_monthly_cap_eur</field>
+            <field name="value">45.0</field>
+        </record>
+
+    </data>
+</odoo>

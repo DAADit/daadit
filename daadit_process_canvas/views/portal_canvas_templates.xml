@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vanaf het bestaande procesoverzicht door naar het canvas, naast de
+         knop die er al staat. -->
+    <template id="portal_process_canvas_link"
+              inherit_id="daadit_process_tooling.portal_my_process"
+              name="Knop naar het procescanvas">
+        <xpath expr="//a[@href='/my/processen']" position="before">
+            <a t-attf-href="/my/processen/#{process.id}/canvas"
+               class="btn btn-sm btn-primary me-2">
+                <i class="fa fa-sitemap me-1"/>Procescanvas
+            </a>
+        </xpath>
+    </template>
+
+    <template id="portal_process_canvas" name="Procescanvas">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="False"/>
+            <div class="row mt-2 mb-2">
+                <div class="col-12 d-flex align-items-center justify-content-between flex-wrap gap-2">
+                    <h3 class="mb-0"><t t-out="process.name"/></h3>
+                    <a t-attf-href="/my/processen/#{process.id}"
+                       class="btn btn-sm btn-secondary">
+                        <i class="fa fa-arrow-left me-1"/>Terug naar het proces
+                    </a>
+                </div>
+            </div>
+
+            <div class="o_daadit_canvas" data-level="process"
+                 t-att-data-process-id="process.id"
+                 t-attf-data-back-url="/my/processen/#{process.id}">
+                <noscript>
+                    <div class="alert alert-info m-3">
+                        Het procescanvas heeft JavaScript nodig.
+                        <a t-attf-href="/my/processen/#{process.id}">
+                            Bekijk het proces als lijst.
+                        </a>
+                    </div>
+                </noscript>
+            </div>
+        </t>
+    </template>
+
+    <!-- Niveau 1: het domein, met de processen en de apps die ze raken. -->
+    <template id="portal_domain_canvas" name="Domeincanvas">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="False"/>
+            <div class="row mt-2 mb-2">
+                <div class="col-12 d-flex align-items-center justify-content-between flex-wrap gap-2">
+                    <div>
+                        <h3 class="mb-0"><t t-out="domain.name"/></h3>
+                        <small class="text-muted">
+                            <t t-out="domain.process_count"/> processen ·
+                            <t t-out="domain.app_count"/> Odoo-applicaties
+                        </small>
+                    </div>
+                    <a href="/my/processen" class="btn btn-sm btn-secondary">
+                        <i class="fa fa-arrow-left me-1"/>Alle processen
+                    </a>
+                </div>
+            </div>
+
+            <div class="o_daadit_canvas" data-level="domain"
+                 t-att-data-domain-id="domain.id"
+                 data-back-url="/my/processen">
+                <noscript>
+                    <div class="alert alert-info m-3">
+                        Het procescanvas heeft JavaScript nodig.
+                        <a href="/my/processen">Bekijk de processen als lijst.</a>
+                    </div>
+                </noscript>
+            </div>
+        </t>
+    </template>
+
+</odoo>

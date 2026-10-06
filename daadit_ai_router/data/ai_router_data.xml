@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Eén provider per AI-dienst uit Instellingen → AI. Sleutels worden
+             daar beheerd; records hier staan uit tot de dienst een sleutel
+             heeft en bewust wordt geactiveerd. -->
+        <record id="provider_mistral" model="ai.router.provider">
+            <field name="name">Mistral AI</field>
+            <field name="code">mistral</field>
+            <field name="default_model">mistral-large-latest</field>
+            <field name="sequence">10</field>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="provider_openai" model="ai.router.provider">
+            <field name="name">ChatGPT (OpenAI)</field>
+            <field name="code">openai</field>
+            <field name="default_model">gpt-4.1</field>
+            <field name="sequence">20</field>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="provider_google" model="ai.router.provider">
+            <field name="name">Google Gemini</field>
+            <field name="code">google</field>
+            <field name="default_model">gemini-2.5-flash</field>
+            <field name="sequence">30</field>
+            <field name="active" eval="False"/>
+        </record>
+        <record id="provider_anthropic" model="ai.router.provider">
+            <field name="name">Anthropic Claude</field>
+            <field name="code">anthropic</field>
+            <field name="default_model">claude-sonnet-5</field>
+            <field name="sequence">40</field>
+            <field name="active" eval="False"/>
+            <field name="note">Sleutel: vul het api_key-veld op deze provider
+                in, of zet de config-parameter daadit_ai_router.anthropic_key.
+                Spreekt de Messages-API (/v1/messages), niet OpenAI-compat.</field>
+        </record>
+
+        <!-- Beschikbare modellen per dienst; toggle bepaalt selecteerbaarheid
+             in routes. Verouderde modellen staan standaard uit. -->
+        <record id="model_mistral_large" model="ai.router.model">
+            <field name="name">Mistral Large</field>
+            <field name="code">mistral-large-latest</field>
+            <field name="provider_id" ref="provider_mistral"/>
+            <field name="sequence">10</field>
+            <field name="tier">heavy</field>
+            <field name="cost_in_usd">2.0</field>
+            <field name="cost_out_usd">6.0</field>
+        </record>
+        <record id="model_mistral_medium" model="ai.router.model">
+            <field name="name">Mistral Medium</field>
+            <field name="code">mistral-medium-latest</field>
+            <field name="provider_id" ref="provider_mistral"/>
+            <field name="sequence">20</field>
+            <field name="tier">standard</field>
+            <field name="cost_in_usd">0.4</field>
+            <field name="cost_out_usd">2.0</field>
+        </record>
+        <record id="model_mistral_small" model="ai.router.model">
+            <field name="name">Mistral Small</field>
+            <field name="code">mistral-small-latest</field>
+            <field name="provider_id" ref="provider_mistral"/>
+            <field name="sequence">30</field>
+            <field name="tier">standard</field>
+            <field name="cost_in_usd">0.1</field>
+            <field name="cost_out_usd">0.3</field>
+        </record>
+        <record id="model_ministral_8b" model="ai.router.model">
+            <field name="name">Ministral 8B</field>
+            <field name="code">ministral-8b-latest</field>
+            <field name="provider_id" ref="provider_mistral"/>
+            <field name="sequence">40</field>
+            <field name="tier">light</field>
+            <field name="cost_in_usd">0.1</field>
+            <field name="cost_out_usd">0.1</field>
+        </record>
+        <record id="model_ministral_3b" model="ai.router.model">
+            <field name="name">Ministral 3B</field>
+            <field name="code">ministral-3b-latest</field>
+            <field name="provider_id" ref="provider_mistral"/>
+            <field name="sequence">50</field>
+            <field name="tier">light</field>
+            <field name="cost_in_usd">0.04</field>
+            <field name="cost_out_usd">0.04</field>
+        </record>
+        <record id="model_codestral" model="ai.router.model">
+            <field name="name">Codestral</field>
+            <field name="code">codestral-latest</field>
+            <field name="provider_id" ref="provider_mistral"/>
+            <field name="sequence">60</field>
+            <field name="tier">standard</field>
+            <field name="cost_in_usd">0.3</field>
+            <field name="cost_out_usd">0.9</field>
+        </record>
+        <record id="model_pixtral_large" model="ai.router.model">
+            <field name="name">Pixtral Large</field>
+            <field name="code">pixtral-large-latest</field>
+            <field name="provider_id" ref="provider_mistral"/>
+            <field name="sequence">70</field>
+            <field name="tier">heavy</field>
+            <field name="cost_in_usd">2.0</field>
+            <field name="cost_out_usd">6.0</field>
+        </record>
+
+        <record id="model_gpt5" model="ai.router.model">
+            <field name="name">GPT-5</field>
+            <field name="code">gpt-5</field>
+            <field name="provider_id" ref="provider_openai"/>
+            <field name="sequence">10</field>
+            <field name="tier">heavy</field>
+            <field name="cost_in_usd">1.25</field>
+            <field name="cost_out_usd">10.0</field>
+        </record>
+        <record id="model_gpt5_mini" model="ai.router.model">
+            <field name="name">GPT-5 Mini</field>
+            <field name="code">gpt-5-mini</field>
+            <field name="provider_id" ref="provider_openai"/>
+            <field name="sequence">20</field>
+            <field name="tier">standard</field>
+            <field name="cost_in_usd">0.25</field>
+            <field name="cost_out_usd">2.0</field>
+        </record>
+        <record id="model_gpt41" model="ai.router.model">
+            <field name="name">GPT-4.1</field>
+            <field name="code">gpt-4.1</field>
+            <field name="provider_id" ref="provider_openai"/>
+            <field name="sequence">30</field>
+            <field name="tier">heavy</field>
+            <field name="cost_in_usd">2.0</field>
+            <field name="cost_out_usd">8.0</field>
+        </record>
+        <record id="model_gpt41_mini" model="ai.router.model">
+            <field name="name">GPT-4.1 Mini</field>
+            <field name="code">gpt-4.1-mini</field>
+            <field name="provider_id" ref="provider_openai"/>
+            <field name="sequence">40</field>
+            <field name="tier">standard</field>
+            <field name="cost_in_usd">0.4</field>
+            <field name="cost_out_usd">1.6</field>
+        </record>
+        <record id="model_gpt4o" model="ai.router.model">
+            <field name="name">GPT-4o</field>
+            <field name="code">gpt-4o</field>
+            <field name="provider_id" ref="provider_openai"/>
+            <field name="sequence">50</field>
+            <field name="tier">standard</field>
+            <field name="cost_in_usd">2.5</field>
+            <field name="cost_out_usd">10.0</field>
+        </record>
+        <record id="model_gpt4" model="ai.router.model">
+            <field name="name">GPT-4</field>
+            <field name="code">gpt-4</field>
+            <field name="provider_id" ref="provider_openai"/>
+            <field name="sequence">60</field>
+            <field name="active" eval="False"/>
+            <field name="note">Verouderd</field>
+            <field name="tier">heavy</field>
+            <field name="cost_in_usd">30.0</field>
+            <field name="cost_out_usd">60.0</field>
+        </record>
+        <record id="model_gpt35_turbo" model="ai.router.model">
+            <field name="name">GPT-3.5 Turbo</field>
+            <field name="code">gpt-3.5-turbo</field>
+            <field name="provider_id" ref="provider_openai"/>
+            <field name="sequence">70</field>
+            <field name="active" eval="False"/>
+            <field name="note">Verouderd</field>
+            <field name="tier">light</field>
+            <field name="cost_in_usd">0.5</field>
+            <field name="cost_out_usd">1.5</field>
+        </record>
+
+        <record id="model_gemini_25_pro" model="ai.router.model">
+            <field name="name">Gemini 2.5 Pro</field>
+            <field name="code">gemini-2.5-pro</field>
+            <field name="provider_id" ref="provider_google"/>
+            <field name="sequence">10</field>
+            <field name="tier">heavy</field>
+            <field name="cost_in_usd">1.25</field>
+            <field name="cost_out_usd">10.0</field>
+        </record>
+        <record id="model_gemini_25_flash" model="ai.router.model">
+            <field name="name">Gemini 2.5 Flash</field>
+            <field name="code">gemini-2.5-flash</field>
+            <field name="provider_id" ref="provider_google"/>
+            <field name="sequence">20</field>
+            <field name="tier">standard</field>
+            <field name="cost_in_usd">0.3</field>
+            <field name="cost_out_usd">2.5</field>
+        </record>
+        <record id="model_gemini_15_pro" model="ai.router.model">
+            <field name="name">Gemini 1.5 Pro</field>
+            <field name="code">gemini-1.5-pro</field>
+            <field name="provider_id" ref="provider_google"/>
+            <field name="sequence">30</field>
+            <field name="active" eval="False"/>
+            <field name="note">Deprecated bij Google</field>
+            <field name="tier">standard</field>
+            <field name="cost_in_usd">1.25</field>
+            <field name="cost_out_usd">5.0</field>
+        </record>
+        <record id="model_gemini_15_flash" model="ai.router.model">
+            <field name="name">Gemini 1.5 Flash</field>
+            <field name="code">gemini-1.5-flash</field>
+            <field name="provider_id" ref="provider_google"/>
+            <field name="sequence">40</field>
+            <field name="active" eval="False"/>
+            <field name="note">Deprecated bij Google</field>
+            <field name="tier">light</field>
+            <field name="cost_in_usd">0.075</field>
+            <field name="cost_out_usd">0.3</field>
+        </record>
+
+        <!-- Anthropic Claude-modellen (Messages-API). -->
+        <record id="model_claude_opus_48" model="ai.router.model">
+            <field name="name">Claude Opus 4.8</field>
+            <field name="code">claude-opus-4-8</field>
+            <field name="provider_id" ref="provider_anthropic"/>
+            <field name="sequence">10</field>
+            <field name="note">Krachtigst; voor de zwaarste taken.</field>
+            <field name="tier">heavy</field>
+            <field name="cost_in_usd">15.0</field>
+            <field name="cost_out_usd">75.0</field>
+        </record>
+        <record id="model_claude_sonnet_5" model="ai.router.model">
+            <field name="name">Claude Sonnet 5</field>
+            <field name="code">claude-sonnet-5</field>
+            <field name="provider_id" ref="provider_anthropic"/>
+            <field name="sequence">20</field>
+            <field name="note">Standaardkeuze: balans prijs/kwaliteit.</field>
+            <field name="tier">standard</field>
+            <field name="cost_in_usd">3.0</field>
+            <field name="cost_out_usd">15.0</field>
+        </record>
+        <record id="model_claude_haiku_45" model="ai.router.model">
+            <field name="name">Claude Haiku 4.5</field>
+            <field name="code">claude-haiku-4-5-20251001</field>
+            <field name="provider_id" ref="provider_anthropic"/>
+            <field name="sequence">30</field>
+            <field name="note">Snel en zuinig; voor batch/classificatie.</field>
+            <field name="tier">light</field>
+            <field name="cost_in_usd">1.0</field>
+            <field name="cost_out_usd">5.0</field>
+        </record>
+
+        <!-- Standaardroute; fallback instellen zodra een tweede dienst een
+             sleutel heeft. -->
+        <record id="route_default" model="ai.router.route">
+            <field name="name">Standaard</field>
+            <field name="purpose">default</field>
+            <field name="provider_id" ref="provider_mistral"/>
+            <field name="sequence">100</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <!-- Classificatieroute voor de werk-router: goedkoop, snel model. -->
+        <record id="route_classify" model="ai.router.route">
+            <field name="name">Classificatie</field>
+            <field name="purpose">classify</field>
+            <field name="provider_id" ref="provider_mistral"/>
+            <field name="model_id" ref="model_mistral_small"/>
+            <field name="max_tokens">256</field>
+            <field name="sequence">10</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <!-- Fase 2: werkregel CRM-leads (activeren wanneer gewenst). -->
+        <record id="dispatch_crm_leads" model="ai.router.dispatch">
+            <field name="name">CRM-leads → juiste opvolger</field>
+            <field name="source">crm.lead</field>
+            <field name="purpose">classify</field>
+            <field name="max_per_run">10</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <!-- Cron voor de werkregels; staat uit tot fase 2 bewust aangaat. -->
+        <record id="cron_dispatch_run_all" model="ir.cron">
+            <field name="name">AI Router: werkregels uitvoeren</field>
+            <field name="model_id" ref="model_ai_router_dispatch"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_run_all()</field>
+            <field name="interval_number">15</field>
+            <field name="interval_type">minutes</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <!-- Dagelijkse modellen-sync: haalt per geconfigureerde provider de
+             modellenlijst uit de provider-API (GET /models). Staat aan. -->
+        <record id="cron_sync_models" model="ir.cron">
+            <field name="name">AI Router: modellen synchroniseren</field>
+            <field name="model_id" ref="model_ai_router_provider"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_sync_all_models()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="active" eval="True"/>
+        </record>
+    </data>
+</odoo>

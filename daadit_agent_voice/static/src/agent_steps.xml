@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!--
+        De denkstappen-lijst. Bij een agent-beurt met verse stappen tonen we
+        de groeiende lijst; anders vallen we terug op het standaard
+        Typing-component (voor mensen die typen, of vóór de eerste stap).
+    -->
+    <t t-name="daadit_agent_voice.AgentSteps">
+        <t t-if="active">
+            <div class="o-daadit-AgentSteps d-flex flex-column small text-muted">
+                <t t-foreach="visibleSteps" t-as="step" t-key="step.seq">
+                    <div class="o-daadit-AgentSteps-line d-flex align-items-center gap-1"
+                         t-att-style="indentStyle(step)">
+                        <i t-if="isLast(step) and !steps.done"
+                           class="o-daadit-AgentSteps-bullet fa fa-spinner fa-spin opacity-75"/>
+                        <i t-else="" class="o-daadit-AgentSteps-bullet fa fa-check opacity-50"/>
+                        <span t-esc="step.text"/>
+                    </div>
+                </t>
+            </div>
+        </t>
+        <Typing t-else="" channel="props.channel" size="props.size"/>
+    </t>
+
+    <!--
+        Vervang het Typing-component in de compose-strook (toegevoegd door
+        mail's typing/composer_patch) door ons eigen AgentSteps. AgentSteps
+        toont de lijst óf valt terug op Typing, dus niet-agent-kanalen
+        gedragen zich exact als voorheen.
+    -->
+    <t t-inherit="mail.Composer" t-inherit-mode="extension">
+        <xpath expr="//*[hasclass('o-discuss-Typing')]/Typing" position="replace">
+            <AgentSteps channel="thread" size="'medium'"/>
+        </xpath>
+    </t>
+
+</templates>

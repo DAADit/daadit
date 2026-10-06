@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="social_media_tiktok" model="social.media">
+            <field name="name">TikTok</field>
+            <field name="media_type">tiktok</field>
+            <field name="media_description">Manage your TikTok accounts and schedule video posts</field>
+            <field name="image" type="base64" file="social_tiktok/static/src/img/tiktok.svg"/>
+        </record>
+
+        <record id="stream_type_user_videos" model="social.stream.type">
+            <field name="name">User Videos</field>
+            <field name="stream_type">tiktok_user_videos</field>
+            <field name="media_id" ref="social_media_tiktok"/>
+        </record>
+    </data>
+</odoo>

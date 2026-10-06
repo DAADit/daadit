@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Proactively refresh tokens that are about to expire; the on-demand
+             refresh in the Graph helper also handles this, but a periodic
+             refresh keeps long-lived sessions alive even if no one schedules
+             meetings for a while. -->
+        <record id="ir_cron_daadit_teams_token_refresh" model="ir.cron">
+            <field name="name">DAADit Teams: refresh user tokens</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_refresh_ms_teams_tokens()</field>
+            <field name="interval_number">6</field>
+            <field name="interval_type">hours</field>
+            <field name="active" eval="True"/>
+        </record>
+    </data>
+</odoo>

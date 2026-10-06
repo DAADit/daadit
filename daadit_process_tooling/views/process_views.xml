@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================ process ============================ -->
+    <record id="view_daadit_process_list" model="ir.ui.view">
+        <field name="name">daadit.process.list</field>
+        <field name="model">daadit.process</field>
+        <field name="arch" type="xml">
+            <list string="Processen">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="partner_id" optional="show"/>
+                <field name="validated_count" optional="show" string="Akkoord"/>
+                <field name="step_count" optional="show" string="Stappen"/>
+                <field name="progress" widget="progressbar" optional="show"/>
+                <field name="portal_visible" widget="boolean_toggle" optional="show"/>
+                <field name="is_template" optional="hide"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_daadit_process_form" model="ir.ui.view">
+        <field name="name">daadit.process.form</field>
+        <field name="model">daadit.process</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_copy_from_template" type="object"
+                            string="Neem template over" class="btn-primary"
+                            invisible="not template_id"/>
+                    <button name="action_open_portal_preview" type="object"
+                            string="Voorbeeld (portal)" icon="fa-eye"/>
+                    <button name="action_open_tool_preview" type="object"
+                            string="Externe HTML" icon="fa-external-link"
+                            invisible="not tool_html"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Template" bg_color="text-bg-info"
+                            invisible="not is_template"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Processnaam"/></h1>
+                    </div>
+                    <group>
+                        <group string="Algemeen">
+                            <field name="is_template"/>
+                            <field name="partner_id" invisible="is_template"
+                                   required="not is_template" options="{'no_create': True}"/>
+                            <field name="template_id" invisible="is_template"
+                                   options="{'no_create': True}"/>
+                            <field name="code"/>
+                            <field name="sequence"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                        <group string="Portalconfiguratie">
+                            <field name="portal_visible" widget="boolean_toggle"/>
+                            <field name="allow_validation" widget="boolean_toggle"/>
+                            <field name="partner_tooling_active" invisible="is_template"/>
+                            <field name="validated_count"/>
+                            <field name="step_count"/>
+                            <field name="progress" widget="progressbar"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Fasen" name="phases">
+                            <field name="phase_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Stappen" name="steps">
+                            <field name="step_ids">
+                                <list>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="phase_id"/>
+                                    <field name="name"/>
+                                    <field name="role" optional="show"/>
+                                    <field name="system" optional="show"/>
+                                    <field name="validation_state" optional="show"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Omschrijving" name="description">
+                            <field name="description"/>
+                        </page>
+                        <page string="Externe HTML (optioneel)" name="external_html">
+                            <div class="text-muted mb-2">
+                                Optioneel: een door YoMoRo gegenereerde self-contained HTML-tool.
+                                Als er fasen/stappen bestaan, gaat de native weergave voor.
+                            </div>
+                            <group>
+                                <field name="tool_filename" invisible="1"/>
+                                <field name="tool_html" filename="tool_filename" widget="binary"/>
+                                <field name="version"/>
+                                <field name="uploaded_on"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_daadit_process_search" model="ir.ui.view">
+        <field name="name">daadit.process.search</field>
+        <field name="model">daadit.process</field>
+        <field name="arch" type="xml">
+            <search string="Processen">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <filter name="customer_processes" string="Klantprocessen" domain="[('is_template', '=', False)]"/>
+                <filter name="templates" string="Templates" domain="[('is_template', '=', True)]"/>
+                <filter name="portal_visible" string="Portal-zichtbaar" domain="[('portal_visible', '=', True)]"/>
+                <separator/>
+                <filter name="inactive" string="Gearchiveerd" domain="[('active', '=', False)]"/>
+                <separator/>
+                <filter name="group_partner" string="Klant" context="{'group_by': 'partner_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- ============================ step ============================ -->
+    <record id="view_daadit_process_step_form" model="ir.ui.view">
+        <field name="name">daadit.process.step.form</field>
+        <field name="model">daadit.process.step</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Stapnaam"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="phase_id" options="{'no_create_edit': True}"/>
+                            <field name="sequence"/>
+                            <field name="role"/>
+                            <field name="system"/>
+                        </group>
+                        <group>
+                            <field name="input"/>
+                            <field name="output"/>
+                            <field name="validation_state"/>
+                            <field name="validated_by"/>
+                            <field name="validated_on"/>
+                        </group>
+                    </group>
+                    <separator string="Omschrijving"/>
+                    <field name="description"/>
+                    <separator string="Validatie-opmerking"/>
+                    <field name="validation_note"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_daadit_process_step_list" model="ir.ui.view">
+        <field name="name">daadit.process.step.list</field>
+        <field name="model">daadit.process.step</field>
+        <field name="arch" type="xml">
+            <list string="Stappen">
+                <field name="sequence" widget="handle"/>
+                <field name="process_id"/>
+                <field name="phase_id"/>
+                <field name="name"/>
+                <field name="role"/>
+                <field name="system"/>
+                <field name="validation_state"/>
+            </list>
+        </field>
+    </record>
+</odoo>

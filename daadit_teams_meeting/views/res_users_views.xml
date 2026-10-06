@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_users_form_teams" model="ir.ui.view">
+        <field name="name">res.users.form.inherit.daadit.teams</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Microsoft Teams" name="ms_teams">
+                    <group>
+                        <field name="ms_teams_account_upn"/>
+                        <field name="ms_teams_use_by_default"/>
+                    </group>
+                    <group>
+                        <button name="action_ms_teams_connect" type="object"
+                                string="Connect Microsoft Account" class="btn-primary"
+                                invisible="ms_teams_account_upn"/>
+                        <button name="action_ms_teams_disconnect" type="object"
+                                string="Disconnect" class="btn-secondary"
+                                invisible="not ms_teams_account_upn"
+                                confirm="Disconnect your Microsoft account from Odoo?"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_users_form_preferences_teams" model="ir.ui.view">
+        <field name="name">res.users.preferences.form.inherit.daadit.teams</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Microsoft Teams" name="ms_teams_pref">
+                    <group>
+                        <field name="ms_teams_account_upn"/>
+                        <field name="ms_teams_use_by_default"/>
+                    </group>
+                    <group>
+                        <button name="action_ms_teams_connect" type="object"
+                                string="Connect Microsoft Account" class="btn-primary"
+                                invisible="ms_teams_account_upn"/>
+                        <button name="action_ms_teams_disconnect" type="object"
+                                string="Disconnect" class="btn-secondary"
+                                invisible="not ms_teams_account_upn"
+                                confirm="Disconnect your Microsoft account from Odoo?"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

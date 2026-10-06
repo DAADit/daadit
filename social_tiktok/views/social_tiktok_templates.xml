@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+    <!-- Server-side QWeb template: rendered inside the post-composer preview panel -->
+    <template id="tiktok_preview" t-name="TikTok Preview">
+        <div class="o_social_preview o_social_tiktok_preview border rounded overflow-hidden">
+            <div class="o_social_preview_header d-flex m-3 align-items-center">
+                <span class="o_social_preview_icon_wrapper d-inline-block rounded-circle overflow-hidden me-2"
+                      style="background:#010101; width:40px; height:40px; display:flex; align-items:center; justify-content:center;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#ffffff" width="24" height="24">
+                        <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34l-.01-8.1A8.18 8.18 0 0020 9v-3.4a4.85 4.85 0 01-.41.09z"/>
+                    </svg>
+                </span>
+                <div class="o_social_preview_author">
+                    <b class="d-block">TikTok</b>
+                    <div class="text-muted small">
+                        <time t-esc="published_date"/>
+                    </div>
+                </div>
+            </div>
+            <div class="o_social_preview_message pb-3 mx-3" t-out="message"/>
+            <div t-if="not message" class="text-muted pb-3 mx-3 fst-italic small">
+                No caption entered yet.
+            </div>
+        </div>
+    </template>
+</data>
+</odoo>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        Append a "Schedules" section to the stock ai.agent form
+        (ai_app.ai_agent_view_form). Same flat xpath-into-sheet pattern
+        daadit_ai_mistral uses against this view — no dependency on the
+        stock form having a button box or notebook (Odoo 19's view
+        validator rejects assumptions about closed-source structure).
+    -->
+    <record id="ai_agent_view_form_inherit_daadit_schedule"
+            model="ir.ui.view">
+        <field name="name">ai.agent.view.form.inherit.daadit_schedule</field>
+        <field name="model">ai.agent</field>
+        <field name="inherit_id" ref="ai_app.ai_agent_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form//sheet" position="inside">
+
+                <separator string="Budget"/>
+                <div>
+                    <p class="text-muted">
+                        De grens voor deze collega alleen — chatbeurten
+                        én geplande runs samen. Leeg of 0 betekent: de
+                        standaard uit de instellingen. Bij 60% hoort de
+                        gebruiker het in het gesprek; op 100% pauzeren
+                        de geplande taken tot de volgende periode en kan
+                        de collega nog wel meedenken, maar niets meer
+                        uitvoeren.
+                    </p>
+                    <group>
+                        <field name="daadit_daily_cost_cap_eur"/>
+                        <field name="daadit_monthly_cost_cap_eur"/>
+                    </group>
+                </div>
+
+                <separator string="Schedules"/>
+                <div>
+                    <p class="text-muted">
+                        Run this agent automatically on a recurring basis.
+                        Each run is logged with the agent's findings and
+                        the tool actions it performed. Open a schedule to
+                        edit it or add a new one.
+                    </p>
+                    <field name="schedule_ids"
+                           context="{'default_agent_id': id}"/>
+                </div>
+
+                <separator string="Reparatiebereik"/>
+                <div>
+                    <p class="text-muted">
+                        Welke collega's deze agent autonoom mag
+                        repareren (prompt of planning). Zolang deze
+                        lijst leeg is verandert er niets aan de huidige
+                        stand; zodra er één regel staat, is de lijst
+                        uitputtend en wordt de rest geweigerd. Een regel
+                        werkt pas als er een mens bij <i>Aangezet
+                        door</i> staat — een agent kan zijn eigen bereik
+                        niet vergroten.
+                    </p>
+                    <field name="daadit_repair_scope_ids"
+                           context="{'default_agent_id': id}"/>
+                </div>
+
+                <separator string="Werkafspraken"/>
+                <div>
+                    <p class="text-muted">
+                        Wat een bedrijf deze collega anders laat doen dan
+                        zijn standaardopdracht. Ze staan los van de
+                        opdracht, dus een nieuwe standaard overschrijft ze
+                        niet. Zet een afspraak uit om terug te gaan naar
+                        de standaard.
+                    </p>
+                    <field name="daadit_werkafspraak_ids"
+                           context="{'default_agent_id': id}">
+                        <list editable="bottom">
+                            <field name="partner_id"/>
+                            <field name="name"/>
+                            <field name="author_name"/>
+                            <field name="create_date" string="Sinds"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </list>
+                    </field>
+                </div>
+
+                <separator string="Run log"/>
+                <div>
+                    <p class="text-muted">
+                        Every autonomous run this agent has performed —
+                        across all of its schedules. Each row is one
+                        execution with the findings (the agent's written
+                        answer), every tool call it made, and the token
+                        cost. Start here when you want to know exactly
+                        what the agent did.
+                    </p>
+                    <button name="action_view_runs" type="object"
+                            class="oe_stat_button" icon="fa-list-alt">
+                        <field name="run_count" widget="statinfo"
+                               string="Runs"/>
+                    </button>
+                </div>
+
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

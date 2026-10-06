@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Taken 1072/739: de kwaliteitsmeting per rol. De lijst staat op
+         gezakt en verslechterd, want dat zijn de twee getallen waarop
+         iemand moet handelen; het aantal geslaagde cases is context. -->
+    <record id="view_daadit_ai_eval_run_list" model="ir.ui.view">
+        <field name="name">daadit.ai.eval.run.list</field>
+        <field name="model">daadit.ai.eval.run</field>
+        <field name="arch" type="xml">
+            <list string="Kwaliteitsmetingen" create="false" edit="false">
+                <field name="date"/>
+                <field name="role"/>
+                <field name="case_count"/>
+                <field name="pass_count" sum="Geslaagd"/>
+                <field name="fail_count" sum="Gezakt"
+                       decoration-danger="fail_count &gt; 0"/>
+                <field name="untested_count" sum="Niet te beoordelen"/>
+                <field name="regression_count" sum="Verslechterd"
+                       decoration-danger="regression_count &gt; 0"/>
+                <field name="cost_usd" sum="Kosten (USD)"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_daadit_ai_eval_run_form" model="ir.ui.view">
+        <field name="name">daadit.ai.eval.run.form</field>
+        <field name="model">daadit.ai.eval.run</field>
+        <field name="arch" type="xml">
+            <form string="Kwaliteitsmeting" create="false" edit="false">
+                <header>
+                    <button name="action_measure_now" type="object"
+                            string="Deze rol opnieuw meten"
+                            class="btn-primary"
+                            confirm="Elke case is een echte agentbeurt en kost geld. Doorgaan?"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="display_name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="role"/>
+                            <field name="state"/>
+                            <field name="task_id"/>
+                        </group>
+                        <group>
+                            <field name="case_count"/>
+                            <field name="pass_count"/>
+                            <field name="fail_count"/>
+                            <field name="untested_count"/>
+                            <field name="regression_count"/>
+                            <field name="cost_usd"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Uitkomsten">
+                            <field name="result_ids" readonly="1">
+                                <list>
+                                    <field name="case_ref"/>
+                                    <field name="role"/>
+                                    <field name="agent_id"/>
+                                    <field name="llm_model"/>
+                                    <field name="verdict"/>
+                                    <field name="failed_detail"/>
+                                    <field name="cost_usd"/>
+                                    <field name="schedule_run_id"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Rapport">
+                            <field name="report_html" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_daadit_ai_eval_result_form" model="ir.ui.view">
+        <field name="name">daadit.ai.eval.result.form</field>
+        <field name="model">daadit.ai.eval.result</field>
+        <field name="arch" type="xml">
+            <form string="Eval-uitkomst" create="false" edit="false">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="case_ref"/>
+                            <field name="role"/>
+                            <field name="agent_id"/>
+                            <field name="llm_model"/>
+                        </group>
+                        <group>
+                            <field name="verdict"/>
+                            <field name="cost_usd"/>
+                            <field name="schedule_run_id"/>
+                            <field name="eval_run_id"/>
+                        </group>
+                    </group>
+                    <group string="Gezakte criteria">
+                        <field name="failed_detail" nolabel="1"/>
+                    </group>
+                    <group string="Niet te beoordelen">
+                        <field name="untested_detail" nolabel="1"/>
+                    </group>
+                    <group string="Antwoord van de collega">
+                        <field name="reply" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_daadit_ai_eval_result_list" model="ir.ui.view">
+        <field name="name">daadit.ai.eval.result.list</field>
+        <field name="model">daadit.ai.eval.result</field>
+        <field name="arch" type="xml">
+            <list string="Eval-uitkomsten" create="false" edit="false">
+                <field name="eval_run_id"/>
+                <field name="case_ref"/>
+                <field name="role"/>
+                <field name="agent_id"/>
+                <field name="verdict"/>
+                <field name="failed_detail"/>
+                <field name="cost_usd"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_daadit_ai_eval_run_search" model="ir.ui.view">
+        <field name="name">daadit.ai.eval.run.search</field>
+        <field name="model">daadit.ai.eval.run</field>
+        <field name="arch" type="xml">
+            <search string="Kwaliteitsmetingen">
+                <field name="role"/>
+                <filter name="with_regression" string="Met verslechtering"
+                        domain="[('regression_count', '&gt;', 0)]"/>
+                <filter name="with_fail" string="Met gezakte cases"
+                        domain="[('fail_count', '&gt;', 0)]"/>
+                <!-- Zie ai_claim_telemetry_views.xml: Odoo 19 weigert
+                     ``expand`` op een search-group. -->
+                <group name="groeperen">
+                    <filter name="group_role" string="Rol"
+                            context="{'group_by': 'role'}"/>
+                    <filter name="group_date" string="Dag"
+                            context="{'group_by': 'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_daadit_ai_eval_run" model="ir.actions.act_window">
+        <field name="name">Kwaliteitsmetingen</field>
+        <field name="res_model">daadit.ai.eval.run</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiley_face">
+                Nog niet gemeten.
+            </p>
+            <p>
+                De meting stelt elke collega een vaste reeks vragen en
+                beoordeelt het antwoord op taal, terugvragen, grenzen,
+                de herkomst van cijfers en de kosten. De beurten draaien
+                in testmodus, dus er wordt niets gewijzigd. De poort valt
+                alleen op verslechtering tegenover de vorige meting.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_daadit_ai_eval_run"
+              name="Kwaliteitsmetingen"
+              parent="ai_app.ai_menu_root"
+              action="action_daadit_ai_eval_run"
+              sequence="49"/>
+</odoo>

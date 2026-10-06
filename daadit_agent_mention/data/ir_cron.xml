@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_agent_mention" model="ir.cron">
+        <field name="name">DAADit AI: reageer op vermeldingen in chatter</field>
+        <field name="model_id" ref="model_daadit_agent_mention"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_process()</field>
+        <field name="interval_number">2</field>
+        <field name="interval_type">minutes</field>
+        <field name="active" eval="True"/>
+    </record>
+</odoo>

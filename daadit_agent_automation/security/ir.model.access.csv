@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_daadit_agent_automation_event_system,daadit.agent.automation.event.system,model_daadit_agent_automation_event,base.group_system,1,1,1,1

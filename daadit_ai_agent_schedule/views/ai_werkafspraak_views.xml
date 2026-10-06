@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="daadit_ai_werkafspraak_view_list" model="ir.ui.view">
+        <field name="name">daadit.ai.werkafspraak.list</field>
+        <field name="model">daadit.ai.werkafspraak</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="agent_id"/>
+                <field name="partner_id"/>
+                <field name="name"/>
+                <field name="origin"/>
+                <field name="author_name"/>
+                <field name="create_date" string="Sinds"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="daadit_ai_werkafspraak_view_form" model="ir.ui.view">
+        <field name="name">daadit.ai.werkafspraak.form</field>
+        <field name="model">daadit.ai.werkafspraak</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Uit" bg_color="text-bg-secondary"
+                            invisible="active"/>
+                    <group>
+                        <field name="agent_id"/>
+                        <field name="partner_id"/>
+                        <field name="name"/>
+                        <field name="active" widget="boolean_toggle"/>
+                    </group>
+                    <group string="Herkomst">
+                        <field name="origin"/>
+                        <field name="author_id"/>
+                        <field name="author_name"/>
+                        <field name="source_message_id"/>
+                        <field name="create_date" string="Sinds"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="daadit_ai_werkafspraak_view_search" model="ir.ui.view">
+        <field name="name">daadit.ai.werkafspraak.search</field>
+        <field name="model">daadit.ai.werkafspraak</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="agent_id"/>
+                <field name="partner_id"/>
+                <filter name="inactive" string="Uitgezet" domain="[('active', '=', False)]"/>
+                <group>
+                    <filter name="group_agent" string="Collega" context="{'group_by': 'agent_id'}"/>
+                    <filter name="group_partner" string="Bedrijf" context="{'group_by': 'partner_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_daadit_ai_werkafspraak" model="ir.actions.act_window">
+        <field name="name">Werkafspraken</field>
+        <field name="res_model">daadit.ai.werkafspraak</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Nog geen werkafspraken</p>
+            <p>
+                Wat een bedrijf een collega anders laat doen dan zijn
+                standaardopdracht. Een collega legt ze zelf vast als iemand
+                hem in een gesprek vraagt iets voortaan anders te doen.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_daadit_ai_werkafspraak"
+              name="Werkafspraken"
+              parent="ai_app.ai_menu_root"
+              action="action_daadit_ai_werkafspraak"
+              sequence="48"/>
+
+</odoo>

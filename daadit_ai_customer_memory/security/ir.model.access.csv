@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_daadit_ai_customer_memory_user,daadit.ai.customer.memory.user,model_daadit_ai_customer_memory,base.group_user,1,1,1,1
+access_daadit_ai_customer_memory_settings_admin,daadit.ai.customer.memory.settings.admin,model_daadit_ai_customer_memory_settings,base.group_system,1,1,1,1
+access_daadit_ai_customer_memory_backfill_admin,daadit.ai.customer.memory.backfill.admin,model_daadit_ai_customer_memory_backfill_wizard,base.group_system,1,1,1,1
+access_daadit_ai_customer_memory_log_admin,daadit.ai.customer.memory.log.admin,model_daadit_ai_customer_memory_log,base.group_system,1,1,1,1

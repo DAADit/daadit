@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_loes_model_list" model="ir.ui.view">
+        <field name="name">daadit.ai.loes.model.list</field>
+        <field name="model">daadit.ai.loes.model</field>
+        <field name="arch" type="xml">
+            <list string="Loes models" editable="bottom">
+                <header>
+                    <button name="action_sync_now" type="object"
+                            string="Refresh from Loes" class="btn-primary"/>
+                </header>
+                <field name="sequence" widget="handle"/>
+                <field name="technical_name"/>
+                <field name="label"/>
+                <field name="synced_from_api"/>
+                <field name="last_synced"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_loes_model_form" model="ir.ui.view">
+        <field name="name">daadit.ai.loes.model.form</field>
+        <field name="model">daadit.ai.loes.model</field>
+        <field name="arch" type="xml">
+            <form string="Loes model">
+                <header>
+                    <button name="action_sync_now" type="object"
+                            string="Refresh from Loes" class="btn-primary"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="technical_name"/>
+                        <field name="label"/>
+                        <field name="sequence"/>
+                        <field name="active"/>
+                        <field name="synced_from_api" readonly="1"/>
+                        <field name="last_synced" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_loes_model" model="ir.actions.act_window">
+        <field name="name">Loes Models</field>
+        <field name="res_model">daadit.ai.loes.model</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'active_test': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No Loes models yet</p>
+            <p>Use <b>Refresh from Loes</b> to pull the current model
+               list from the Loes API. This runs daily automatically.</p>
+        </field>
+    </record>
+
+    <!-- Het losse Models-menu is vervallen (2026-07-29): het register
+         wordt beheerd via AI . Configuration . Router: Providers &
+         modellen, dat live met dit register meeloopt. De action blijft
+         bestaan voor de "Refresh models"-knop in Settings. -->
+</odoo>

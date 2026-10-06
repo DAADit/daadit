@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_daadit_config_snapshot_list" model="ir.ui.view">
+        <field name="name">daadit.config.snapshot.list</field>
+        <field name="model">daadit.config.snapshot</field>
+        <field name="arch" type="xml">
+            <list create="false" delete="false">
+                <field name="vestiging"/>
+                <field name="package_number" string="Pakket"/>
+                <field name="create_date" string="Vastgelegd"/>
+                <field name="create_uid" string="Gemaakt door"/>
+                <field name="restored_at" optional="show"/>
+                <field name="name" optional="hide"/>
+                <field name="trigger" widget="badge"
+                       decoration-info="trigger == 'manual'"/>
+                <field name="agent_count" string="Collega's"/>
+                <field name="schedule_count" string="Planningen"/>
+                <field name="change_summary" string="Wijzigingen"
+                       optional="show"/>
+                <field name="digest" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_daadit_config_snapshot_form" model="ir.ui.view">
+        <field name="name">daadit.config.snapshot.form</field>
+        <field name="model">daadit.config.snapshot</field>
+        <field name="arch" type="xml">
+            <form string="Configuratiepakket" create="false">
+                <header>
+                    <button name="action_restore_dry_run" type="object"
+                            string="Proef terugrollen"
+                            class="btn-secondary" icon="fa-flask"/>
+                    <button name="action_restore" type="object"
+                            string="Terugrollen" class="btn-primary"
+                            icon="fa-undo"
+                            confirm="De configuratie van DEZE database wordt teruggerold naar dit pakket. Planningen blijven uit. Doorgaan?"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="vestiging"/>
+                            <field name="package_number"/>
+                            <field name="create_date" string="Vastgelegd"/>
+                            <field name="create_uid" string="Gemaakt door"/>
+                            <field name="trigger"/>
+                        </group>
+                        <group>
+                            <field name="agent_count" string="Collega's"/>
+                            <field name="schedule_count"
+                                   string="Planningen"/>
+                            <field name="digest"/>
+                        </group>
+                    </group>
+                    <separator string="Wijzigingen ten opzichte van het vorige pakket"/>
+                    <field name="change_summary" nolabel="1" readonly="1"/>
+                    <group invisible="not restore_preview and not restore_log">
+                        <group>
+                            <field name="restored_at"/>
+                            <field name="restored_by_id"/>
+                        </group>
+                    </group>
+                    <separator string="Proef van de laatste terugrol"
+                               invisible="not restore_preview"/>
+                    <field name="restore_preview" nolabel="1" readonly="1"
+                           invisible="not restore_preview"/>
+                    <separator string="Wat de terugrol feitelijk veranderde"
+                               invisible="not restore_log"/>
+                    <field name="restore_log" nolabel="1" readonly="1"
+                           invisible="not restore_log"/>
+                    <separator string="Configuratie"/>
+                    <field name="payload" nolabel="1" widget="ace"
+                           options="{'mode': 'json'}" readonly="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_daadit_config_snapshot" model="ir.actions.act_window">
+        <field name="name">Configuratiepakketten</field>
+        <field name="res_model">daadit.config.snapshot</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Nog geen pakketten
+            </p>
+            <p>
+                Elke nacht wordt de agentconfiguratie vastgelegd als een
+                genummerd pakket, maar alleen wanneer er iets is
+                veranderd. Elk pakket zegt wat er anders is dan het
+                vorige; terugrollen is een eerder pakket opnieuw
+                toepassen — eerst als proef, dan echt.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_daadit_config_snapshot"
+              name="Configuratiepakketten"
+              parent="base.menu_administration"
+              action="action_daadit_config_snapshot"
+              sequence="91"
+              groups="base.group_system"/>
+</odoo>

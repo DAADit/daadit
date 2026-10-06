@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ai_router_provider_view_list" model="ir.ui.view">
+        <field name="name">ai.router.provider.list</field>
+        <field name="model">ai.router.provider</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="default_model"/>
+                <field name="model_count" string="# Modellen"/>
+                <field name="models_last_sync" optional="show"/>
+                <field name="service_configured" column_invisible="1"/>
+                <field name="active" widget="boolean_toggle"
+                       invisible="not service_configured"/>
+                <button name="action_sync_models" type="object"
+                        string="Sync modellen" icon="fa-refresh"
+                        invisible="not service_configured"/>
+                <button name="action_open_ai_settings" type="object"
+                        string="Instellen in AI-instellingen" icon="fa-gear"
+                        invisible="service_configured"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="ai_router_provider_view_form" model="ir.ui.view">
+        <field name="name">ai.router.provider.form</field>
+        <field name="model">ai.router.provider</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_sync_models" type="object"
+                            string="Modellen verversen" class="btn-primary"
+                            icon="fa-refresh"
+                            invisible="not service_configured"/>
+                </header>
+                <sheet>
+                    <field name="service_configured" invisible="1"/>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="service_configured">
+                        Deze dienst heeft nog geen sleutel. Configureer hem in
+                        de AI-instellingen (of vul hieronder een eigen sleutel
+                        in); daarna kan de provider aangezet worden.
+                        <button name="action_open_ai_settings" type="object"
+                                string="Open AI-instellingen"
+                                class="btn btn-link p-0 ms-1"/>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="default_model"/>
+                            <field name="active" widget="boolean_toggle"
+                                   invisible="not service_configured"/>
+                        </group>
+                        <group>
+                            <field name="api_key" password="True"/>
+                            <field name="base_url" placeholder="standaard-URL van de dienst"/>
+                            <field name="timeout"/>
+                            <field name="sequence"/>
+                            <field name="models_last_sync" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Modellen" name="models">
+                            <field name="model_ids" context="{'active_test': False}">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="tier"/>
+                                    <field name="cost_in_usd" optional="show"/>
+                                    <field name="cost_out_usd" optional="show"/>
+                                    <field name="note" optional="hide"/>
+                                    <field name="rotation_excluded" optional="show"/>
+                                    <field name="instruction_verdict" optional="show"/>
+                                    <field name="instruction_checked_at" optional="hide"/>
+                                    <field name="active" widget="boolean_toggle"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notities" name="notes">
+                            <field name="note" placeholder="Notities…"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ai_router_provider_action" model="ir.actions.act_window">
+        <field name="name">Providers &amp; modellen</field>
+        <field name="res_model">ai.router.provider</field>
+        <field name="view_mode">list,form</field>
+        <!-- active_test uit: providers zonder sleutel blijven zichtbaar. -->
+        <field name="context">{'active_test': False}</field>
+    </record>
+</odoo>

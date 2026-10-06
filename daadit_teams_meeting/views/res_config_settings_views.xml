@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_teams" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.daadit.teams</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Microsoft Teams" string="Microsoft Teams" name="daadit_teams_meeting"
+                     logo="/daadit_teams_meeting/static/description/icon.png"
+                     groups="base.group_system">
+                    <block title="Microsoft Teams Meetings" name="ms_teams_block">
+                        <setting id="ms_teams_enabled_setting" string="Enable Microsoft Teams" help="Allow Odoo calendar events to use Microsoft Teams as videoconferencing provider.">
+                            <field name="ms_teams_enabled"/>
+                        </setting>
+                        <setting id="ms_teams_tenant_setting" string="Azure AD Tenant ID">
+                            <field name="ms_teams_tenant_id" placeholder="00000000-0000-0000-0000-000000000000"/>
+                        </setting>
+                        <setting id="ms_teams_client_setting" string="Application (Client) ID">
+                            <field name="ms_teams_client_id" placeholder="00000000-0000-0000-0000-000000000000"/>
+                        </setting>
+                        <setting id="ms_teams_secret_setting" string="Client Secret">
+                            <field name="ms_teams_client_secret" password="True"/>
+                        </setting>
+                        <setting id="ms_teams_redirect_setting" string="Redirect URI" help="Must match the redirect URI on the Azure AD application registration.">
+                            <field name="ms_teams_redirect_uri" placeholder="https://your-host/daadit_teams/oauth/callback"/>
+                        </setting>
+                        <setting id="ms_teams_test_setting" string="Diagnostics"
+                                 help="Validate the configured Azure AD credentials and your delegated Microsoft connection against Microsoft Graph.">
+                            <button name="action_test_teams_connection"
+                                    type="object"
+                                    string="Test connection"
+                                    class="btn btn-primary"
+                                    icon="fa-plug"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+</odoo>

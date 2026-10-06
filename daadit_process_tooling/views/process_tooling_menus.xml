@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_processes_customers" model="ir.actions.act_window">
+        <field name="name">Klantprocessen</field>
+        <field name="res_model">daadit.process</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('is_template', '=', False)]</field>
+        <field name="context">{'default_is_template': False, 'search_default_customer_processes': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Nog geen klantprocessen</p>
+            <p>Maak een proces aan op een klant (Contacten → tab Processtooling) of
+               hier, en kies eventueel een template als startpunt.</p>
+        </field>
+    </record>
+
+    <record id="action_processes_templates" model="ir.actions.act_window">
+        <field name="name">Templates</field>
+        <field name="res_model">daadit.process</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('is_template', '=', True)]</field>
+        <field name="context">{'default_is_template': True}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Nog geen templates</p>
+            <p>Templates zijn klant-onafhankelijke sjablonen die als startpunt dienen
+               voor klanten waar nog geen proces is ingericht.</p>
+        </field>
+    </record>
+
+    <!-- Separate top-level menu (branded web_icon can be added later). -->
+    <menuitem id="menu_process_tooling_root"
+              name="Processtooling"
+              sequence="90"/>
+
+    <menuitem id="menu_process_tooling_customers"
+              name="Klantprocessen"
+              parent="menu_process_tooling_root"
+              action="action_processes_customers"
+              sequence="10"/>
+
+    <menuitem id="menu_process_tooling_templates"
+              name="Templates"
+              parent="menu_process_tooling_root"
+              action="action_processes_templates"
+              sequence="20"/>
+</odoo>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_config_snapshot" model="ir.cron">
+        <field name="name">DAADit — Configuratie vastleggen</field>
+        <field name="model_id" ref="model_daadit_config_snapshot"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_capture()</field>
+        <field name="user_id" ref="base.user_root"/>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active" eval="True"/>
+    </record>
+
+    <!-- noupdate: een bewaartermijn die een beheerder heeft aangepast
+         hoort niet bij elke module-upgrade terug te springen naar 90. -->
+    <data noupdate="1">
+        <record id="param_snapshot_retention" model="ir.config_parameter">
+            <field name="key">daadit_tenant_blueprint.snapshot_retention_days</field>
+            <field name="value">90</field>
+        </record>
+    </data>
+</odoo>

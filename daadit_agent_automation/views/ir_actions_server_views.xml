@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_server_action_form_daadit_agent" model="ir.ui.view">
+        <field name="name">ir.actions.server.form.daadit_agent</field>
+        <field name="model">ir.actions.server</field>
+        <field name="inherit_id" ref="base.view_server_action_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//t[@name='action_content']" position="inside">
+                <group name="daadit_agent" invisible="state != 'daadit_agent'">
+                    <field name="daadit_schedule_id"
+                           required="state == 'daadit_agent'"
+                           options="{'no_create': True}"/>
+                    <field name="daadit_agent_id"/>
+                    <field name="daadit_prompt_template"
+                           required="state == 'daadit_agent'"
+                           placeholder="Er is een nieuw ticket: {{ object.name }}. Lees het en zet in de chatter wat de klant nodig heeft."/>
+                    <field name="daadit_run_mode" widget="radio"/>
+                    <field name="daadit_throttle_minutes"/>
+                    <field name="daadit_outcome" widget="radio"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

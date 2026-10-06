@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Taak 1071: het beeld boven de losse run. De lijst staat op
+         aandeel onverifieerbaar, want dat is het getal dat moet zakken;
+         de kosten staan ernaast zodat een goedkoper model een afweging
+         wordt en geen gevoel. -->
+    <record id="view_daadit_ai_claim_telemetry_list" model="ir.ui.view">
+        <field name="name">daadit.ai.claim.telemetry.list</field>
+        <field name="model">daadit.ai.claim.telemetry</field>
+        <field name="arch" type="xml">
+            <list string="Claim tegenover effect" create="false" edit="false">
+                <field name="date"/>
+                <field name="agent_name"/>
+                <field name="llm_model"/>
+                <field name="run_count" sum="Runs"/>
+                <field name="unverified_count" sum="Onverifieerbaar"/>
+                <field name="disputed_count" sum="Betwist" optional="show"/>
+                <field name="unverified_share" optional="show"/>
+                <field name="attention_count" sum="Vraagt aandacht" optional="show"/>
+                <field name="write_attempt_count" sum="Pogingen" optional="hide"/>
+                <field name="effective_write_count" sum="Effectief" optional="show"/>
+                <field name="lost_write_count" sum="Verloren" optional="show"/>
+                <field name="cost_eur" sum="Kosten" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_daadit_ai_claim_telemetry_form" model="ir.ui.view">
+        <field name="name">daadit.ai.claim.telemetry.form</field>
+        <field name="model">daadit.ai.claim.telemetry</field>
+        <field name="arch" type="xml">
+            <form string="Claim tegenover effect" create="false" edit="false">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="date"/>
+                            <field name="agent_id"/>
+                            <field name="agent_name"/>
+                            <field name="llm_model"/>
+                            <field name="cost_eur"/>
+                        </group>
+                        <group>
+                            <field name="run_count"/>
+                            <field name="unverified_count"/>
+                            <field name="unverified_share"/>
+                            <field name="attention_count"/>
+                            <field name="write_attempt_count"/>
+                            <field name="effective_write_count"/>
+                            <field name="lost_write_count"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Runs (bron)">
+                            <field name="run_ids" readonly="1">
+                                <list>
+                                    <field name="display_name"/>
+                                    <field name="state"/>
+                                    <field name="claims_unverified"/>
+                                    <field name="needs_attention"/>
+                                    <field name="attention_reason"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_daadit_ai_claim_telemetry_search" model="ir.ui.view">
+        <field name="name">daadit.ai.claim.telemetry.search</field>
+        <field name="model">daadit.ai.claim.telemetry</field>
+        <field name="arch" type="xml">
+            <search string="Claim tegenover effect">
+                <field name="agent_name"/>
+                <field name="llm_model"/>
+                <filter name="unverified" string="Met onverifieerbare claims"
+                        domain="[('unverified_count', '&gt;', 0)]"/>
+                <filter name="lost" string="Met verloren writes"
+                        domain="[('lost_write_count', '&gt;', 0)]"/>
+                <!-- Odoo 19 keurt ``expand``/``string`` op een search-group af
+                     (RELAXNG_ERR_INVALIDATTR): daar hoort een form-group met
+                     velden. Group-by-filters staan in een kale group, zoals
+                     mistral_usage_views.xml en agent_hire_views.xml. -->
+                <group name="groeperen">
+                    <filter name="group_agent" string="Collega"
+                            context="{'group_by': 'agent_name'}"/>
+                    <filter name="group_model" string="Model"
+                            context="{'group_by': 'llm_model'}"/>
+                    <filter name="group_date" string="Dag"
+                            context="{'group_by': 'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_daadit_ai_claim_telemetry" model="ir.actions.act_window">
+        <field name="name">Claim tegenover effect</field>
+        <field name="res_model">daadit.ai.claim.telemetry</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiley_face">
+                Nog niets geteld.
+            </p>
+            <p>
+                De dagtelling loopt 's nachts en telt per collega en per
+                model hoeveel runs werk claimden zonder dat een
+                geregistreerd effect dat dekt. Elk cijfer is via de runs
+                onder de regel na te rekenen.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_daadit_ai_claim_telemetry"
+              name="Claim tegenover effect"
+              parent="ai_app.ai_menu_root"
+              action="action_daadit_ai_claim_telemetry"
+              sequence="48"/>
+</odoo>

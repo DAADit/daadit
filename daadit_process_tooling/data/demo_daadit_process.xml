@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- DAADit's own onboarding process, linked to the main company partner.
+         The portal master switch (process_tooling_active) is intentionally NOT
+         set here so a manual toggle is never overwritten on upgrade. -->
+    <record id="proc_daadit_onboarding" model="daadit.process">
+        <field name="name">DAADit — Klant-onboarding &amp; implementatie (voorbeeld)</field>
+        <field name="partner_id" ref="base.main_partner"/>
+        <field name="is_template" eval="False"/>
+        <field name="portal_visible" eval="True"/>
+        <field name="allow_validation" eval="True"/>
+        <field name="version">v1</field>
+        <field name="sequence">5</field>
+        <field name="description" type="html"><p>Voorbeeldproces om de werking van de processtooling te tonen: navigeer door de fasen, valideer stappen (akkoord / aandachtspunt / afkeur) en pas ze aan in Odoo. Volledig native — geen HTML-bestanden nodig.</p></field>
+    </record>
+
+    <!-- Fasen -->
+    <record id="phase_daadit_1" model="daadit.process.phase">
+        <field name="process_id" ref="proc_daadit_onboarding"/>
+        <field name="name">1. Intake &amp; scope</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="phase_daadit_2" model="daadit.process.phase">
+        <field name="process_id" ref="proc_daadit_onboarding"/>
+        <field name="name">2. Analyse</field>
+        <field name="sequence">20</field>
+    </record>
+    <record id="phase_daadit_3" model="daadit.process.phase">
+        <field name="process_id" ref="proc_daadit_onboarding"/>
+        <field name="name">3. Inrichting</field>
+        <field name="sequence">30</field>
+    </record>
+    <record id="phase_daadit_4" model="daadit.process.phase">
+        <field name="process_id" ref="proc_daadit_onboarding"/>
+        <field name="name">4. Validatie</field>
+        <field name="sequence">40</field>
+    </record>
+    <record id="phase_daadit_5" model="daadit.process.phase">
+        <field name="process_id" ref="proc_daadit_onboarding"/>
+        <field name="name">5. Go-live</field>
+        <field name="sequence">50</field>
+    </record>
+    <record id="phase_daadit_6" model="daadit.process.phase">
+        <field name="process_id" ref="proc_daadit_onboarding"/>
+        <field name="name">6. Nazorg &amp; beheer</field>
+        <field name="sequence">60</field>
+    </record>
+
+    <!-- Stappen -->
+    <record id="step_daadit_1a" model="daadit.process.step">
+        <field name="phase_id" ref="phase_daadit_1"/>
+        <field name="name">Kennismaking &amp; doelen</field>
+        <field name="sequence">10</field>
+        <field name="role">Projectleider</field>
+        <field name="system">CRM</field>
+        <field name="input">Lead / aanvraag</field>
+        <field name="output">Doelstelling &amp; scope</field>
+        <field name="description" type="html"><p>Kennismakingsgesprek met de klant: business, pijnpunten en doelen scherp krijgen. Scope en verwachtingen vastleggen.</p></field>
+    </record>
+    <record id="step_daadit_1b" model="daadit.process.step">
+        <field name="phase_id" ref="phase_daadit_1"/>
+        <field name="name">Offerte &amp; akkoord</field>
+        <field name="sequence">20</field>
+        <field name="role">Sales / Projectleider</field>
+        <field name="system">Sales</field>
+        <field name="input">Scope</field>
+        <field name="output">Getekende offerte</field>
+        <field name="description" type="html"><p>Offerte opstellen op basis van scope en akkoord van de klant verkrijgen. Startdatum en key-users afstemmen.</p></field>
+    </record>
+
+    <record id="step_daadit_2a" model="daadit.process.step">
+        <field name="phase_id" ref="phase_daadit_2"/>
+        <field name="name">Procesinterviews</field>
+        <field name="sequence">10</field>
+        <field name="role">Consultant</field>
+        <field name="system">Knowledge</field>
+        <field name="input">Key-users</field>
+        <field name="output">Procesbeschrijvingen</field>
+        <field name="description" type="html"><p>Interviews met key-users per proces. Huidige werkwijze en wensen vastleggen als bron voor de inrichting.</p></field>
+    </record>
+    <record id="step_daadit_2b" model="daadit.process.step">
+        <field name="phase_id" ref="phase_daadit_2"/>
+        <field name="name">Swimlanes &amp; key-users</field>
+        <field name="sequence">20</field>
+        <field name="role">Consultant</field>
+        <field name="system">Knowledge</field>
+        <field name="input">Interviews</field>
+        <field name="output">Swimlanes + rol-proces-matrix</field>
+        <field name="description" type="html"><p>Processen visualiseren als swimlanes; rollen en key-users per procesfase bepalen.</p></field>
+    </record>
+
+    <record id="step_daadit_3a" model="daadit.process.step">
+        <field name="phase_id" ref="phase_daadit_3"/>
+        <field name="name">Odoo-configuratie</field>
+        <field name="sequence">10</field>
+        <field name="role">Consultant / Dev</field>
+        <field name="system">Odoo</field>
+        <field name="input">Swimlanes</field>
+        <field name="output">Ingerichte modules</field>
+        <field name="description" type="html"><p>Odoo inrichten conform de gevalideerde processen: apps, workflows, rechten en rapportages.</p></field>
+    </record>
+    <record id="step_daadit_3b" model="daadit.process.step">
+        <field name="phase_id" ref="phase_daadit_3"/>
+        <field name="name">Data-migratie</field>
+        <field name="sequence">20</field>
+        <field name="role">Developer</field>
+        <field name="system">Odoo</field>
+        <field name="input">Brondata</field>
+        <field name="output">Gemigreerde data</field>
+        <field name="description" type="html"><p>Stamdata en historische data migreren en controleren (klanten, producten, openstaande posten).</p></field>
+    </record>
+
+    <record id="step_daadit_4a" model="daadit.process.step">
+        <field name="phase_id" ref="phase_daadit_4"/>
+        <field name="name">Key-user reviews</field>
+        <field name="sequence">10</field>
+        <field name="role">Key-users</field>
+        <field name="system">Processtool</field>
+        <field name="input">Ingerichte omgeving</field>
+        <field name="output">Feedback / akkoord</field>
+        <field name="description" type="html"><p>Key-users lopen hun processen na in de omgeving en valideren of het klopt met de praktijk.</p></field>
+    </record>
+    <record id="step_daadit_4b" model="daadit.process.step">
+        <field name="phase_id" ref="phase_daadit_4"/>
+        <field name="name">Acceptatietest</field>
+        <field name="sequence">20</field>
+        <field name="role">Projectleider</field>
+        <field name="system">Helpdesk</field>
+        <field name="input">Testscenario's</field>
+        <field name="output">Acceptatie</field>
+        <field name="description" type="html"><p>Gezamenlijke acceptatietest op de belangrijkste flows. Bevindingen loggen en oplossen.</p></field>
+    </record>
+
+    <record id="step_daadit_5a" model="daadit.process.step">
+        <field name="phase_id" ref="phase_daadit_5"/>
+        <field name="name">Livegang</field>
+        <field name="sequence">10</field>
+        <field name="role">Projectleider</field>
+        <field name="system">Odoo</field>
+        <field name="input">Acceptatie</field>
+        <field name="output">Productie live</field>
+        <field name="description" type="html"><p>Overgang naar productie, communicatie naar het team en cut-over van de oude werkwijze.</p></field>
+    </record>
+    <record id="step_daadit_5b" model="daadit.process.step">
+        <field name="phase_id" ref="phase_daadit_5"/>
+        <field name="name">Hypercare</field>
+        <field name="sequence">20</field>
+        <field name="role">Support</field>
+        <field name="system">Helpdesk</field>
+        <field name="input">Live omgeving</field>
+        <field name="output">Stabiele operatie</field>
+        <field name="description" type="html"><p>Intensieve begeleiding de eerste periode na livegang; snel schakelen op vragen en incidenten.</p></field>
+    </record>
+
+    <record id="step_daadit_6a" model="daadit.process.step">
+        <field name="phase_id" ref="phase_daadit_6"/>
+        <field name="name">Evaluatie</field>
+        <field name="sequence">10</field>
+        <field name="role">Projectleider</field>
+        <field name="system">Knowledge</field>
+        <field name="input">Ervaringen</field>
+        <field name="output">Evaluatierapport</field>
+        <field name="description" type="html"><p>Project evalueren met de klant: doelen behaald, geleerde lessen, vervolgstappen.</p></field>
+    </record>
+    <record id="step_daadit_6b" model="daadit.process.step">
+        <field name="phase_id" ref="phase_daadit_6"/>
+        <field name="name">Doorontwikkeling / SLA</field>
+        <field name="sequence">20</field>
+        <field name="role">Account / Support</field>
+        <field name="system">Helpdesk</field>
+        <field name="input">Wensen</field>
+        <field name="output">Beheer &amp; backlog</field>
+        <field name="description" type="html"><p>Overgang naar beheer: SLA, doorontwikkeling en periodieke reviews.</p></field>
+    </record>
+</odoo>

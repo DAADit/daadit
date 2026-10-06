@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- De app-koppeling op de fase: die levert het icoon op het canvas. -->
+    <record id="view_daadit_process_form_canvas" model="ir.ui.view">
+        <field name="name">daadit.process.form.canvas</field>
+        <field name="model">daadit.process</field>
+        <field name="inherit_id" ref="daadit_process_tooling.view_daadit_process_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='phase_ids']/list/field[@name='name']"
+                   position="after">
+                <field name="app_module_id"
+                       options="{'no_create': True, 'no_open': True}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Het project waarin bevindingen landen, plus de teller ernaartoe. -->
+    <record id="view_daadit_process_form_project" model="ir.ui.view">
+        <field name="name">daadit.process.form.project</field>
+        <field name="model">daadit.process</field>
+        <field name="inherit_id" ref="daadit_process_tooling.view_daadit_process_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="after">
+                <field name="project_id" invisible="is_template"
+                       options="{'no_create_edit': True}"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_daadit_process_step_form_origin" model="ir.ui.view">
+        <field name="name">daadit.process.step.form.origin</field>
+        <field name="model">daadit.process.step</field>
+        <field name="inherit_id" ref="daadit_process_tooling.view_daadit_process_step_form"/>
+        <field name="arch" type="xml">
+            <field name="validation_note" position="after">
+                <field name="origin"/>
+                <field name="task_id" readonly="1"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Niveau 1: het domein. -->
+    <record id="view_daadit_process_domain_list" model="ir.ui.view">
+        <field name="name">daadit.process.domain.list</field>
+        <field name="model">daadit.process.domain</field>
+        <field name="arch" type="xml">
+            <list string="Domeinen">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="process_count"/>
+                <field name="app_count"/>
+                <field name="project_id" optional="show"/>
+                <field name="portal_visible" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_daadit_process_domain_form" model="ir.ui.view">
+        <field name="name">daadit.process.domain.form</field>
+        <field name="model">daadit.process.domain</field>
+        <field name="arch" type="xml">
+            <form string="Domein">
+                <header>
+                    <button name="action_view_domain_canvas" type="object"
+                            string="Open het canvas" class="btn-primary"
+                            icon="fa-sitemap"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_domain_tasks" type="object"
+                                class="oe_stat_button" icon="fa-tasks">
+                            <span class="o_stat_text">Taken</span>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Order to Cash"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="project_id"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group>
+                            <field name="portal_visible"/>
+                            <field name="allow_validation"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Processen" name="processes">
+                            <field name="process_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="project_id"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Omschrijving" name="description">
+                            <field name="description"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_process_domains" model="ir.actions.act_window">
+        <field name="name">Domeinen</field>
+        <field name="res_model">daadit.process.domain</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_process_tooling_domains"
+              name="Domeinen"
+              parent="daadit_process_tooling.menu_process_tooling_root"
+              action="action_process_domains"
+              sequence="5"/>
+
+    <record id="view_daadit_process_form_domain" model="ir.ui.view">
+        <field name="name">daadit.process.form.domain</field>
+        <field name="model">daadit.process</field>
+        <field name="inherit_id" ref="daadit_process_tooling.view_daadit_process_form"/>
+        <field name="arch" type="xml">
+            <field name="partner_id" position="before">
+                <field name="domain_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_daadit_process_link_list" model="ir.ui.view">
+        <field name="name">daadit.process.link.list</field>
+        <field name="model">daadit.process.link</field>
+        <field name="arch" type="xml">
+            <list string="Verbindingen">
+                <field name="process_id"/>
+                <field name="source_step_id"/>
+                <field name="target_step_id"/>
+                <field name="label"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_daadit_process_link_form" model="ir.ui.view">
+        <field name="name">daadit.process.link.form</field>
+        <field name="model">daadit.process.link</field>
+        <field name="arch" type="xml">
+            <form string="Verbinding">
+                <group>
+                    <field name="source_step_id"/>
+                    <field name="target_step_id"/>
+                    <field name="label"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+</odoo>

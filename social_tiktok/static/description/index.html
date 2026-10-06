@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Social TikTok — Odoo 19</title>
+</head>
+<body style="font-family:'Segoe UI',system-ui,Arial,sans-serif;margin:0;padding:0;background:#ffffff;color:#1a1a2e;">
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<div style="background-color:#010101;padding:72px 40px 80px;text-align:center;">
+
+  <!-- Badge -->
+  <div style="display:inline-flex;align-items:center;gap:10px;border:1px solid #336870;border-radius:999px;padding:8px 22px;margin-bottom:32px;background:#111122;">
+    <img src="icon.png" width="24" height="24" style="width:24px;height:24px;vertical-align:middle;" />
+    <span style="font-size:11px;letter-spacing:2.5px;text-transform:uppercase;color:#69C9D0;font-weight:700;">Odoo 19 &nbsp;·&nbsp; Social Marketing</span>
+  </div>
+
+  <br/>
+
+  <!-- Headline -->
+  <div style="margin-bottom:20px;">
+    <span style="font-size:60px;font-weight:900;color:#ffffff;letter-spacing:-1.5px;line-height:1.05;">Social&nbsp;</span><span style="font-size:60px;font-weight:900;color:#69C9D0;letter-spacing:-1.5px;line-height:1.05;">TikTok</span>
+    <br/>
+    <span style="font-size:60px;font-weight:900;color:#ffffff;letter-spacing:-1.5px;line-height:1.05;">Integration</span>
+  </div>
+
+  <!-- Sub -->
+  <p style="font-size:17px;color:#9090a8;max-width:580px;margin:0 auto 44px;line-height:1.75;">
+    Connect TikTok creator or business accounts to Odoo's Social Marketing app.
+    Schedule videos, stream your feed, and track engagement — all from one place.
+  </p>
+
+  <!-- Stats row -->
+  <table style="max-width:540px;width:100%;margin:0 auto 44px;border:1px solid #2d4a4e;border-collapse:collapse;">
+    <tr>
+      <td style="padding:18px 8px;text-align:center;border-right:1px solid #2d4a4e;">
+        <span style="display:block;font-size:22px;font-weight:800;color:#69C9D0;line-height:1;margin-bottom:5px;">OAuth</span>
+        <span style="font-size:10px;color:#556677;text-transform:uppercase;letter-spacing:1px;">2.0 Auth</span>
+      </td>
+      <td style="padding:18px 8px;text-align:center;border-right:1px solid #2d4a4e;">
+        <span style="display:block;font-size:22px;font-weight:800;color:#69C9D0;line-height:1;margin-bottom:5px;">8</span>
+        <span style="font-size:10px;color:#556677;text-transform:uppercase;letter-spacing:1px;">Features</span>
+      </td>
+      <td style="padding:18px 8px;text-align:center;border-right:1px solid #2d4a4e;">
+        <span style="display:block;font-size:22px;font-weight:800;color:#69C9D0;line-height:1;margin-bottom:5px;">19.0</span>
+        <span style="font-size:10px;color:#556677;text-transform:uppercase;letter-spacing:1px;">Odoo Ver.</span>
+      </td>
+      <td style="padding:18px 8px;text-align:center;">
+        <span style="display:block;font-size:22px;font-weight:800;color:#69C9D0;line-height:1;margin-bottom:5px;">LGPL</span>
+        <span style="font-size:10px;color:#556677;text-transform:uppercase;letter-spacing:1px;">License</span>
+      </td>
+    </tr>
+  </table>
+
+  <!-- Pills -->
+  <div>
+    <span style="display:inline-block;background:#0a2428;border:1px solid #336870;color:#69C9D0;border-radius:999px;padding:7px 18px;font-size:12.5px;font-weight:500;margin:4px;">OAuth 2.0</span>
+    <span style="display:inline-block;background:#0a2428;border:1px solid #336870;color:#69C9D0;border-radius:999px;padding:7px 18px;font-size:12.5px;font-weight:500;margin:4px;">Video Publishing</span>
+    <span style="display:inline-block;background:#0a2428;border:1px solid #336870;color:#69C9D0;border-radius:999px;padding:7px 18px;font-size:12.5px;font-weight:500;margin:4px;">Feed / Stream</span>
+    <span style="display:inline-block;background:#0a2428;border:1px solid #336870;color:#69C9D0;border-radius:999px;padding:7px 18px;font-size:12.5px;font-weight:500;margin:4px;">Engagement Stats</span>
+    <span style="display:inline-block;background:#0a2428;border:1px solid #336870;color:#69C9D0;border-radius:999px;padding:7px 18px;font-size:12.5px;font-weight:500;margin:4px;">Privacy Controls</span>
+    <span style="display:inline-block;background:#0a2428;border:1px solid #336870;color:#69C9D0;border-radius:999px;padding:7px 18px;font-size:12.5px;font-weight:500;margin:4px;">Token Refresh</span>
+  </div>
+
+</div>
+
+<hr style="border:none;border-top:1px solid #f0f0f5;margin:0;" />
+
+<!-- ═══════════════════ FEATURES ═══════════════════ -->
+<div style="max-width:980px;margin:0 auto;padding:64px 36px;">
+
+  <!-- Section header -->
+  <table style="border-collapse:collapse;margin-bottom:40px;"><tr>
+    <td style="width:4px;padding:0;background:#EE1D52;border-radius:4px;vertical-align:top;">&nbsp;</td>
+    <td style="padding-left:16px;vertical-align:top;">
+      <h2 style="font-size:28px;font-weight:800;color:#0d0d18;margin:0 0 6px;letter-spacing:-0.4px;">What's Included</h2>
+      <p style="font-size:14px;color:#8a8a9a;margin:0;">Everything you need to manage TikTok from inside Odoo</p>
+    </td>
+  </tr></table>
+
+  <!-- Row 1 -->
+  <table style="width:100%;border-collapse:separate;border-spacing:0;margin-bottom:16px;"><tr>
+    <td style="width:33%;padding-right:8px;vertical-align:top;">
+      <div style="border:1px solid #ebebf2;border-radius:14px;padding:24px 20px;background:#fff;height:100%;">
+        <div style="width:46px;height:46px;border-radius:12px;background:#fde8ec;text-align:center;line-height:46px;font-size:22px;margin-bottom:14px;">🔗</div>
+        <h3 style="font-size:15px;font-weight:700;color:#111;margin:0 0 8px;">Account Linking</h3>
+        <p style="font-size:13px;color:#686880;margin:0;line-height:1.65;">Connect one or more TikTok creator or business accounts via OAuth 2.0 with a single click.</p>
+      </div>
+    </td>
+    <td style="width:33%;padding:0 4px;vertical-align:top;">
+      <div style="border:1px solid #ebebf2;border-radius:14px;padding:24px 20px;background:#fff;height:100%;">
+        <div style="width:46px;height:46px;border-radius:12px;background:#e0f7f9;text-align:center;line-height:46px;font-size:22px;margin-bottom:14px;">🎬</div>
+        <h3 style="font-size:15px;font-weight:700;color:#111;margin:0 0 8px;">Video Publishing</h3>
+        <p style="font-size:13px;color:#686880;margin:0;line-height:1.65;">Upload and publish videos to TikTok directly from the Social Marketing post composer.</p>
+      </div>
+    </td>
+    <td style="width:33%;padding-left:8px;vertical-align:top;">
+      <div style="border:1px solid #ebebf2;border-radius:14px;padding:24px 20px;background:#fff;height:100%;">
+        <div style="width:46px;height:46px;border-radius:12px;background:#eaf6f7;text-align:center;line-height:46px;font-size:22px;margin-bottom:14px;">🔒</div>
+        <h3 style="font-size:15px;font-weight:700;color:#111;margin:0 0 8px;">Privacy Control</h3>
+        <p style="font-size:13px;color:#686880;margin:0;line-height:1.65;">Choose Public, Friends, Followers, or Private visibility per post before publishing.</p>
+      </div>
+    </td>
+  </tr></table>
+
+  <!-- Row 2 -->
+  <table style="width:100%;border-collapse:separate;border-spacing:0;margin-bottom:16px;"><tr>
+    <td style="width:33%;padding-right:8px;vertical-align:top;">
+      <div style="border:1px solid #ebebf2;border-radius:14px;padding:24px 20px;background:#fff;height:100%;">
+        <div style="width:46px;height:46px;border-radius:12px;background:#e0f7f9;text-align:center;line-height:46px;font-size:22px;margin-bottom:14px;">📺</div>
+        <h3 style="font-size:15px;font-weight:700;color:#111;margin:0 0 8px;">Feed / Stream</h3>
+        <p style="font-size:13px;color:#686880;margin:0;line-height:1.65;">Pull your latest published videos into the Social Marketing kanban feed view automatically.</p>
+      </div>
+    </td>
+    <td style="width:33%;padding:0 4px;vertical-align:top;">
+      <div style="border:1px solid #ebebf2;border-radius:14px;padding:24px 20px;background:#fff;height:100%;">
+        <div style="width:46px;height:46px;border-radius:12px;background:#fde8ec;text-align:center;line-height:46px;font-size:22px;margin-bottom:14px;">📊</div>
+        <h3 style="font-size:15px;font-weight:700;color:#111;margin:0 0 8px;">Engagement Stats</h3>
+        <p style="font-size:13px;color:#686880;margin:0;line-height:1.65;">Display likes, comments, shares, and views on each video card inside the feed.</p>
+      </div>
+    </td>
+    <td style="width:33%;padding-left:8px;vertical-align:top;">
+      <div style="border:1px solid #ebebf2;border-radius:14px;padding:24px 20px;background:#fff;height:100%;">
+        <div style="width:46px;height:46px;border-radius:12px;background:#eaf6f7;text-align:center;line-height:46px;font-size:22px;margin-bottom:14px;">👥</div>
+        <h3 style="font-size:15px;font-weight:700;color:#111;margin:0 0 8px;">Account Statistics</h3>
+        <p style="font-size:13px;color:#686880;margin:0;line-height:1.65;">Sync follower count and total likes to the Accounts dashboard for a quick overview.</p>
+      </div>
+    </td>
+  </tr></table>
+
+  <!-- Row 3 -->
+  <table style="width:100%;border-collapse:separate;border-spacing:0;"><tr>
+    <td style="width:33%;padding-right:8px;vertical-align:top;">
+      <div style="border:1px solid #ebebf2;border-radius:14px;padding:24px 20px;background:#fff;height:100%;">
+        <div style="width:46px;height:46px;border-radius:12px;background:#e0f7f9;text-align:center;line-height:46px;font-size:22px;margin-bottom:14px;">⚙️</div>
+        <h3 style="font-size:15px;font-weight:700;color:#111;margin:0 0 8px;">Settings UI</h3>
+        <p style="font-size:13px;color:#686880;margin:0;line-height:1.65;">Store TikTok app credentials securely in Odoo system parameters — no code changes needed.</p>
+      </div>
+    </td>
+    <td style="width:33%;padding:0 4px;vertical-align:top;">
+      <div style="border:1px solid #ebebf2;border-radius:14px;padding:24px 20px;background:#fff;height:100%;">
+        <div style="width:46px;height:46px;border-radius:12px;background:#fde8ec;text-align:center;line-height:46px;font-size:22px;margin-bottom:14px;">🔄</div>
+        <h3 style="font-size:15px;font-weight:700;color:#111;margin:0 0 8px;">Token Refresh</h3>
+        <p style="font-size:13px;color:#686880;margin:0;line-height:1.65;">Built-in access token refresh helper keeps accounts connected without re-authorising manually.</p>
+      </div>
+    </td>
+    <td style="width:33%;padding-left:8px;vertical-align:top;"></td>
+  </tr></table>
+
+</div>
+
+<hr style="border:none;border-top:1px solid #f0f0f5;margin:0;" />
+
+<!-- ═══════════════════ REQUIREMENTS ═══════════════════ -->
+<div style="max-width:980px;margin:0 auto;padding:64px 36px;">
+
+  <table style="border-collapse:collapse;margin-bottom:40px;"><tr>
+    <td style="width:4px;padding:0;background:#EE1D52;border-radius:4px;vertical-align:top;">&nbsp;</td>
+    <td style="padding-left:16px;vertical-align:top;">
+      <h2 style="font-size:28px;font-weight:800;color:#0d0d18;margin:0 0 6px;letter-spacing:-0.4px;">Requirements</h2>
+      <p style="font-size:14px;color:#8a8a9a;margin:0;">What you need before installing</p>
+    </td>
+  </tr></table>
+
+  <table style="width:100%;border-collapse:collapse;font-size:14px;border:1px solid #e0e0ec;border-radius:12px;overflow:hidden;">
+    <thead>
+      <tr style="background:#010101;">
+        <th style="padding:13px 18px;text-align:left;color:#69C9D0;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;width:30%;">Requirement</th>
+        <th style="padding:13px 18px;text-align:left;color:#69C9D0;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;">Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td style="padding:13px 18px;border-bottom:1px solid #f0f0f5;color:#111;font-weight:600;">Odoo version</td>
+        <td style="padding:13px 18px;border-bottom:1px solid #f0f0f5;color:#3a3a52;">19.0</td>
+      </tr>
+      <tr style="background:#fafafe;">
+        <td style="padding:13px 18px;border-bottom:1px solid #f0f0f5;color:#111;font-weight:600;">Odoo modules</td>
+        <td style="padding:13px 18px;border-bottom:1px solid #f0f0f5;color:#3a3a52;"><code style="background:#f0f0f8;border:1px solid #e0e0ec;border-radius:4px;padding:2px 7px;font-size:12px;color:#d63384;font-family:'Courier New',monospace;">social</code> (Social Marketing)</td>
+      </tr>
+      <tr>
+        <td style="padding:13px 18px;border-bottom:1px solid #f0f0f5;color:#111;font-weight:600;">TikTok account</td>
+        <td style="padding:13px 18px;border-bottom:1px solid #f0f0f5;color:#3a3a52;">Creator or Business account</td>
+      </tr>
+      <tr style="background:#fafafe;">
+        <td style="padding:13px 18px;color:#111;font-weight:600;">TikTok Developer App</td>
+        <td style="padding:13px 18px;color:#3a3a52;">Registered at <a href="https://developers.tiktok.com" target="_blank" style="color:#69C9D0;">developers.tiktok.com</a> with <strong>Login Kit</strong> and <strong>Content Posting API</strong> enabled</td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
+<hr style="border:none;border-top:1px solid #f0f0f5;margin:0;" />
+
+<!-- ═══════════════════ INSTALLATION ═══════════════════ -->
+<div style="max-width:980px;margin:0 auto;padding:64px 36px;">
+
+  <table style="border-collapse:collapse;margin-bottom:40px;"><tr>
+    <td style="width:4px;padding:0;background:#EE1D52;border-radius:4px;vertical-align:top;">&nbsp;</td>
+    <td style="padding-left:16px;vertical-align:top;">
+      <h2 style="font-size:28px;font-weight:800;color:#0d0d18;margin:0 0 6px;letter-spacing:-0.4px;">Installation</h2>
+      <p style="font-size:14px;color:#8a8a9a;margin:0;">Get up and running in minutes</p>
+    </td>
+  </tr></table>
+
+  <!-- Step 1 -->
+  <table style="width:100%;border-collapse:collapse;margin-bottom:2px;"><tr>
+    <td style="width:56px;text-align:center;vertical-align:top;padding-top:20px;">
+      <div style="width:42px;height:42px;border-radius:50%;background:#010101;color:#69C9D0;font-weight:800;font-size:16px;text-align:center;line-height:42px;border:2px solid #336870;margin:0 auto;">1</div>
+    </td>
+    <td style="vertical-align:top;padding:20px 0 28px 16px;border-bottom:1px dashed #e8e8f0;">
+      <h4 style="font-size:16px;font-weight:700;color:#0d0d18;margin:0 0 8px;">Add to addons path</h4>
+      <p style="font-size:13.5px;color:#5a5a72;margin:0;line-height:1.7;">
+        Copy the <code style="background:#f0f0f8;border:1px solid #e0e0ec;border-radius:4px;padding:2px 6px;font-size:12px;color:#d63384;font-family:'Courier New',monospace;">social_tiktok</code> folder into your custom addons directory and ensure it is listed in <code style="background:#f0f0f8;border:1px solid #e0e0ec;border-radius:4px;padding:2px 6px;font-size:12px;color:#d63384;font-family:'Courier New',monospace;">addons_path</code> in your Odoo configuration file.
+      </p>
+    </td>
+  </tr></table>
+
+  <!-- Step 2 -->
+  <table style="width:100%;border-collapse:collapse;margin-bottom:2px;"><tr>
+    <td style="width:56px;text-align:center;vertical-align:top;padding-top:20px;">
+      <div style="width:42px;height:42px;border-radius:50%;background:#010101;color:#69C9D0;font-weight:800;font-size:16px;text-align:center;line-height:42px;border:2px solid #336870;margin:0 auto;">2</div>
+    </td>
+    <td style="vertical-align:top;padding:20px 0 28px 16px;border-bottom:1px dashed #e8e8f0;">
+      <h4 style="font-size:16px;font-weight:700;color:#0d0d18;margin:0 0 8px;">Restart the server</h4>
+      <p style="font-size:13.5px;color:#5a5a72;margin:0;line-height:1.7;">Restart your Odoo server so the new module is discovered and its assets are loaded.</p>
+    </td>
+  </tr></table>
+
+  <!-- Step 3 -->
+  <table style="width:100%;border-collapse:collapse;"><tr>
+    <td style="width:56px;text-align:center;vertical-align:top;padding-top:20px;">
+      <div style="width:42px;height:42px;border-radius:50%;background:#010101;color:#69C9D0;font-weight:800;font-size:16px;text-align:center;line-height:42px;border:2px solid #336870;margin:0 auto;">3</div>
+    </td>
+    <td style="vertical-align:top;padding:20px 0 28px 16px;">
+      <h4 style="font-size:16px;font-weight:700;color:#0d0d18;margin:0 0 8px;">Install from Apps</h4>
+      <p style="font-size:13.5px;color:#5a5a72;margin:0;line-height:1.7;">Go to <strong>Apps</strong>, search for <strong>Social TikTok</strong>, and click <strong>Install</strong>.</p>
+    </td>
+  </tr></table>
+
+</div>
+
+<hr style="border:none;border-top:1px solid #f0f0f5;margin:0;" />
+
+<!-- ═══════════════════ CONFIGURATION ═══════════════════ -->
+<div style="max-width:980px;margin:0 auto;padding:64px 36px;">
+
+  <table style="border-collapse:collapse;margin-bottom:40px;"><tr>
+    <td style="width:4px;padding:0;background:#EE1D52;border-radius:4px;vertical-align:top;">&nbsp;</td>
+    <td style="padding-left:16px;vertical-align:top;">
+      <h2 style="font-size:28px;font-weight:800;color:#0d0d18;margin:0 0 6px;letter-spacing:-0.4px;">Configuration</h2>
+      <p style="font-size:14px;color:#8a8a9a;margin:0;">Three quick steps to connect your TikTok account</p>
+    </td>
+  </tr></table>
+
+  <!-- Step 1 -->
+  <table style="width:100%;border-collapse:collapse;margin-bottom:2px;"><tr>
+    <td style="width:56px;text-align:center;vertical-align:top;padding-top:20px;">
+      <div style="width:42px;height:42px;border-radius:50%;background:#010101;color:#69C9D0;font-weight:800;font-size:16px;text-align:center;line-height:42px;border:2px solid #336870;margin:0 auto;">1</div>
+    </td>
+    <td style="vertical-align:top;padding:20px 0 28px 16px;border-bottom:1px dashed #e8e8f0;">
+      <h4 style="font-size:16px;font-weight:700;color:#0d0d18;margin:0 0 8px;">Register a TikTok App</h4>
+      <p style="font-size:13.5px;color:#5a5a72;margin:0;line-height:1.7;">
+        Log in to <a href="https://developers.tiktok.com" target="_blank" style="color:#69C9D0;">developers.tiktok.com</a>, create a new app, and enable <strong>Login Kit</strong> and <strong>Content Posting API</strong>.
+        Under <em>App Settings → Redirect URI</em> add <code style="background:#f0f0f8;border:1px solid #e0e0ec;border-radius:4px;padding:2px 6px;font-size:12px;color:#d63384;font-family:'Courier New',monospace;">https://&lt;your-odoo-domain&gt;/social_tiktok/callback</code>.
+        Note your <strong>Client Key</strong> and <strong>Client Secret</strong>.
+      </p>
+    </td>
+  </tr></table>
+
+  <!-- Step 2 -->
+  <table style="width:100%;border-collapse:collapse;margin-bottom:2px;"><tr>
+    <td style="width:56px;text-align:center;vertical-align:top;padding-top:20px;">
+      <div style="width:42px;height:42px;border-radius:50%;background:#010101;color:#69C9D0;font-weight:800;font-size:16px;text-align:center;line-height:42px;border:2px solid #336870;margin:0 auto;">2</div>
+    </td>
+    <td style="vertical-align:top;padding:20px 0 28px 16px;border-bottom:1px dashed #e8e8f0;">
+      <h4 style="font-size:16px;font-weight:700;color:#0d0d18;margin:0 0 8px;">Enter credentials in Odoo</h4>
+      <p style="font-size:13.5px;color:#5a5a72;margin:0;line-height:1.7;">
+        Navigate to <strong>Settings → Social Marketing</strong>, scroll to <em>Developer Accounts</em>,
+        enter your <strong>TikTok Client Key</strong> and <strong>Client Secret</strong>, then save.
+      </p>
+    </td>
+  </tr></table>
+
+  <!-- Step 3 -->
+  <table style="width:100%;border-collapse:collapse;"><tr>
+    <td style="width:56px;text-align:center;vertical-align:top;padding-top:20px;">
+      <div style="width:42px;height:42px;border-radius:50%;background:#010101;color:#69C9D0;font-weight:800;font-size:16px;text-align:center;line-height:42px;border:2px solid #336870;margin:0 auto;">3</div>
+    </td>
+    <td style="vertical-align:top;padding:20px 0 28px 16px;">
+      <h4 style="font-size:16px;font-weight:700;color:#0d0d18;margin:0 0 8px;">Authorise your TikTok account</h4>
+      <p style="font-size:13.5px;color:#5a5a72;margin:0;line-height:1.7;">
+        Open <strong>Social Marketing → Accounts</strong>, click the <strong>TikTok</strong> media card → <strong>Add Account</strong>,
+        and authorise the app on TikTok. You will be redirected back to Odoo automatically.
+      </p>
+    </td>
+  </tr></table>
+
+</div>
+
+<hr style="border:none;border-top:1px solid #f0f0f5;margin:0;" />
+
+<!-- ═══════════════════ LIMITATIONS ═══════════════════ -->
+<div style="max-width:980px;margin:0 auto;padding:64px 36px;">
+
+  <table style="border-collapse:collapse;margin-bottom:40px;"><tr>
+    <td style="width:4px;padding:0;background:#EE1D52;border-radius:4px;vertical-align:top;">&nbsp;</td>
+    <td style="padding-left:16px;vertical-align:top;">
+      <h2 style="font-size:28px;font-weight:800;color:#0d0d18;margin:0 0 6px;letter-spacing:-0.4px;">Known Limitations</h2>
+      <p style="font-size:14px;color:#8a8a9a;margin:0;">Platform API restrictions to be aware of</p>
+    </td>
+  </tr></table>
+
+  <!-- Row 1 -->
+  <table style="width:100%;border-collapse:separate;border-spacing:0;margin-bottom:14px;"><tr>
+    <td style="width:50%;padding-right:7px;vertical-align:top;">
+      <div style="border:1px solid #f5d78a;border-radius:14px;padding:18px 20px;background:#fffdf0;">
+        <table style="border-collapse:collapse;width:100%;"><tr>
+          <td style="width:42px;vertical-align:top;padding-right:14px;">
+            <div style="width:38px;height:38px;border-radius:10px;background:#fde8ec;text-align:center;line-height:38px;font-size:18px;">🎥</div>
+          </td>
+          <td style="vertical-align:top;">
+            <strong style="font-size:13.5px;font-weight:700;color:#2a2a3a;display:block;margin-bottom:5px;">Video-only posts</strong>
+            <p style="font-size:12.5px;color:#6a6a7a;margin:0;line-height:1.6;">TikTok's Content Posting API does not support text-only or image posts.</p>
+          </td>
+        </tr></table>
+      </div>
+    </td>
+    <td style="width:50%;padding-left:7px;vertical-align:top;">
+      <div style="border:1px solid #f5d78a;border-radius:14px;padding:18px 20px;background:#fffdf0;">
+        <table style="border-collapse:collapse;width:100%;"><tr>
+          <td style="width:42px;vertical-align:top;padding-right:14px;">
+            <div style="width:38px;height:38px;border-radius:10px;background:#fde8ec;text-align:center;line-height:38px;font-size:18px;">💬</div>
+          </td>
+          <td style="vertical-align:top;">
+            <strong style="font-size:13.5px;font-weight:700;color:#2a2a3a;display:block;margin-bottom:5px;">No in-app comment management</strong>
+            <p style="font-size:12.5px;color:#6a6a7a;margin:0;line-height:1.6;">Comment read/write requires the TikTok Research API, which has a separate approval process.</p>
+          </td>
+        </tr></table>
+      </div>
+    </td>
+  </tr></table>
+
+  <!-- Row 2 -->
+  <table style="width:100%;border-collapse:separate;border-spacing:0;"><tr>
+    <td style="width:50%;padding-right:7px;vertical-align:top;">
+      <div style="border:1px solid #f5d78a;border-radius:14px;padding:18px 20px;background:#fffdf0;">
+        <table style="border-collapse:collapse;width:100%;"><tr>
+          <td style="width:42px;vertical-align:top;padding-right:14px;">
+            <div style="width:38px;height:38px;border-radius:10px;background:#fde8ec;text-align:center;line-height:38px;font-size:18px;">📈</div>
+          </td>
+          <td style="vertical-align:top;">
+            <strong style="font-size:13.5px;font-weight:700;color:#2a2a3a;display:block;margin-bottom:5px;">No engagement trends</strong>
+            <p style="font-size:12.5px;color:#6a6a7a;margin:0;line-height:1.6;">Trend calculation requires historical data not available in the standard API tier.</p>
+          </td>
+        </tr></table>
+      </div>
+    </td>
+    <td style="width:50%;padding-left:7px;vertical-align:top;">
+      <div style="border:1px solid #f5d78a;border-radius:14px;padding:18px 20px;background:#fffdf0;">
+        <table style="border-collapse:collapse;width:100%;"><tr>
+          <td style="width:42px;vertical-align:top;padding-right:14px;">
+            <div style="width:38px;height:38px;border-radius:10px;background:#fde8ec;text-align:center;line-height:38px;font-size:18px;">⏱️</div>
+          </td>
+          <td style="vertical-align:top;">
+            <strong style="font-size:13.5px;font-weight:700;color:#2a2a3a;display:block;margin-bottom:5px;">Access token expiry</strong>
+            <p style="font-size:12.5px;color:#6a6a7a;margin:0;line-height:1.6;">Tokens expire after 24 hours; refresh tokens last 1 year. Re-authorise when prompted.</p>
+          </td>
+        </tr></table>
+      </div>
+    </td>
+  </tr></table>
+
+</div>
+
+<hr style="border:none;border-top:1px solid #f0f0f5;margin:0;" />
+
+<!-- ═══════════════════ LICENSE ═══════════════════ -->
+<div style="max-width:980px;margin:0 auto;padding:60px 36px;">
+
+  <table style="border-collapse:collapse;margin-bottom:28px;"><tr>
+    <td style="width:4px;padding:0;background:#EE1D52;border-radius:4px;vertical-align:top;">&nbsp;</td>
+    <td style="padding-left:16px;vertical-align:top;">
+      <h2 style="font-size:28px;font-weight:800;color:#0d0d18;margin:0 0 6px;letter-spacing:-0.4px;">License</h2>
+      <p style="font-size:14px;color:#8a8a9a;margin:0;">Open source and freely modifiable</p>
+    </td>
+  </tr></table>
+
+  <span style="display:inline-flex;align-items:center;gap:8px;background:#010101;color:#69C9D0;border-radius:8px;padding:10px 20px;font-size:14px;font-weight:700;border:1px solid #336870;">
+    <span style="width:8px;height:8px;border-radius:50%;background:#69C9D0;display:inline-block;"></span>
+    LGPL-3
+  </span>
+  <span style="font-size:13px;color:#8a8a9a;margin-left:16px;">Lesser General Public License v3 — use, modify, and distribute freely under its terms.</span>
+
+</div>
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<div style="background:#010101;padding:36px 40px;">
+  <table style="max-width:980px;margin:0 auto;width:100%;border-collapse:collapse;"><tr>
+    <td style="vertical-align:middle;">
+      <table style="border-collapse:collapse;"><tr>
+        <td style="padding-right:14px;vertical-align:middle;">
+          <img src="icon.png" width="36" height="36" style="width:36px;height:36px;border-radius:8px;vertical-align:middle;" />
+        </td>
+        <td style="vertical-align:middle;">
+          <strong style="display:block;font-size:15px;font-weight:700;color:#ffffff;">Social TikTok</strong>
+          <span style="font-size:12px;color:#555570;">for Odoo 19 · Social Marketing</span>
+        </td>
+      </tr></table>
+    </td>
+    <td style="vertical-align:middle;text-align:right;">
+      <a href="https://amis.lk/" target="_blank" style="color:#69C9D0;font-size:13px;font-weight:600;text-decoration:none;">amis.lk</a>
+      <br/>
+      <span style="font-size:12px;color:#444458;">Developed by Black Monkey &nbsp;·&nbsp; LGPL-3</span>
+    </td>
+  </tr></table>
+</div>
+
+</body>
+</html>

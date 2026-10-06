@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Geïntegreerd in de bestaande AI-app (ai_app), geen eigen app-tegel. -->
+
+    <!-- Dagelijkse monitoring: naast Schedule Runs. -->
+    <menuitem id="menu_ai_router_logs" name="Router-logboek"
+              parent="ai_app.ai_menu_root" action="ai_router_log_action"
+              sequence="48" groups="base.group_system"/>
+
+    <!-- Instellingen: onder AI → Configuration. -->
+    <menuitem id="menu_ai_router_routes" name="Router: Routes"
+              parent="ai_app.ai_config_menu" action="ai_router_route_action"
+              sequence="60" groups="base.group_system"/>
+    <menuitem id="menu_ai_router_providers" name="Router: Providers &amp; modellen"
+              parent="ai_app.ai_config_menu" action="ai_router_provider_action"
+              sequence="61" groups="base.group_system"/>
+    <menuitem id="menu_ai_router_dispatch" name="Router: Werkregels"
+              parent="ai_app.ai_config_menu" action="ai_router_dispatch_action"
+              sequence="63" groups="base.group_system"/>
+</odoo>

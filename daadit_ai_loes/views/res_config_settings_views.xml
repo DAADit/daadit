@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_inherit_daadit_ai_loes" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.daadit_ai_loes</field>
+        <field name="model">res.config.settings</field>
+        <!--
+            We inherit from the ai_app view (NOT the ai view) because that's
+            where the openai_provider / google_provider blocks are rendered
+            (inside <app name="ai_app"><block name="ai_providers">).
+
+            Layout strategy:
+              * Toggle + key field reproduce the OpenAI/Gemini pattern
+                exactly (flex-grow-1 div with nolabel field).
+              * Helper text for the loes.ai link uses
+                ``text-muted``, the standard Odoo class for hints.
+              * Advanced fields (base URL, timeout) go inside an inner
+                <group> — Odoo's settings-aware label/field grid that
+                does not collide with the parent <setting>'s flex layout.
+                Earlier attempts using handwritten <div class="row"> with
+                <label class="col-3"> caused label/input overlap.
+              * Top-of-section info card lists every provider with a
+                direct link + 3-step "where to get the key" for each.
+                Sits OUTSIDE individual <setting> blocks because we
+                don't own ChatGPT/Gemini/Azure; injecting inside their
+                <setting> would break across Odoo Enterprise versions.
+        -->
+        <field name="inherit_id" ref="ai_app.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+
+            <!--
+                Top-of-providers help card: one place that documents
+                where every supported provider's API key comes from,
+                so the user doesn't bounce back to Google to figure
+                out "what's a Loes console" or "where in Azure do
+                I find the key". Uses Bootstrap alert + details so
+                the card collapses out of the way once you know your
+                way around.
+            -->
+            <xpath expr="//block[@name='ai_providers']" position="before">
+                <!-- role="status": informational card; without a role
+                     Odoo 19's view checker logs a warning per load
+                     and builds must stay warning-free. -->
+                <div class="alert alert-info" role="status"
+                     groups="base.group_system">
+                    <!-- geen alert-heading: elke alert-*-klasse zonder
+                         role triggert de view-checker (warning-vrije
+                         builds); fw-bold oogt gelijk. -->
+                    <h5 class="fw-bold">
+                        <i class="fa fa-key me-1"/>
+                        Where do I get an API key for these providers?
+                    </h5>
+                    <p class="small mb-2">
+                        Pick the provider you want to use below, then
+                        follow its steps to get a key. Most providers
+                        bill by usage; a typical Odoo + AI workload
+                        costs a few cents per agent conversation.
+                    </p>
+                    <details class="mb-1">
+                        <summary class="small fw-bold">
+                            <i class="fa fa-comment-dots me-1"/> ChatGPT (OpenAI)
+                        </summary>
+                        <ol class="small mt-1 mb-2">
+                            <li>Open <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">platform.openai.com/api-keys</a> and sign in (or create an account).</li>
+                            <li>Click <strong>Create new secret key</strong>, give it a name like "Odoo", and copy the key (starts with <code>sk-</code>). It is shown only once.</li>
+                            <li>Make sure you have a payment method on file: <a href="https://platform.openai.com/settings/organization/billing" target="_blank" rel="noopener">platform.openai.com/settings/organization/billing</a>. New accounts get free credits but a card is required for production use.</li>
+                            <li>Paste the key in the <em>Use your own ChatGPT account</em> field below.</li>
+                        </ol>
+                    </details>
+                    <details class="mb-1">
+                        <summary class="small fw-bold">
+                            <i class="fa fa-google me-1"/> Google Gemini
+                        </summary>
+                        <ol class="small mt-1 mb-2">
+                            <li>Open <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener">aistudio.google.com/app/apikey</a> and sign in with your Google account.</li>
+                            <li>Click <strong>Create API key</strong> → choose a Google Cloud project (or accept the auto-created one) → copy the key.</li>
+                            <li>Free tier covers light testing. For production, link a billing account in Google Cloud and switch the key to a paid project — see <a href="https://ai.google.dev/pricing" target="_blank" rel="noopener">ai.google.dev/pricing</a>.</li>
+                            <li>Paste the key in the <em>Use your own Google Gemini account</em> field below.</li>
+                        </ol>
+                    </details>
+                    <details class="mb-1">
+                        <summary class="small fw-bold">
+                            <i class="fa fa-robot me-1"/> Loes AI
+                        </summary>
+                        <ol class="small mt-1 mb-2">
+                            <li>Loes is HostYourAI's EU-trained model, served via the HostYourAI EU-router. See <a href="https://loes.ai/#api" target="_blank" rel="noopener">loes.ai/#api</a> for the API documentation.</li>
+                            <li>Request an API key via registration at <a href="https://hostyourai.com/" target="_blank" rel="noopener">hostyourai.com</a> (pay-per-use, prepaid balance). Keys start with <code>hyai-</code>; copy the key — you'll only see it once.</li>
+                            <li>Paste it in the <em>Use your own Loes AI account</em> field below. The default API base URL (the HostYourAI EU-router) works for everyone; the default model is <code>hyai/loes-large</code>.</li>
+                        </ol>
+                    </details>
+                    <!--
+                        v19.0.4.5.0 (store readiness): the Microsoft 365
+                        Copilot / Azure OpenAI walkthrough moved out of
+                        this module — it documented fields owned by the
+                        separate daadit_ai_copilot module, which renders
+                        its own setup card. This card only documents
+                        providers this module (or stock Odoo) ships.
+                    -->
+                </div>
+            </xpath>
+
+            <xpath expr="//block[@name='ai_providers']" position="inside">
+                <setting id="loes_provider"
+                         string="Use your own Loes AI account"
+                         help="Provide your API key to connect with your account"
+                         groups="base.group_system">
+                    <field name="loes_key_enabled"/>
+                    <div invisible="not loes_key_enabled">
+                        <div class="flex-grow-1">
+                            <field name="loes_key"
+                                   placeholder="Key"
+                                   password="True"
+                                   nolabel="1"
+                                   class="w-100"/>
+                        </div>
+                        <div class="mt8">
+                            <label for="loes_key_batch"
+                                   string="Aparte key voor geplande agents (batch)"/>
+                            <field name="loes_key_batch"
+                                   placeholder="Optioneel — leeg = zelfde key"
+                                   password="True"
+                                   nolabel="1"
+                                   class="w-100"/>
+                            <div class="text-muted">
+                                Geplande agent-runs gebruiken deze key
+                                zodat batch-verkeer de livechat-key
+                                nooit kan leegtrekken (Fase 0).
+                            </div>
+                        </div>
+                        <div class="text-muted mt8 mb8">
+                            <i class="fa fa-info-circle me-1"/>
+                            Get a key at
+                            <a href="https://hostyourai.com/"
+                               target="_blank" rel="noopener">hostyourai.com</a>
+                            (sign in → top up the prepaid balance →
+                            create an API key (<code>hyai-…</code>) → copy
+                            the value shown once). See the help card above
+                            for the full step-by-step.
+                        </div>
+                        <group>
+                            <field name="loes_base_url" string="API base URL"/>
+                            <field name="loes_timeout" string="Request timeout (s)"/>
+                        </group>
+                        <div class="mt8">
+                            <button type="object"
+                                    name="action_daadit_loes_sync_models"
+                                    string="Refresh Loes model list"
+                                    icon="fa-refresh"
+                                    class="btn-secondary"/>
+                            <div class="text-muted mt4">
+                                <i class="fa fa-info-circle me-1"/>
+                                The available Loes models are synced
+                                automatically every day from the Loes API.
+                                Use this button to refresh now (save the key
+                                first). Manage the list under
+                                <strong>AI → Configuration → Loes Models</strong>.
+                            </div>
+                        </div>
+                    </div>
+                </setting>
+            </xpath>
+        </field>
+    </record>
+</odoo>

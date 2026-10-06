@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Seed targets. noupdate="1": these are initial values only. Once
+        installed, the team edits targets in the UI (Dashboards ▸ Doelen
+        beheren) without a module upgrade reverting them.
+
+        Targets are derived from the Marketing Playbook and the draw
+        objective (4 × €100k = €400k → €600k revenue goal). Adjust freely.
+    -->
+    <data noupdate="1">
+
+        <!-- ===================== SALES ===================== -->
+        <record id="kpi_sales_revenue_ytd" model="daadit.agent.kpi">
+            <field name="name">Omzet dit jaar</field>
+            <field name="agent_key">sales</field>
+            <field name="metric_key">sales_revenue_ytd</field>
+            <field name="target">600000</field>
+            <field name="unit">eur</field>
+            <field name="pace_aware" eval="True"/>
+            <field name="sequence">10</field>
+            <field name="signal">Duurzaam doel: dekt €400k opnames + overhead + marge.</field>
+        </record>
+
+        <record id="kpi_sales_won_count_ytd" model="daadit.agent.kpi">
+            <field name="name">Gewonnen deals (YTD)</field>
+            <field name="agent_key">sales</field>
+            <field name="metric_key">sales_won_count_ytd</field>
+            <field name="target">12</field>
+            <field name="unit">count</field>
+            <field name="pace_aware" eval="True"/>
+            <field name="sequence">20</field>
+            <field name="signal">~12 nieuwe klanten per jaar (3 per kwartaal).</field>
+        </record>
+
+        <record id="kpi_sales_pipeline_eur" model="daadit.agent.kpi">
+            <field name="name">Actieve pijplijn</field>
+            <field name="agent_key">sales</field>
+            <field name="metric_key">sales_pipeline_eur</field>
+            <field name="target">150000</field>
+            <field name="unit">eur</field>
+            <field name="sequence">30</field>
+            <field name="signal">Streef ~3× dekking van het resterende jaardoel. Werk de onbewerkte leads op.</field>
+        </record>
+
+        <record id="kpi_sales_avg_deal_ytd" model="daadit.agent.kpi">
+            <field name="name">Gem. dealwaarde (YTD)</field>
+            <field name="agent_key">sales</field>
+            <field name="metric_key">sales_avg_deal_ytd</field>
+            <field name="target">30000</field>
+            <field name="unit">eur</field>
+            <field name="sequence">40</field>
+            <field name="signal">Stuur op Custom + recurring richting €30–40k eerste-jaarswaarde.</field>
+        </record>
+
+        <!-- ===================== MARKETING ===================== -->
+        <record id="kpi_mkt_leads_ytd" model="daadit.agent.kpi">
+            <field name="name">Nieuwe leads (YTD)</field>
+            <field name="agent_key">marketing</field>
+            <field name="metric_key">mkt_leads_ytd</field>
+            <field name="target">180</field>
+            <field name="unit">count</field>
+            <field name="pace_aware" eval="True"/>
+            <field name="sequence">10</field>
+            <field name="signal">15 leads/maand voedt ~12 nieuwe klanten per jaar.</field>
+        </record>
+
+        <record id="kpi_mkt_leads_month" model="daadit.agent.kpi">
+            <field name="name">Leads deze maand</field>
+            <field name="agent_key">marketing</field>
+            <field name="metric_key">mkt_leads_month</field>
+            <field name="target">15</field>
+            <field name="unit">count</field>
+            <field name="sequence">20</field>
+            <field name="signal">Playbook-norm: 15 leads per maand.</field>
+        </record>
+
+        <record id="kpi_mkt_conversion_pct" model="daadit.agent.kpi">
+            <field name="name">Conversie lead → klant</field>
+            <field name="agent_key">marketing</field>
+            <field name="metric_key">mkt_conversion_pct</field>
+            <field name="target">20</field>
+            <field name="unit">pct</field>
+            <field name="sequence">30</field>
+            <field name="signal">Playbook-norm: ~20% van de leads wordt klant.</field>
+        </record>
+
+        <record id="kpi_mkt_source_pct" model="daadit.agent.kpi">
+            <field name="name">Leads met bron</field>
+            <field name="agent_key">marketing</field>
+            <field name="metric_key">mkt_source_pct</field>
+            <field name="target">90</field>
+            <field name="unit">pct</field>
+            <field name="sequence">40</field>
+            <field name="signal">Zet bron-/UTM-tracking op — zonder attributie geen marketing-ROI.</field>
+        </record>
+
+        <!-- ===================== HELPDESK ===================== -->
+        <record id="kpi_hd_unassigned" model="daadit.agent.kpi">
+            <field name="name">Niet-toegewezen tickets</field>
+            <field name="agent_key">helpdesk</field>
+            <field name="metric_key">hd_unassigned</field>
+            <field name="target">0</field>
+            <field name="unit">count</field>
+            <field name="higher_is_better" eval="False"/>
+            <field name="sequence">10</field>
+            <field name="signal">Kerntaak: elk open ticket heeft een eigenaar.</field>
+        </record>
+
+        <record id="kpi_hd_open" model="daadit.agent.kpi">
+            <field name="name">Open tickets</field>
+            <field name="agent_key">helpdesk</field>
+            <field name="metric_key">hd_open</field>
+            <field name="target">30</field>
+            <field name="unit">count</field>
+            <field name="higher_is_better" eval="False"/>
+            <field name="sequence">20</field>
+            <field name="signal">Plafond om de werkvoorraad beheersbaar te houden.</field>
+        </record>
+
+        <record id="kpi_hd_max_share_pct" model="daadit.agent.kpi">
+            <field name="name">Grootste werklast (1 persoon)</field>
+            <field name="agent_key">helpdesk</field>
+            <field name="metric_key">hd_max_share_pct</field>
+            <field name="target">40</field>
+            <field name="unit">pct</field>
+            <field name="higher_is_better" eval="False"/>
+            <field name="sequence">30</field>
+            <field name="signal">Herverdeel bij >40% bij één persoon (continuïteit).</field>
+        </record>
+
+        <!-- ===================== PROJECT ===================== -->
+        <record id="kpi_proj_active" model="daadit.agent.kpi">
+            <field name="name">Actieve projecten</field>
+            <field name="agent_key">project</field>
+            <field name="metric_key">proj_active</field>
+            <field name="unit">count</field>
+            <field name="informational" eval="True"/>
+            <field name="sequence">10</field>
+            <field name="signal">Lopende delivery-portefeuille.</field>
+        </record>
+
+        <record id="kpi_proj_open_tasks" model="daadit.agent.kpi">
+            <field name="name">Open taken</field>
+            <field name="agent_key">project</field>
+            <field name="metric_key">proj_open_tasks</field>
+            <field name="unit">count</field>
+            <field name="informational" eval="True"/>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="kpi_proj_urgent" model="daadit.agent.kpi">
+            <field name="name">Urgente open taken</field>
+            <field name="agent_key">project</field>
+            <field name="metric_key">proj_urgent</field>
+            <field name="target">10</field>
+            <field name="unit">count</field>
+            <field name="higher_is_better" eval="False"/>
+            <field name="sequence">30</field>
+            <field name="signal">Bewaak doorlooptijd; urgente taken horen een eigenaar én deadline te hebben.</field>
+        </record>
+
+        <!-- ===================== PRODUCT ===================== -->
+        <record id="kpi_prod_total_orders" model="daadit.agent.kpi">
+            <field name="name">Bevestigde orders (totaal)</field>
+            <field name="agent_key">product</field>
+            <field name="metric_key">prod_total_orders</field>
+            <field name="unit">count</field>
+            <field name="informational" eval="True"/>
+            <field name="sequence">10</field>
+            <field name="signal">Geïnstalleerde basis.</field>
+        </record>
+
+        <record id="kpi_prod_total_revenue" model="daadit.agent.kpi">
+            <field name="name">Omzet boeken (totaal)</field>
+            <field name="agent_key">product</field>
+            <field name="metric_key">prod_total_revenue</field>
+            <field name="unit">eur</field>
+            <field name="informational" eval="True"/>
+            <field name="sequence">20</field>
+            <field name="signal">Nog te koppelen: recurring MRR en Launchpad vs Custom.</field>
+        </record>
+
+    </data>
+</odoo>

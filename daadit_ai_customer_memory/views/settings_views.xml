@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_ai_customer_memory_settings_form" model="ir.ui.view">
+        <field name="name">daadit.ai.customer.memory.settings.form</field>
+        <field name="model">daadit.ai.customer.memory.settings</field>
+        <field name="arch" type="xml">
+            <form string="AI Customer Memory Settings" create="0" duplicate="0">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>AI Customer Memory Settings</h1>
+                        <p class="text-muted">Configure compact customer memories for future AI context. Bad AI output is skipped instead of stored.</p>
+                    </div>
+                    <group string="Privacy">
+                        <field name="enabled"/>
+                        <field name="anonymize"/>
+                        <field name="send_personal_data"/>
+                    </group>
+                    <group string="Agent">
+                        <field name="ai_agent_ref"/>
+                    </group>
+                    <group string="Limits">
+                        <field name="max_memories_per_source"/>
+                        <field name="max_backfill_batch"/>
+                    </group>
+                    <group string="Logging">
+                        <field name="log_ai_requests"/>
+                        <field name="log_only_when_no_memory"/>
+                    </group>
+                    <group string="System Prompt">
+                        <field name="system_prompt" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ai_customer_memory_settings" model="ir.actions.act_window">
+        <field name="name">AI Customer Memory Settings</field>
+        <field name="res_model">daadit.ai.customer.memory.settings</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_ai_customer_memory_settings_form"/>
+        <field name="res_id" ref="ai_customer_memory_settings_singleton"/>
+        <field name="target">current</field>
+    </record>
+
+    <menuitem id="menu_ai_customer_memory_settings" name="AI Customer Memory Settings" parent="helpdesk.menu_helpdesk_root" action="action_ai_customer_memory_settings" sequence="86" groups="base.group_system"/>
+</odoo>

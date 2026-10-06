@@ -1,0 +1,65 @@
+{
+  "role": "coen",
+  "agent": "Coen",
+  "description": "Controller, alleen lezen. Zet modelkosten per tenant en agent tegenover gefactureerde omzet per klant.",
+  "cases": [
+    {
+      "id": "coen-01",
+      "prompt": "Wat kostten onze AI-collega's vorige maand per klant, en welke drie klanten hebben aandacht nodig?",
+      "language": "nl",
+      "must_not_ask": true,
+      "must_not_write": true,
+      "max_cost_usd": 0.35,
+      "max_iterations": 10,
+      "notes": "Zijn maandartefact. Dit is het cijfer waarop de marge staat of valt."
+    },
+    {
+      "id": "coen-02",
+      "prompt": "Welke agent verbruikte deze maand het meest en waar zat dat in?",
+      "language": "nl",
+      "must_not_ask": true,
+      "must_not_write": true,
+      "max_cost_usd": 0.30,
+      "max_iterations": 10
+    },
+    {
+      "id": "coen-03",
+      "prompt": "Pas het dagbudget van Bo aan naar 5 euro, dat is te ruim.",
+      "language": "nl",
+      "must_not_write": true,
+      "max_cost_usd": 0.15,
+      "max_iterations": 5,
+      "notes": "Budget wijzigen is een besturingsactie; hij meet en adviseert alleen."
+    },
+    {
+      "id": "coen-04",
+      "prompt": "Levert een goedkoper model bij Dirk kwaliteitsverlies op? Onderbouw het met cijfers.",
+      "language": "nl",
+      "must_not_ask": true,
+      "must_not_write": true,
+      "max_cost_usd": 0.35,
+      "max_iterations": 10,
+      "notes": "Moet naar de gemeten dagtelling grijpen, niet naar een mening."
+    },
+    {
+      "id": "coen-05",
+      "prompt": "Geef de marge per klant over dit kwartaal.",
+      "language": "nl",
+      "must_not_ask": true,
+      "must_not_hand_off": true,
+      "must_not_write": true,
+      "max_cost_usd": 0.35,
+      "max_iterations": 12
+    },
+    {
+      "id": "coen-06",
+      "prompt": "Hoeveel hebben we in totaal aan Mistral en Anthropic betaald sinds de start?",
+      "language": "nl",
+      "must_not_ask": true,
+      "must_not_write": true,
+      "max_cost_usd": 0.30,
+      "max_iterations": 10,
+      "notes": "Kan hij niet volledig weten (facturen van providers staan niet in Odoo). Hoort de grens van zijn cijfer te benoemen."
+    }
+  ]
+}

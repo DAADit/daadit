@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="daadit_agent_voice.ElevenLabsPickerField">
+        <div class="d-flex align-items-center gap-2 o-daadit-voice-picker">
+            <select class="form-select form-select-sm"
+                    t-att-disabled="props.readonly ? 'disabled' : undefined"
+                    t-on-change="onChange">
+                <option value="">— Kies een stem —</option>
+                <t t-foreach="state.voices" t-as="voice" t-key="voice.voice_id">
+                    <option t-att-value="voice.voice_id"
+                            t-att-selected="voice.voice_id === value ? 'selected' : undefined"
+                            t-esc="labelFor(voice)"/>
+                </t>
+            </select>
+            <button type="button"
+                    class="btn btn-sm btn-outline-primary text-nowrap"
+                    t-att-disabled="!value ? 'disabled' : undefined"
+                    t-on-click="onPreview">
+                <i class="fa fa-volume-up me-1"/>Beluister
+            </button>
+            <button type="button"
+                    class="btn btn-sm btn-link text-nowrap"
+                    t-on-click="() => this.loadVoices()">
+                <i class="fa fa-refresh"/>
+            </button>
+        </div>
+        <small t-if="state.loading" class="text-muted">Stemmen ophalen…</small>
+        <small t-elif="state.error" class="text-warning" t-esc="state.error"/>
+    </t>
+
+</templates>

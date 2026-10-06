@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Two "Call via Teams" buttons on the stock CRM lead/opportunity
+         form: one next to the phone field (PSTN dial), one next to the
+         email field (Teams-user call by UPN). Each is hidden when its
+         source field is empty. -->
+    <record id="view_crm_lead_form_teams_call" model="ir.ui.view">
+        <field name="name">crm.lead.form.inherit.daadit.teams.call</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='phone']" position="after">
+                <button name="action_call_via_teams"
+                        type="object"
+                        class="btn btn-link p-0 ms-2"
+                        icon="fa-phone"
+                        string="Call via Teams"
+                        invisible="not phone"/>
+            </xpath>
+            <xpath expr="//field[@name='email_from']" position="after">
+                <button name="action_call_via_teams_email"
+                        type="object"
+                        class="btn btn-link p-0 ms-2"
+                        icon="fa-comments-o"
+                        string="Call Teams user"
+                        invisible="not email_from"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

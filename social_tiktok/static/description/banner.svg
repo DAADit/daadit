@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 712 430" width="712" height="430">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#010101"/>
+      <stop offset="100%" style="stop-color:#1a1a2e"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#EE1D52"/>
+      <stop offset="100%" style="stop-color:#69C9D0"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="18" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="712" height="430" fill="url(#bg)"/>
+
+  <!-- Decorative glow blobs -->
+  <circle cx="100" cy="80"  r="120" fill="#EE1D52" opacity="0.08"/>
+  <circle cx="620" cy="360" r="140" fill="#69C9D0" opacity="0.07"/>
+  <circle cx="680" cy="60"  r="80"  fill="#69C9D0" opacity="0.05"/>
+
+  <!-- Accent bar -->
+  <rect x="60" y="200" width="80" height="4" rx="2" fill="url(#accent)"/>
+
+  <!-- TikTok icon (simplified) -->
+  <g transform="translate(56, 80) scale(0.42)" filter="url(#glow)">
+    <rect width="256" height="256" rx="40" fill="#010101" opacity="0.6"/>
+    <path fill="#69C9D0"
+      d="M180,72a48,48,0,0,1-36.1-16H104V184a28,28,0,1,1-28-28,28.3,28.3,0,0,1,8,1.1V117.5A76,76,0,1,0,152,184V72h28Z"/>
+    <path fill="#EE1D52"
+      d="M184,56v48a80,80,0,0,1-48-15.7V184a76,76,0,0,1-76,76h-4A76,76,0,0,1,84,184V155.5a28,28,0,0,0,8,1.1v40.3A28,28,0,1,0,148,184V56h36Z" opacity="0.9"/>
+    <path fill="#ffffff"
+      d="M148,56h36A48,48,0,0,0,148,8V56zm-64,99.5A28.3,28.3,0,0,0,76,156,28,28,0,1,0,104,184V56H67.9A76,76,0,0,1,84,155.5z"/>
+  </g>
+
+  <!-- Headline -->
+  <text x="60" y="232" font-family="'Segoe UI', Arial, sans-serif" font-size="48" font-weight="800" fill="#ffffff" letter-spacing="-1">Social</text>
+  <text x="192" y="232" font-family="'Segoe UI', Arial, sans-serif" font-size="48" font-weight="800" fill="#69C9D0" letter-spacing="-1"> TikTok</text>
+
+  <!-- Tagline -->
+  <text x="60" y="268" font-family="'Segoe UI', Arial, sans-serif" font-size="17" fill="#999999">
+    Publish videos · Monitor engagement · Manage all social channels from Odoo
+  </text>
+
+  <!-- Pill tags -->
+  <!-- OAuth 2.0 -->
+  <rect x="60"  y="296" width="96"  height="28" rx="14" fill="none" stroke="#69C9D0" stroke-width="1" opacity="0.5"/>
+  <text x="108" y="314" font-family="'Segoe UI', Arial, sans-serif" font-size="12" fill="#69C9D0" text-anchor="middle">OAuth 2.0</text>
+
+  <!-- Video Publishing -->
+  <rect x="168" y="296" width="130" height="28" rx="14" fill="none" stroke="#69C9D0" stroke-width="1" opacity="0.5"/>
+  <text x="233" y="314" font-family="'Segoe UI', Arial, sans-serif" font-size="12" fill="#69C9D0" text-anchor="middle">Video Publishing</text>
+
+  <!-- Feed Stream -->
+  <rect x="310" y="296" width="104" height="28" rx="14" fill="none" stroke="#69C9D0" stroke-width="1" opacity="0.5"/>
+  <text x="362" y="314" font-family="'Segoe UI', Arial, sans-serif" font-size="12" fill="#69C9D0" text-anchor="middle">Feed / Stream</text>
+
+  <!-- Privacy Controls -->
+  <rect x="426" y="296" width="126" height="28" rx="14" fill="none" stroke="#69C9D0" stroke-width="1" opacity="0.5"/>
+  <text x="489" y="314" font-family="'Segoe UI', Arial, sans-serif" font-size="12" fill="#69C9D0" text-anchor="middle">Privacy Controls</text>
+
+  <!-- Odoo version badge -->
+  <rect x="60" y="350" width="90" height="26" rx="6" fill="#EE1D52" opacity="0.85"/>
+  <text x="105" y="367" font-family="'Segoe UI', Arial, sans-serif" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle">Odoo 19.0</text>
+
+  <!-- Author -->
+  <text x="652" y="415" font-family="'Segoe UI', Arial, sans-serif" font-size="12" fill="#555555" text-anchor="end">Black Monkey · amis.lk</text>
+
+  <!-- Decorative circuit lines (right side) -->
+  <g opacity="0.06" stroke="#69C9D0" stroke-width="1" fill="none">
+    <line x1="560" y1="60"  x2="560" y2="370"/>
+    <line x1="580" y1="80"  x2="580" y2="350"/>
+    <line x1="600" y1="100" x2="600" y2="330"/>
+    <line x1="620" y1="60"  x2="620" y2="370"/>
+    <line x1="640" y1="80"  x2="640" y2="350"/>
+    <line x1="560" y1="150" x2="660" y2="150"/>
+    <line x1="560" y1="200" x2="660" y2="200"/>
+    <line x1="560" y1="250" x2="660" y2="250"/>
+    <circle cx="560" cy="150" r="3" fill="#69C9D0"/>
+    <circle cx="580" cy="200" r="3" fill="#EE1D52"/>
+    <circle cx="600" cy="250" r="3" fill="#69C9D0"/>
+    <circle cx="620" cy="150" r="3" fill="#69C9D0"/>
+    <circle cx="640" cy="200" r="3" fill="#EE1D52"/>
+  </g>
+</svg>

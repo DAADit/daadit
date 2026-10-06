@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_partner_form_daadit_build" model="ir.ui.view">
+        <field name="name">res.partner.form.daadit.build</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page name="daadit_build" string="DAADit Build"
+                      groups="project.group_project_manager">
+                    <p class="text-muted">
+                        Standaard build-configuratie voor deze klant. Projecten en
+                        taken van deze klant erven deze waarden en kunnen ze
+                        overschrijven.
+                    </p>
+                    <group>
+                        <group string="Repository">
+                            <field name="daadit_repo_owner"/>
+                            <field name="daadit_repo_name"/>
+                            <field name="daadit_base_branch" placeholder="main"/>
+                            <field name="daadit_branch_prefix" placeholder="feature/"/>
+                            <field name="daadit_target_env"/>
+                            <field name="daadit_path_whitelist"/>
+                        </group>
+                        <group string="AI &amp; commit">
+                            <field name="daadit_ai_provider"/>
+                            <field name="daadit_ai_model_id"/>
+                            <field name="daadit_commit_author_name"/>
+                            <field name="daadit_commit_author_email"/>
+                        </group>
+                    </group>
+                    <group string="Commit-conventie">
+                        <field name="daadit_commit_convention" nolabel="1"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

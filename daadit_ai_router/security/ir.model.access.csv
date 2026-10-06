@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ai_router_provider_system,ai.router.provider system,model_ai_router_provider,base.group_system,1,1,1,1
+access_ai_router_route_system,ai.router.route system,model_ai_router_route,base.group_system,1,1,1,1
+access_ai_router_model_system,ai.router.model system,model_ai_router_model,base.group_system,1,1,1,1
+access_ai_router_dispatch_system,ai.router.dispatch system,model_ai_router_dispatch,base.group_system,1,1,1,1
+access_ai_router_log_system,ai.router.log system,model_ai_router_log,base.group_system,1,0,0,1

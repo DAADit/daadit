@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form_voice" model="ir.ui.view">
+        <field name="name">res.config.settings.form.daadit.voice</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app string="Praten met AI-agents" name="daadit_agent_voice"
+                     logo="/daadit_agent_voice/static/description/icon.png">
+
+                    <block title="Luisteren — jouw stem naar tekst"
+                           name="daadit_voice_stt">
+                        <setting string="Spraakherkenning via"
+                                 help="Wispr Flow schrijft uit wat je bedoelde:
+                                       stopwoorden eruit, interpunctie erin en
+                                       namen van collega's correct gespeld.
+                                       Valt automatisch terug op Scribe als
+                                       Wispr onbereikbaar is.">
+                            <field name="daadit_stt_provider"/>
+                        </setting>
+                        <setting string="Wispr Flow API-sleutel"
+                                 help="Aan te maken op het Wispr Flow
+                                       Developer Platform. Zonder sleutel
+                                       blijft de herkenning op Scribe staan."
+                                 invisible="daadit_stt_provider != 'wispr'">
+                            <field name="daadit_wispr_api_key"
+                                   password="True"
+                                   placeholder="Bearer-sleutel van Wispr Flow"/>
+                        </setting>
+                    </block>
+
+                    <block title="Spreken — het antwoord hardop"
+                           name="daadit_voice_elevenlabs">
+                        <setting string="ElevenLabs API-sleutel"
+                                 help="Zonder sleutel gebruiken alle agents de
+                                       gratis browserstem. Met sleutel kun je
+                                       per agent kiezen voor een natuurlijke
+                                       ElevenLabs-stem.">
+                            <field name="daadit_elevenlabs_api_key"
+                                   password="True"
+                                   placeholder="sk_..."/>
+                        </setting>
+                        <setting string="Stemmodel"
+                                 help="Klinkt de agent robotachtig? Dan staat
+                                       dit op Flash — het snelste maar vlakste
+                                       model. Multilingual v2 klinkt duidelijk
+                                       natuurlijker en begint een halve seconde
+                                       later met praten.">
+                            <field name="daadit_elevenlabs_model"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

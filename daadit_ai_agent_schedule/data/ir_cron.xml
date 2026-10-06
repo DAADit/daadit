@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- noupdate: let admins tune the interval / disable it without a
+         module upgrade reverting their change. -->
+    <data noupdate="1">
+        <record id="ir_cron_run_due_schedules" model="ir.cron">
+            <field name="name">DAADit AI: Run due agent schedules</field>
+            <field name="model_id" ref="model_daadit_ai_agent_schedule"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_run_due_schedules()</field>
+            <field name="interval_number">15</field>
+            <field name="interval_type">minutes</field>
+            <field name="nextcall" eval="(DateTime.now() + timedelta(minutes=15)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- Taak 708: de kwartaalcadans van de rechtenreview. Kwartaal
+             en niet maandelijks: een review die vaker langskomt dan de
+             configuratie verandert, wordt afgevinkt in plaats van
+             gelezen. De eerste loopt een dag na installatie, zodat de
+             reeks niet op het upgrade-moment zelf begint. -->
+        <record id="ir_cron_permission_review" model="ir.cron">
+            <field name="name">DAADit AI: Rechtenreview van de uitvoerende agents</field>
+            <field name="model_id" ref="model_daadit_ai_permission_review"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_quarterly_review()</field>
+            <field name="interval_number">3</field>
+            <field name="interval_type">months</field>
+            <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 06:00:00')"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- Taak 1069: de deploy-wachter. Elk uur, want een build die
+             niet landt kost per uur werk dat niemand ziet. Hij leest
+             alleen en legt bevindingen vast als taak op het agentbord. -->
+        <record id="ir_cron_deploy_watch" model="ir.cron">
+            <field name="name">DAADit AI: Deploy-wachter (code geladen, crons op ritme)</field>
+            <field name="model_id" ref="model_daadit_ai_deploy_watch"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_check()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="nextcall" eval="(DateTime.now() + timedelta(minutes=30)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- Taak 1071: de dagtelling van claim tegenover effect. 's
+             nachts, na de laatste geplande runs van de dag, en met een
+             paar dagen terugkijken zodat een gemiste nacht zich zelf
+             herstelt in plaats van een gat te laten. -->
+        <record id="ir_cron_claim_telemetry" model="ir.cron">
+            <field name="name">DAADit AI: Claim tegenover effect tellen (per dag)</field>
+            <field name="model_id" ref="model_daadit_ai_claim_telemetry"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_collect()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 04:30:00')"/>
+            <field name="active" eval="True"/>
+        </record>
+
+        <!-- Taken 1072/739: de kwaliteitsmeting per rol. Standaard UIT,
+             en dat is geen slordigheid: elke case is een echte
+             agentbeurt en kost geld, dus het aanzetten hoort een besluit
+             te zijn en geen bijwerking van een upgrade. Aan gezet meet
+             hij elke nacht de rol die het langst niet gemeten is
+             (parameters: daadit_ai_agent_schedule.eval_roles en
+             .eval_roles_per_run). -->
+        <record id="ir_cron_eval_measure" model="ir.cron">
+            <field name="name">DAADit AI: Kwaliteitsmeting per rol (kost beurten)</field>
+            <field name="model_id" ref="model_daadit_ai_eval_run"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_measure()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 03:00:00')"/>
+            <field name="active" eval="False"/>
+        </record>
+
+        <!-- Taak 1482: instructie-opvolging per Mistral-model. Standaard
+             UIT om dezelfde reden als de meting per rol: elke case is
+             een betaalde beurt. Aan gezet meet hij wekelijks elk model
+             en haalt zakkers uit de automatische routering. -->
+        <!-- Taak 1483: embeddings en kennisbronnen in één cron, in vaste
+             volgorde. Vervangt de losse Enterprise-crons 59/60; die blijven
+             op 2859 staan. Standaard uit: aanzetten is een besluit op de
+             omgeving zelf. -->
+        <record id="ir_cron_index_sources" model="ir.cron">
+            <field name="name">DAADit AI: Kennisbronnen indexeren (embeddings, dan bronnen)</field>
+            <field name="model_id" ref="model_daadit_ai_index_run"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_index_sources()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="active" eval="False"/>
+        </record>
+
+        <record id="ir_cron_eval_measure_models" model="ir.cron">
+            <field name="name">DAADit AI: Instructie-opvolging per model (kost beurten)</field>
+            <field name="model_id" ref="model_daadit_ai_eval_run"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_measure_models()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 03:30:00')"/>
+            <field name="active" eval="False"/>
+        </record>
+
+        <!-- Taak 1070: de opruimer van de verslag-stapel. Standaard UIT,
+             en dat is de kern: die stapel is iemands werkvoorraad en
+             opruimen hoort een besluit van die persoon te zijn. Aan
+             gezet vat hij verslagen samen op de rollende taak en sluit
+             ze met action_feedback af — nooit unlink, want dit is
+             historie. Het kanaal staat in
+             daadit_ai_agent_schedule.assurance_cleanup_res_id; zonder
+             dat id doet hij niets. -->
+        <record id="ir_cron_assurance_cleanup" model="ir.cron">
+            <field name="name">DAADit AI: Assurance-verslagen opruimen (standaard uit)</field>
+            <field name="model_id" ref="model_daadit_ai_assurance_report"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_cleanup()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="nextcall" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 05:00:00')"/>
+            <field name="active" eval="False"/>
+        </record>
+    </data>
+</odoo>

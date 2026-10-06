@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Live Claude Design tool for marketing agents.
+
+    Attach this action to the topics of Mark / Lux / Nova / Penny (and
+    any other content agent). The tool is read-only: it never publishes.
+    noupdate="1" so operators can rename/reattach without upgrade fights.
+-->
+<odoo>
+    <data noupdate="1">
+
+        <record id="ir_actions_server_haal_claude_design" model="ir.actions.server">
+            <field name="name">AI Marketing: haal_claude_design</field>
+            <field name="use_in_ai" eval="True"/>
+            <field name="model_id" ref="ai.model_ai_agent"/>
+            <field name="state">code</field>
+            <field name="ai_tool_description">Haal het LIVE DAADit design system op uit Claude Design. Roep dit ALTIJD aan vóór je website-blogdrafts of social drafts maakt of bijwerkt — de huisstijl beweegt, dus cache of verzin geen eigen kleuren/fonts/tone. Optioneel: geef project_url; zonder argument gebruikt de tool de standaard Design-project-URL uit de instellingen.</field>
+            <field name="ai_tool_schema">{"type": "object", "properties": {"project_url": {"type": "string", "description": "Optionele Claude Design URL, bv. https://claude.ai/design/p/&lt;uuid&gt;. Laat leeg voor het standaard design-systemproject."}}, "required": []}</field>
+            <!--
+                Odoo 19 safe_eval builtins expose Exception but NOT NameError.
+                Optional tool args are simply absent from the eval context, so
+                reading project_url raises NameError; catching NameError then
+                fails with "name 'NameError' is not defined". Catch Exception.
+            -->
+            <field name="code"># safe_eval: optional args may be missing; builtins have Exception only.
+try:
+    _url = project_url
+except Exception:
+    _url = None
+ai['result'] = record._daadit_claude_design_fetch(project_url=_url)</field>
+        </record>
+
+        <!--
+            Renders the visual itself. Scoped to the two agents that own
+            content and marketing: a picture published under our name is
+            not something every agent should be able to produce.
+        -->
+        <record id="ir_actions_server_maak_social_visual" model="ir.actions.server">
+            <field name="name">AI Marketing: maak_social_visual</field>
+            <field name="use_in_ai" eval="True"/>
+            <field name="model_id" ref="ai.model_ai_agent"/>
+            <field name="state">code</field>
+            <field name="ai_tool_description">Maak de visual bij een social post MET de kant-en-klare template uit Claude Design (standaard "LinkedIn Post — Cinematic", 1200x1200: donker canvas, blauw-paars gradient, DAADit-logo en Odoo Silver Partner-badge). Gebruik dit altijd als je een post klaarzet: een bericht zonder beeld valt weg in de tijdlijn en kan op Instagram niet eens gepubliceerd worden. Geef een korte kop (headline, max ~60 tekens), eventueel een ondertitel (subline) en het id van de post (post_id) zodat de afbeelding er direct aan hangt. Met template kies je een andere template op naam. Ontwerp NOOIT zelf een lay-out: de template is de huisstijl. Komt het antwoord terug met template_used: false, meld dan expliciet dat de template niet gerenderd kon worden.</field>
+            <field name="ai_tool_schema">{"type": "object", "properties": {"headline": {"type": "string", "description": "Korte, krachtige kop op de visual. Houd het onder de 60 tekens."}, "subline": {"type": "string", "description": "Optionele ondertitel van een regel."}, "post_id": {"type": "integer", "description": "Optioneel: id van de social.post waaraan de visual gehangen wordt. 0 = alleen de afbeelding aanmaken."}, "template": {"type": "string", "description": "Optioneel: naam (of deel daarvan) van de Claude Design-template. Leeg = LinkedIn Post."}}, "required": ["headline"]}</field>
+            <field name="code">aid = record.id
+if aid not in (10, 15):
+    ai['result'] = {'ok': False, 'error': 'SCOPE-GUARD: deze tool is voor Penny (content) en Mark (marketing).'}
+else:
+    try:
+        _tpl = template
+    except Exception:
+        _tpl = ''
+    try:
+        _sub = subline
+    except Exception:
+        _sub = ''
+    try:
+        _pid = post_id
+    except Exception:
+        _pid = 0
+    ai['result'] = record._daadit_render_template_visual(headline=headline, subline=_sub or '', post_id=_pid or 0, template=_tpl or '')</field>
+        </record>
+
+        <!-- Laat zien welke templates er zijn, zodat een agent er een
+             kan kiezen in plaats van er een te bedenken. -->
+        <record id="ir_actions_server_lijst_design_templates" model="ir.actions.server">
+            <field name="name">AI Marketing: lijst_design_templates</field>
+            <field name="use_in_ai" eval="True"/>
+            <field name="model_id" ref="ai.model_ai_agent"/>
+            <field name="state">code</field>
+            <field name="ai_tool_description">Toon welke kant-en-klare templates er in Claude Design staan (LinkedIn Post, LinkedIn Banner, Facebook Banner, ...) met hun naam, afmeting en omschrijving. Roep dit aan als je niet zeker weet welke template bij een opdracht past; geef daarna de naam mee aan maak_social_visual.</field>
+            <field name="ai_tool_schema">{"type": "object", "properties": {}, "required": []}</field>
+            <field name="code">ai['result'] = record._daadit_design_templates()</field>
+        </record>
+
+    </data>
+</odoo>

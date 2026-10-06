@@ -1,0 +1,571 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!-- Schedule                                                     -->
+    <!-- ============================================================ -->
+    <record id="view_ai_agent_schedule_list" model="ir.ui.view">
+        <field name="name">daadit.ai.agent.schedule.list</field>
+        <field name="model">daadit.ai.agent.schedule</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="not active"
+                  decoration-danger="last_status == 'error'">
+                <field name="name"/>
+                <field name="agent_id"/>
+                <field name="user_id"/>
+                <field name="interval_number"/>
+                <field name="interval_type"/>
+                <field name="nextcall"/>
+                <field name="last_run"/>
+                <field name="last_status"
+                       widget="badge"
+                       decoration-success="last_status == 'done'"
+                       decoration-danger="last_status == 'error'"/>
+                <field name="run_count"/>
+                <field name="active" column_invisible="1"/>
+                <button name="action_run_now" type="object"
+                        string="Run now" icon="fa-play"
+                        invisible="not active"/>
+                <button name="action_test_run" type="object"
+                        string="Test run" icon="fa-flask"
+                        invisible="not active"
+                        help="Dry run: the agent reads real data and reports its findings, but write actions are simulated — nothing is changed in the system."/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ai_agent_schedule_form" model="ir.ui.view">
+        <field name="name">daadit.ai.agent.schedule.form</field>
+        <field name="model">daadit.ai.agent.schedule</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_run_now" type="object"
+                            string="Run now" class="btn-primary"
+                            icon="fa-play"
+                            invisible="not active"/>
+                    <button name="action_test_run" type="object"
+                            string="Test run" class="btn-secondary"
+                            icon="fa-flask"
+                            invisible="not active"
+                            help="Dry run: the agent reads real data and reports its findings, but write actions are simulated — nothing is changed in the system."/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_runs" type="object"
+                                class="oe_stat_button" icon="fa-history">
+                            <field name="run_count" widget="statinfo"
+                                   string="Runs"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived"
+                            bg_color="text-bg-danger"
+                            invisible="active"/>
+                    <widget name="web_ribbon"
+                            title="Circuit breaker armed"
+                            bg_color="text-bg-warning"
+                            invisible="not active or consecutive_failures == 0"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name"
+                                   placeholder="e.g. Hourly SLA sweep"/></h1>
+                    </div>
+                    <group>
+                        <group string="Agent">
+                            <field name="agent_id"
+                                   options="{'no_create': True}"/>
+                            <field name="agent_llm_model"/>
+                            <field name="user_id"
+                                   options="{'no_create': True}"/>
+                            <field name="company_id"
+                                   groups="base.group_multi_company"/>
+                            <field name="active" invisible="1"/>
+                        </group>
+                        <group string="Recurrence">
+                            <label for="interval_number" string="Run every"/>
+                            <div class="o_row">
+                                <field name="interval_number"
+                                       class="oe_inline"/>
+                                <field name="interval_type"
+                                       class="oe_inline"/>
+                            </div>
+                            <field name="nextcall"/>
+                            <field name="last_run"/>
+                            <field name="last_status" widget="badge"
+                                   decoration-success="last_status == 'done'"
+                                   decoration-danger="last_status == 'error'"/>
+                        </group>
+                    </group>
+                    <group string="Failure alerting">
+                        <group>
+                            <field name="daily_cost_cap_eur"/>
+                            <field name="monthly_cost_cap_eur"/>
+                            <field name="failure_threshold"/>
+                            <field name="consecutive_failures"/>
+                        </group>
+                        <group>
+                            <field name="alert_user_ids"
+                                   widget="many2many_tags"
+                                   options="{'no_create': True}"/>
+                            <field name="task_id"/>
+                        </group>
+                    </group>
+                    <separator string="Instruction"/>
+                    <field name="prompt"
+                           placeholder="The standing instruction sent to the agent on every run, e.g. 'Controleer alle openstaande helpdesk-tickets en rapporteer welke over de SLA-deadline zijn.'"/>
+                    <separator string="Verplichte opbouw"/>
+                    <field name="required_markers"
+                           placeholder="Eén kopje per regel, bijv. Gedaan:"/>
+                    <separator string="Recent runs"/>
+                    <field name="run_ids" readonly="1">
+                        <list decoration-danger="state == 'error'"
+                              decoration-success="state == 'done'"
+                              limit="20">
+                            <field name="start_date"/>
+                            <field name="trigger"/>
+                            <field name="state" widget="badge"
+                                   decoration-success="state == 'done'"
+                                   decoration-danger="state == 'error'"/>
+                            <field name="duration"/>
+                            <field name="billable_quarters" optional="show"/>
+                            <field name="billable_hours" optional="show"/>
+                            <field name="write_action_count" string="Writes"/>
+                            <field name="action_count" string="All calls"/>
+                            <field name="total_tokens"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ai_agent_schedule_search" model="ir.ui.view">
+        <field name="name">daadit.ai.agent.schedule.search</field>
+        <field name="model">daadit.ai.agent.schedule</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="agent_id"/>
+                <field name="user_id"/>
+                <filter name="filter_last_error"
+                        string="Last run failed"
+                        domain="[('last_status', '=', 'error')]"/>
+                <separator/>
+                <filter name="group_by_agent" string="Agent"
+                        context="{'group_by': 'agent_id'}"/>
+                <filter name="group_by_user" string="Run as"
+                        context="{'group_by': 'user_id'}"/>
+                <filter name="group_by_status" string="Last status"
+                        context="{'group_by': 'last_status'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ai_agent_schedule" model="ir.actions.act_window">
+        <field name="name">AI Agent Schedules</field>
+        <field name="res_model">daadit.ai.agent.schedule</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id"
+                ref="view_ai_agent_schedule_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a schedule to run an AI agent automatically
+            </p>
+            <p>
+                Pick an agent, give it a standing instruction and an
+                interval. Each run is logged with the agent's findings
+                and the tool actions it performed.
+            </p>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Run — tool action                                            -->
+    <!-- ============================================================ -->
+    <record id="view_ai_agent_schedule_run_action_list" model="ir.ui.view">
+        <field name="name">daadit.ai.agent.schedule.run.action.list</field>
+        <field name="model">daadit.ai.agent.schedule.run.action</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="is_error"
+                  decoration-muted="not is_write">
+                <field name="sequence"/>
+                <field name="tool_name"/>
+                <field name="is_write" string="Write"/>
+                <field name="change_kind"/>
+                <field name="is_publication" string="Publicatie"
+                       optional="hide"/>
+                <field name="target_model"/>
+                <field name="target_ref"/>
+                <field name="arguments"/>
+                <field name="result_preview" string="Result"/>
+                <field name="is_error"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ai_agent_schedule_run_action_form" model="ir.ui.view">
+        <field name="name">daadit.ai.agent.schedule.run.action.form</field>
+        <field name="model">daadit.ai.agent.schedule.run.action</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="sequence"/>
+                        <field name="tool_name"/>
+                        <field name="is_error"/>
+                        <field name="is_write"/>
+                        <field name="is_effective_write"/>
+                        <field name="rolled_back"/>
+                        <field name="change_kind"/>
+                        <field name="is_publication"/>
+                        <field name="target_model"/>
+                        <field name="target_ref"/>
+                    </group>
+                    <separator string="Arguments"/>
+                    <field name="arguments" widget="ace"
+                           options="{'mode': 'json'}"/>
+                    <separator string="Result"/>
+                    <field name="result" widget="ace"
+                           options="{'mode': 'json'}"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Run                                                          -->
+    <!-- ============================================================ -->
+    <record id="view_ai_agent_schedule_run_list" model="ir.ui.view">
+        <field name="name">daadit.ai.agent.schedule.run.list</field>
+        <field name="model">daadit.ai.agent.schedule.run</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="state == 'error'"
+                  decoration-success="state == 'done' and trigger != 'test'"
+                  decoration-info="trigger == 'test'"
+                  decoration-muted="state == 'running'">
+                <field name="start_date"/>
+                <field name="schedule_id"/>
+                <field name="agent_id"/>
+                <field name="trigger" widget="badge"
+                       decoration-info="trigger == 'test'"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'done'"
+                       decoration-warning="state == 'budget'"
+                       decoration-danger="state in ('error', 'disputed')"/>
+                <field name="citation_unfounded" string="Ongefundeerd"
+                       optional="show"/>
+                <field name="duration"/>
+                            <field name="billable_quarters" optional="show"/>
+                            <field name="billable_hours" optional="show"/>
+                <field name="write_action_count" string="Writes"/>
+                <field name="lost_write_count" string="Lost writes"
+                          optional="show"/>
+                <field name="action_count" string="All calls"/>
+                <field name="error_action_count" string="Failed calls"
+                       decoration-danger="error_action_count &gt; 0"/>
+                <field name="needs_attention" optional="show"/>
+                <field name="attention_reason" optional="hide"/>
+                <field name="claims_unverified" optional="show"
+                       string="Bewering niet verifieerbaar"/>
+                <field name="claim_count" optional="hide"/>
+                <field name="claim_covered_count" optional="hide"/>
+                <field name="is_resolved" optional="show"/>
+                <field name="resolution_kind" optional="show"/>
+                <field name="resolved_by_run_id" optional="hide"/>
+                <field name="task_id" optional="show"/>
+                <field name="total_tokens"/>
+                <field name="user_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ai_agent_schedule_run_form" model="ir.ui.view">
+        <field name="name">daadit.ai.agent.schedule.run.form</field>
+        <field name="model">daadit.ai.agent.schedule.run</field>
+        <field name="arch" type="xml">
+            <form create="false">
+                <sheet>
+                    <widget name="web_ribbon" title="Error"
+                            bg_color="text-bg-danger"
+                            invisible="state != 'error'"/>
+                    <widget name="web_ribbon" title="Budget bereikt"
+                            bg_color="text-bg-warning"
+                            invisible="state != 'budget'"/>
+                    <widget name="web_ribbon" title="Test run"
+                            bg_color="text-bg-info"
+                            invisible="trigger != 'test'"/>
+                    <widget name="web_ribbon" title="Success"
+                            bg_color="text-bg-success"
+                            invisible="state != 'done' or trigger == 'test'"/>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="not citation_unfounded">
+                        <b>Ongefundeerd: dit antwoord steunt op kennis zonder
+                        echte bron.</b>
+                        <span invisible="not citation_unknown">Genoemd maar
+                        niet opgezocht:
+                        <field name="citation_unknown" readonly="1"
+                               nolabel="1" class="oe_inline"/></span>
+                        <field name="citation_unfounded" invisible="1"/>
+                    </div>
+                    <div class="alert alert-danger" role="alert"
+                         invisible="state != 'disputed' or not instruction_missing">
+                        <b>Betwist: de verplichte opbouw ontbreekt, ook na
+                        één herkansing.</b> Het verslag is niet naar de klant
+                        gegaan. Ontbreekt:
+                        <field name="instruction_missing" readonly="1"
+                               nolabel="1" class="oe_inline"/>
+                    </div>
+                    <div class="alert alert-danger" role="alert"
+                         invisible="state != 'disputed' or instruction_missing">
+                        <b>Betwist: deze run beweert handelingen zonder
+                        geslaagde tool-actie.</b> Het verslag is niet naar
+                        de klant gegaan.
+                        <field name="claims_ledger_text" readonly="1"
+                               nolabel="1"/>
+                    </div>
+                    <div class="alert alert-danger" role="alert"
+                         invisible="not claims_unverified">
+                        <b>Deze samenvatting wordt niet gedekt door het
+                        actielogboek.</b> De tekst beschrijft werk dat is
+                        uitgevoerd, maar dat werk wordt niet door de
+                        vastgelegde effecten gedekt. Ga niet af op wat
+                        hieronder staat; kijk op het tabblad
+                        <i>Actions performed</i> wat er werkelijk is
+                        gebeurd.
+                        <field name="claim_verification" readonly="1"
+                               nolabel="1" class="oe_inline"/>
+                    </div>
+                    <field name="claims_unverified" invisible="1"/>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="not needs_attention or claims_unverified">
+                        <b>Er is werk mislukt in deze run.</b>
+                        <field name="attention_reason" readonly="1"
+                               nolabel="1" class="oe_inline"/> — kijk op
+                        het tabblad <i>Actions performed</i> welke
+                        aanroepen zijn geweigerd voordat je de
+                        samenvatting gebruikt.
+                    </div>
+                    <field name="needs_attention" invisible="1"/>
+                    <div class="alert alert-info" role="alert"
+                         invisible="trigger != 'test'">
+                        <b>Test run</b> — de agent heeft echte data
+                        gelezen en zijn bevindingen gerapporteerd, maar
+                        schrijfacties zijn gesimuleerd: er is
+                        <b>niets</b> in het systeem gewijzigd.
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="schedule_id" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Run">
+                            <field name="agent_id"/>
+                            <field name="trigger"/>
+                            <field name="user_id"/>
+                            <field name="company_id"
+                                   groups="base.group_multi_company"/>
+                            <field name="state"/>
+                            <field name="turn_uuid"
+                                   groups="base.group_no_one"/>
+                        </group>
+                        <group string="Timing &amp; cost">
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="duration"/>
+                            <field name="billable_quarters" optional="show"/>
+                            <field name="billable_hours" optional="show"/>
+                            <field name="model"/>
+                            <field name="provider"/>
+                            <field name="fallback_provider"
+                                   invisible="not fallback_provider"/>
+                            <field name="fallback_model"
+                                   invisible="not fallback_provider"/>
+                            <field name="fallback_reason"
+                                   invisible="not fallback_provider"/>
+                            <field name="iterations"/>
+                            <field name="prompt_tokens"/>
+                            <field name="completion_tokens"/>
+                            <field name="total_tokens"/>
+                            <field name="usage_model" groups="base.group_no_one"/>
+                            <field name="usage_row_id" groups="base.group_no_one"/>
+                            <field name="estimated_cost_eur" widget="float"
+                                   digits="[16, 4]"/>
+                            <field name="estimated_cost_usd" groups="base.group_no_one"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Findings" name="findings">
+                            <field name="findings_html" readonly="1"
+                                   nolabel="1"/>
+                            <separator string="Verificatie van beweringen"/>
+                            <field name="claim_verification" readonly="1"
+                                   nolabel="1"/>
+                            <separator string="Raw text"/>
+                            <field name="findings" readonly="1"
+                                   nolabel="1"/>
+                        </page>
+                        <page string="Opvolging" name="resolution">
+                            <group>
+                                <field name="is_resolved"/>
+                                <field name="resolution_kind"/>
+                                <field name="resolved_by_run_id"/>
+                                <field name="resolved_on"/>
+                            </group>
+                            <p class="text-muted">
+                                Door code vastgesteld: de eerste latere
+                                geslaagde run van dezelfde planning die
+                                zelf geen aandacht vraagt. Een run met
+                                een onverifieerbare bewering geldt nooit
+                                als opgelost.
+                            </p>
+                        </page>
+                        <page string="Denkstappen" name="denkstappen">
+                            <p class="text-muted">
+                                De denkstappen die de gebruiker tijdens
+                                dit antwoord live zag, opnieuw opgebouwd
+                                uit de vastgelegde tool-aanroepen. Dezelfde
+                                bron als de audit hiernaast: wat je hier
+                                terugleest kan dus niet afwijken van wat de
+                                agent echt deed. Cadans-regels ("Ik kijk
+                                ernaar") en de afsluiter horen bij geen
+                                tool-aanroep en staan hier bewust niet in.
+                            </p>
+                            <field name="denkstappen_html" readonly="1"
+                                   nolabel="1"/>
+                        </page>
+                        <page string="Actions performed"
+                              name="actions">
+                            <div class="mb-2">
+                                <button name="action_view_all_actions"
+                                        type="object"
+                                        string="Show all tool calls (incl. read/get)"
+                                        icon="fa-list" class="btn-link"/>
+                                <span class="text-muted">
+                                    — read/get/search calls are hidden;
+                                    only write actions are shown below.
+                                </span>
+                            </div>
+                            <field name="action_ids" readonly="1"
+                                   domain="[('is_write', '=', True)]"/>
+                        </page>
+                        <page string="Delegaties" name="delegations"
+                              invisible="not delegation_ids">
+                            <group>
+                                <field name="delegation_cost_usd" readonly="1"/>
+                                <field name="total_cost_usd" readonly="1"/>
+                            </group>
+                            <field name="delegation_ids" readonly="1">
+                                <list>
+                                    <field name="sequence"/>
+                                    <field name="depth"/>
+                                    <field name="caller_agent_id"/>
+                                    <field name="agent_id"/>
+                                    <field name="parent_id" optional="hide"/>
+                                    <field name="state"/>
+                                    <field name="tool_calls"/>
+                                    <field name="write_calls"/>
+                                    <field name="estimated_cost_usd"/>
+                                    <field name="question" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Teruggedraaid" name="rolled_back"
+                              invisible="not rolled_back">
+                            <field name="rolled_back" invisible="1"/>
+                            <p>De run liep vast. Wat hij in deze database
+                                had gewijzigd is teruggedraaid.</p>
+                            <field name="undo_plan" readonly="1"
+                                   invisible="not undo_plan"/>
+                        </page>
+                        <page string="Error" name="error"
+                              invisible="state != 'error'">
+                            <field name="error" readonly="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ai_agent_schedule_run_search" model="ir.ui.view">
+        <field name="name">daadit.ai.agent.schedule.run.search</field>
+        <field name="model">daadit.ai.agent.schedule.run</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="schedule_id"/>
+                <field name="agent_id"/>
+                <field name="user_id"/>
+                <filter name="filter_success" string="Success"
+                        domain="[('state', '=', 'done')]"/>
+                <filter name="filter_error" string="Error"
+                        domain="[('state', '=', 'error')]"/>
+                <filter name="filter_budget" string="Budget bereikt"
+                        domain="[('state', '=', 'budget')]"/>
+                <filter name="filter_manual" string="Manual"
+                        domain="[('trigger', '=', 'manual')]"/>
+                <separator/>
+                <filter name="filter_claims_unverified"
+                        string="Bewering niet verifieerbaar"
+                        domain="[('claims_unverified', '=', True)]"/>
+                <filter name="filter_needs_attention"
+                        string="Vraagt aandacht"
+                        domain="[('needs_attention', '=', True)]"/>
+                <separator/>
+                <filter name="filter_resolved"
+                        string="Inmiddels opgelost"
+                        domain="[('is_resolved', '=', True)]"/>
+                <filter name="filter_unresolved"
+                        string="Nog niet opgelost"
+                        domain="[('is_resolved', '=', False)]"/>
+                <filter name="filter_open_attention"
+                        string="Vraagt aandacht en nog niet opgelost"
+                        domain="[('needs_attention', '=', True),
+                                 ('is_resolved', '=', False)]"/>
+                <separator/>
+                <filter name="group_by_schedule" string="Schedule"
+                        context="{'group_by': 'schedule_id'}"/>
+                <filter name="group_by_agent" string="Agent"
+                        context="{'group_by': 'agent_id'}"/>
+                <filter name="group_by_state" string="Status"
+                        context="{'group_by': 'state'}"/>
+                <filter name="group_by_start" string="Start date"
+                        context="{'group_by': 'start_date:day'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ai_agent_schedule_run" model="ir.actions.act_window">
+        <field name="name">Schedule Runs</field>
+        <field name="res_model">daadit.ai.agent.schedule.run</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id"
+                ref="view_ai_agent_schedule_run_search"/>
+        <field name="context">{'search_default_group_by_schedule': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No runs yet
+            </p>
+            <p>
+                Scheduled (or manually triggered) agent runs appear
+                here, each with its findings and the tool actions the
+                agent performed.
+            </p>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!-- Menus — under the AI app                                     -->
+    <!-- ============================================================ -->
+    <menuitem id="menu_ai_agent_schedule"
+              name="Schedules"
+              parent="ai_app.ai_menu_root"
+              action="action_ai_agent_schedule"
+              sequence="46"/>
+
+    <menuitem id="menu_ai_agent_schedule_run"
+              name="Schedule Runs"
+              parent="ai_app.ai_menu_root"
+              action="action_ai_agent_schedule_run"
+              sequence="47"/>
+
+</odoo>
